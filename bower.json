@@ -1,0 +1,22 @@
+{
+  "name": "gridstrap",
+  "authors": [
+    "jo <jo@surikat.pro>"
+  ],
+  "description": "",
+  "main": ["gridstrap.js","gridstrap.scss"],
+  "keywords": [
+    "grid",
+    "bootstrap",
+    "builder"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/redcatphp/gridstrap",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
