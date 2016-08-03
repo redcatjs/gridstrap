@@ -9,19 +9,18 @@
 		var self = this;
 		var container = this.container;
 		
-		container.addClass('ge-canvas');
-		container.addClass('ge-editing');
+		container.addClass('gs-canvas');
+		container.addClass('gs-editing');
 
 		//$(document)
 			//.on('click', '.gm-preview', function() {
-				//$(this).toggleClass('active btn-danger').trigger('mouseleave');
-			//})
-			//.on('mouseenter', '.gm-preview', function() {
-				//container.removeClass('ge-editing');
-			//})
-			//.on('mouseleave', '.gm-preview', function() {
-				//if (!$(this).hasClass('active')) {
-					//container.addClass('ge-editing');
+				//if(!self.hasClass('gs-editing')) {
+					//self.addClass('gs-editing');
+					//$(this).addClass('active');
+				//}
+				//else{
+					//self.removeClass('gs-editing');
+					//$(this).removeClass('active');
 				//}
 			//})
 		//;
@@ -48,18 +47,18 @@
 		var self = this;
 		var container = this.container;
 		//create row controls
-		container.find('.row').each(function() {
+		container.find('.gs-row').each(function() {
 			var row = $(this);
-			if (row.find('> .ge-tools-drawer').length) { return; }
+			if (row.find('> .gs-tools-drawer').length) { return; }
 
-			var drawer = $('<div class="ge-tools-drawer" />').prependTo(row);
-			self.createTool(drawer, 'Move', 'ge-move', 'fa fa-move');
+			var drawer = $('<div class="gs-tools-drawer" />').prependTo(row);
+			self.createTool(drawer, 'Move', 'gs-move', 'fa fa-move');
 			self.createTool(drawer, 'Remove row', '', 'fa fa-close', function() {
 				row.slideUp(function() {
 					row.remove();
 				});
 			});
-			self.createTool(drawer, 'Add column', 'ge-add-column', 'fa fa-plus-circle', function() {
+			self.createTool(drawer, 'Add column', 'gs-add-column', 'fa fa-plus-circle', function() {
 				row.append('<div data-col="3" />');
 				self.init();
 			});
@@ -68,21 +67,21 @@
 		//create col controls
 		container.find('[data-col]').each(function() {
 			var col = $(this);
-			if (col.find('> .ge-tools-drawer').length) { return; }
+			if (col.find('> .gs-tools-drawer').length) { return; }
 			
 			//col.addClass('col-md-'+col.attr('data-col'));
 			
-			var drawer = $('<div class="ge-tools-drawer" />').prependTo(col);
+			var drawer = $('<div class="gs-tools-drawer" />').prependTo(col);
 
-			self.createTool(drawer, 'Move', 'ge-move', 'fa fa-arrows');
+			self.createTool(drawer, 'Move', 'gs-move', 'fa fa-arrows');
 
-			self.createTool(drawer, 'Make column narrower\n(hold shift for min)', 'ge-decrease-col-width', 'fa fa-minus', function(e) {
+			self.createTool(drawer, 'Make column narrower\n(hold shift for min)', 'gs-decrease-col-width', 'fa fa-minus', function(e) {
 				var size = (parseInt(col.attr('data-col'),10) || 1) - 1;
 				if(size<1) return;
 				col.attr('data-col' ,size);
 			});
 
-			self.createTool(drawer, 'Make column wider\n(hold shift for max)', 'ge-increase-col-width', 'fa fa-plus', function(e) {
+			self.createTool(drawer, 'Make column wider\n(hold shift for max)', 'gs-increase-col-width', 'fa fa-plus', function(e) {
 				var size = (parseInt(col.attr('data-col'),10) || 1) + 1;
 				if(size>12) return;
 				col.attr('data-col' ,size);
@@ -102,7 +101,7 @@
 				});
 			});
 
-			self.createTool(drawer, 'Add row', 'ge-add-row', 'fa fa-plus-circle', function() {
+			self.createTool(drawer, 'Add row', 'gs-add-row', 'fa fa-plus-circle', function() {
 				var row = $('<div class="row" />');
 				col.append(row);
 				row.append('<div data-col="6" /><div data-col="6" />');
@@ -114,17 +113,17 @@
 		
 		
 		//make sortable
-		container.find('.row').sortable({
+		container.find('.gs-row').sortable({
 			items: '> [data-col]',
-			connectWith: '.ge-canvas .row',
-			handle: '> .ge-tools-drawer .ge-move',
+			connectWith: '.gs-canvas .gs-row',
+			handle: '> .gs-tools-drawer .gs-move',
 			start: sortStart,
 			helper: 'clone',
 		});
 		container.add(container.find('[data-col]')).sortable({
-			items: '> .row',
-			connectsWith: '.ge-canvas, .ge-canvas [data-col]',
-			handle: '> .ge-tools-drawer .ge-move',
+			items: '> .gs-row',
+			connectsWith: '.gs-canvas, .gs-canvas [data-col]',
+			handle: '> .gs-tools-drawer .gs-move',
 			start: sortStart,
 			helper: 'clone',
 		});
@@ -136,6 +135,7 @@
 	
 	Gridstrap.prototype.addWidget = function(el,width){
 		el.attr('data-col',width);
+		//el.wrapInner('<div class="gs-row" />');
 		this.container.append(el);
 		
 		this.init();

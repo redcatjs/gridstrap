@@ -13,12 +13,12 @@ $gridstrap-columns: 12 !default;
 	padding-left: 15px;
 	padding-right: 15px;
 }
-.ge-canvas{
-	.ge-tools-drawer {
+.gs-canvas{
+	.gs-tools-drawer {
 		display: none;
 	}	
-	&.ge-editing{
-		.ge-tools-drawer {
+	&.gs-editing{
+		.gs-tools-drawer {
 			-webkit-touch-callout: none;
 			-webkit-user-select: none;
 			-moz-user-select: none;
@@ -28,7 +28,7 @@ $gridstrap-columns: 12 !default;
 			margin: 0 -5px 5px;
 			display: block;
 		}
-		.ge-tools-drawer{
+		.gs-tools-drawer{
 			 > a {
 				display: inline-block;
 				padding: 5px;
@@ -37,19 +37,19 @@ $gridstrap-columns: 12 !default;
 					cursor: pointer;
 				}
 			}
-			.ge-details {
+			.gs-details {
 				padding: 5px;
 				border-top: 1px solid rgba(0, 0, 0, 0.05);
 				display: none;
 			}
-			.ge-details .btn-group a {
+			.gs-details .btn-group a {
 				color: #333;
 			}
-			.ge-details .btn-group a:hover {
+			.gs-details .btn-group a:hover {
 				text-decoration: none;
 				cursor: pointer;
 			}
-			.ge-details input.ge-id {
+			.gs-details input.gs-id {
 				border: 1px solid #7F7F7F;
 				border-radius: 4px;
 				font-size: 11px;
@@ -58,19 +58,19 @@ $gridstrap-columns: 12 !default;
 				width: 80px;
 			}
 		}
-		.row {
+		.gs-row {
 			background-color: #efefef;
 			border: 1px solid #999999;
 			padding: 0 5px 5px;
 			margin-bottom: 5px;
 			margin-left: 0;
 			margin-right: 0;
-			> .ge-tools-drawer {
+			> .gs-tools-drawer {
 				background: #e5e5e5;
 			}
-			> .ge-tools-drawer > a {
+			> .gs-tools-drawer > a {
 				color: #666;
-				&.ge-add-column {
+				&.gs-add-column {
 					color: #178acc;
 				}
 			}
@@ -79,17 +79,17 @@ $gridstrap-columns: 12 !default;
 			background-color: rgba(47, 164, 231, 0.15);
 			border: 1px solid #2FA4E7;
 			padding: 0 5px 5px;
-			> .ge-tools-drawer {
+			> .gs-tools-drawer {
 				background: #afd5ea;
 				a {
 					color: #178acc;
 				}
-				> a.ge-add-row {
+				> a.gs-add-row {
 					color: #666;
 				}
 			}
 		}
-		.ge-content-type.active {
+		.gs-content-type.active {
 			outline: 1px dotted #333;
 		}
 		.ui-sortable-placeholder {
