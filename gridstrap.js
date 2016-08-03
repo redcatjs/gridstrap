@@ -3,7 +3,8 @@
 	var Gridstrap = function(el, opts) {
 		this.container = $(el);
 		this.opts = $.extend(opts || {}, {
-			
+			width: 12,
+			cellHeight: 80,
 		});
 		
 		var self = this;
@@ -46,23 +47,24 @@
 	Gridstrap.prototype.init = function(){
 		var self = this;
 		var container = this.container;
+		
 		//create row controls
-		container.find('.gs-row').each(function() {
-			var row = $(this);
-			if (row.find('> .gs-tools-drawer').length) { return; }
+		//container.find('.gs-row').each(function() {
+			//var row = $(this);
+			//if (row.find('> .gs-tools-drawer').length) { return; }
 
-			var drawer = $('<div class="gs-tools-drawer" />').prependTo(row);
-			self.createTool(drawer, 'Move', 'gs-move', 'fa fa-move');
-			self.createTool(drawer, 'Remove row', '', 'fa fa-close', function() {
-				row.slideUp(function() {
-					row.remove();
-				});
-			});
-			self.createTool(drawer, 'Add column', 'gs-add-column', 'fa fa-plus-circle', function() {
-				row.append('<div data-col="3" />');
-				self.init();
-			});
-		});
+			//var drawer = $('<div class="gs-tools-drawer" />').prependTo(row);
+			//self.createTool(drawer, 'Move', 'gs-move', 'fa fa-move');
+			//self.createTool(drawer, 'Remove row', '', 'fa fa-close', function() {
+				//row.slideUp(function() {
+					//row.remove();
+				//});
+			//});
+			//self.createTool(drawer, 'Add column', 'gs-add-column', 'fa fa-plus-circle', function() {
+				//row.append('<div data-col="3" />');
+				//self.init();
+			//});
+		//});
 		
 		//create col controls
 		container.find('[data-col]').each(function() {
@@ -83,7 +85,7 @@
 
 			self.createTool(drawer, 'Make column wider\n(hold shift for max)', 'gs-increase-col-width', 'fa fa-plus', function(e) {
 				var size = (parseInt(col.attr('data-col'),10) || 1) + 1;
-				if(size>12) return;
+				if(size>self.opts.width) return;
 				col.attr('data-col' ,size);
 			});
 
@@ -101,10 +103,8 @@
 				});
 			});
 
-			self.createTool(drawer, 'Add row', 'gs-add-row', 'fa fa-plus-circle', function() {
-				var row = $('<div class="row" />');
-				col.append(row);
-				row.append('<div data-col="6" /><div data-col="6" />');
+			self.createTool(drawer, 'Add col', 'gs-add-col', 'fa fa-plus-circle', function() {
+				col.find('.gs-row').append('<div data-col="6" />');
 				self.init();
 			});
 
@@ -113,31 +113,33 @@
 		
 		
 		//make sortable
-		container.find('.gs-row').sortable({
-			items: '> [data-col]',
-			connectWith: '.gs-canvas .gs-row',
-			handle: '> .gs-tools-drawer .gs-move',
-			start: sortStart,
-			helper: 'clone',
-		});
-		container.add(container.find('[data-col]')).sortable({
-			items: '> .gs-row',
-			connectsWith: '.gs-canvas, .gs-canvas [data-col]',
-			handle: '> .gs-tools-drawer .gs-move',
-			start: sortStart,
-			helper: 'clone',
+		container.find('.gs-row').each(function(){
+			$(this).sortable({
+				items: '> [data-col]',
+				connectWith: '.gs-canvas .gs-row',
+				handle: '> .gs-tools-drawer .gs-move',
+				start: sortStart,
+				helper: 'clone',
+				grid: self.getGridIntervals(this),
+			});
 		});
 
 		function sortStart(e, ui) {
-			ui.placeholder.css({ height: ui.item.outerHeight()});
+			ui.placeholder.css({
+				height: ui.item.outerHeight(),
+				width: ui.item.outerWidth(),
+				background: '#0f0',
+				position: 'absolute',
+			});
 		}
 	};
 	
-	Gridstrap.prototype.addWidget = function(el,width){
+	Gridstrap.prototype.addWidget = function(el,width,container){
 		el.attr('data-col',width);
-		//el.wrapInner('<div class="gs-row" />');
-		this.container.append(el);
-		
+		if(!container){
+			container = this.container;
+		}
+		container.append(el);
 		this.init();
 		//this.container.sortable('refresh');
 	};
@@ -145,6 +147,12 @@
 		//el.remove();
 		//this.container.sortable('refresh');
 	//};
+	
+	Gridstrap.prototype.getGridIntervals = function(el){
+		var x = Math.floor( $(el).innerWidth()/this.opts.width );
+		var y = this.opts.cellHeight;
+		return [ x, y ];
+	};
 	
 	
 	$.fn.gridstrap = function(opts) {

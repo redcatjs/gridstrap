@@ -58,23 +58,6 @@ $gridstrap-columns: 12 !default;
 				width: 80px;
 			}
 		}
-		.gs-row {
-			background-color: #efefef;
-			border: 1px solid #999999;
-			padding: 0 5px 5px;
-			margin-bottom: 5px;
-			margin-left: 0;
-			margin-right: 0;
-			> .gs-tools-drawer {
-				background: #e5e5e5;
-			}
-			> .gs-tools-drawer > a {
-				color: #666;
-				&.gs-add-column {
-					color: #178acc;
-				}
-			}
-		}
 		[data-col] {
 			background-color: rgba(47, 164, 231, 0.15);
 			border: 1px solid #2FA4E7;
@@ -84,7 +67,7 @@ $gridstrap-columns: 12 !default;
 				a {
 					color: #178acc;
 				}
-				> a.gs-add-row {
+				> a.gs-add-col {
 					color: #666;
 				}
 			}
