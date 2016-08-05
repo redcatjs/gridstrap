@@ -75,10 +75,11 @@ $gridstrap-columns: 12 !default;
 		.gs-content-type.active {
 			outline: 1px dotted #333;
 		}
-		.ui-sortable-placeholder {
-			background: rgba(255, 255, 0, 0.2);
+		.gs-sortable-placeholder {
+			background: #0f0;
 			visibility: visible !important;
 			min-height: 50px;
+			border: 1px dashed #333;
 		}
 	}
 }

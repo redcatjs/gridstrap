@@ -48,24 +48,6 @@
 		var self = this;
 		var container = this.container;
 		
-		//create row controls
-		//container.find('.gs-row').each(function() {
-			//var row = $(this);
-			//if (row.find('> .gs-tools-drawer').length) { return; }
-
-			//var drawer = $('<div class="gs-tools-drawer" />').prependTo(row);
-			//self.createTool(drawer, 'Move', 'gs-move', 'fa fa-move');
-			//self.createTool(drawer, 'Remove row', '', 'fa fa-close', function() {
-				//row.slideUp(function() {
-					//row.remove();
-				//});
-			//});
-			//self.createTool(drawer, 'Add column', 'gs-add-column', 'fa fa-plus-circle', function() {
-				//row.append('<div data-col="3" />');
-				//self.init();
-			//});
-		//});
-		
 		//create col controls
 		container.find('[data-col]').each(function() {
 			var col = $(this);
@@ -74,20 +56,6 @@
 			//col.addClass('col-md-'+col.attr('data-col'));
 			
 			var drawer = $('<div class="gs-tools-drawer" />').prependTo(col);
-
-			self.createTool(drawer, 'Move', 'gs-move', 'fa fa-arrows');
-
-			self.createTool(drawer, 'Make column narrower\n(hold shift for min)', 'gs-decrease-col-width', 'fa fa-minus', function(e) {
-				var size = (parseInt(col.attr('data-col'),10) || 1) - 1;
-				if(size<1) return;
-				col.attr('data-col' ,size);
-			});
-
-			self.createTool(drawer, 'Make column wider\n(hold shift for max)', 'gs-increase-col-width', 'fa fa-plus', function(e) {
-				var size = (parseInt(col.attr('data-col'),10) || 1) + 1;
-				if(size>self.opts.width) return;
-				col.attr('data-col' ,size);
-			});
 
 			self.createTool(drawer, 'Settings', '', 'fa fa-pencil', function() {
 				details.toggle();
@@ -111,27 +79,27 @@
 			var details = $('<div class="details" />').appendTo(drawer);
 		});
 		
+		var sortStart = function(e, ui){
+			ui.placeholder.css({
+				height: ui.item.outerHeight(),
+				width: ui.item.outerWidth(),
+				background: '#0f0',
+				//position: 'absolute',
+			});
+		};
 		
 		//make sortable
 		container.find('.gs-row').each(function(){
 			$(this).sortable({
 				items: '> [data-col]',
 				connectWith: '.gs-canvas .gs-row',
-				handle: '> .gs-tools-drawer .gs-move',
 				start: sortStart,
-				helper: 'clone',
+				//helper: 'clone',
+				placeholder: 'gs-sortable-placeholder',
 				grid: self.getGridIntervals(this),
+				//axis: "x"
 			});
 		});
-
-		function sortStart(e, ui) {
-			ui.placeholder.css({
-				height: ui.item.outerHeight(),
-				width: ui.item.outerWidth(),
-				background: '#0f0',
-				position: 'absolute',
-			});
-		}
 	};
 	
 	Gridstrap.prototype.addWidget = function(el,width,container){
@@ -154,6 +122,25 @@
 		return [ x, y ];
 	};
 	
+	Gridstrap.prototype.widthMinus = function(col){
+		var size = (parseInt(col.attr('data-col'),10) || 1) - 1;
+		if(size<1) return;
+		this.width(col,size);
+	};
+	Gridstrap.prototype.widthPlus = function(col){
+		var size = (parseInt(col.attr('data-col'),10) || 1) + 1;
+		if(size>self.opts.width) return;
+		this.width(col,size);
+	};
+	Gridstrap.prototype.width = function(col,size){
+		if(size){
+			col.attr('data-col' ,size);
+		}
+		else{
+			size = parseInt(col.attr('data-col'),10) || 1;
+		}
+		return size;
+	};
 	
 	$.fn.gridstrap = function(opts) {
 		return this.each(function() {
