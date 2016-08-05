@@ -2,10 +2,10 @@
 
 	var Gridstrap = function(el, opts) {
 		this.container = $(el);
-		this.opts = $.extend(opts || {}, {
+		this.opts = $.extend({
 			width: 12,
 			cellHeight: 80,
-		});
+		}, opts || {} );
 		
 		var self = this;
 		var container = this.container;
@@ -57,26 +57,11 @@
 			
 			var drawer = $('<div class="gs-tools-drawer" />').prependTo(col);
 
-			self.createTool(drawer, 'Settings', '', 'fa fa-pencil', function() {
-				details.toggle();
-			});
-			
-			self.createTool(drawer, 'Remove col', '', 'fa fa-close', function() {
-				col.animate({
-					opacity: 'hide',
-					width: 'hide',
-					height: 'hide'
-				}, 400, function() {
-					col.remove();
-				});
-			});
-
 			self.createTool(drawer, 'Add col', 'gs-add-col', 'fa fa-plus-circle', function() {
 				col.find('.gs-row').append('<div data-col="6" />');
 				self.init();
 			});
-
-			var details = $('<div class="details" />').appendTo(drawer);
+			
 		});
 		
 		var sortStart = function(e, ui){
@@ -140,6 +125,15 @@
 			size = parseInt(col.attr('data-col'),10) || 1;
 		}
 		return size;
+	};
+	Gridstrap.prototype.remove = function(col){
+		col.animate({
+			opacity: 'hide',
+			width: 'hide',
+			height: 'hide'
+		}, 400, function() {
+			col.remove();
+		});
 	};
 	
 	$.fn.gridstrap = function(opts) {
