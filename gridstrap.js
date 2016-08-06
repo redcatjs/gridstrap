@@ -11,8 +11,8 @@
 		var self = this;
 		var container = this.container;
 		
-		container.addClass('gs-canvas');
 		container.addClass('gs-editing');
+		container.addClass('gridstrap');
 
 		//$(document)
 			//.on('click', '.gm-preview', function() {
@@ -48,7 +48,7 @@
 		container.find('.gs-row').each(function(){
 			$(this).sortable({
 				items: '> [data-col]',
-				connectWith: '.gs-canvas .gs-row',
+				connectWith: '.gridstrap .gs-row',
 				start: sortStart,
 				//helper: 'clone',
 				placeholder: 'gs-sortable-placeholder',
@@ -63,7 +63,7 @@
 			width = el.attr('data-col') || this.defaultWidth;
 		}
 		el.attr('data-col',width);
-		el.addClass('grid-strap-item');
+		el.addClass('gridstrap-item');
 		if(!container){
 			container = this.container;
 		}

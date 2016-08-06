@@ -13,12 +13,11 @@ $gridstrap-columns: 12 !default;
 	padding-left: 15px;
 	padding-right: 15px;
 }
-.gs-canvas{
+
+.gridstrap{
 	&.gs-editing{
 		[data-col] {
-			background-color: rgba(47, 164, 231, 0.15);
-			border: 1px solid #2FA4E7;
-			padding: 0 5px 5px;
+			
 		}
 		.gs-content-type.active {
 			outline: 1px dotted #333;
@@ -28,6 +27,58 @@ $gridstrap-columns: 12 !default;
 			visibility: visible !important;
 			min-height: 50px;
 			border: 1px dashed #333;
+		}
+	}
+	.gridstrap-item{
+		> .gs-content{
+			left: 0;
+			right: 0;
+			color: #2c3e50;
+			background-color: #fff;
+            border:1px dashed rgba(93, 93, 93, 0.50);
+
+			//box-shadow: 2px 2px 6px 0 $m-gray;
+			
+			&:hover{
+
+				border:1px dashed rgba(93, 93, 93, 0.50);
+				transition: border 500ms ease-in;
+				cursor: move;
+			}
+
+		}
+		&.preview-mode{
+			.delete-tab,
+			.add-tab{
+				display: none;
+			}
+			
+			.gridstrap-item > .gs-content:hover,
+			.draggable-component:hover{
+				cursor: default;
+			}
+			
+			> .gs-content{
+				border-color: transparent;
+				&:hover{
+					cursor: normal;
+				}
+				>.field-label{
+					display: none;
+				}
+				>.field-actions-resize{
+					display: none;
+				}
+				>.field-actions-plus{
+					
+				}
+				.ui-resizable-handle{
+					display: none !important;
+				}
+			}
+		}
+		&.edit-mode > .gs-content{
+			
 		}
 	}
 }
