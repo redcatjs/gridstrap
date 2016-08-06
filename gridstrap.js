@@ -5,6 +5,7 @@
 		this.opts = $.extend({
 			width: 12,
 			cellHeight: 80,
+			defaultWidth: 3,
 		}, opts || {} );
 		
 		var self = this;
@@ -88,7 +89,11 @@
 	};
 	
 	Gridstrap.prototype.addWidget = function(el,width,container){
+		if(!width){
+			width = el.attr('data-col') || this.defaultWidth;
+		}
 		el.attr('data-col',width);
+		el.addClass('grid-strap-item');
 		if(!container){
 			container = this.container;
 		}
@@ -114,7 +119,7 @@
 	};
 	Gridstrap.prototype.widthPlus = function(col){
 		var size = (parseInt(col.attr('data-col'),10) || 1) + 1;
-		if(size>self.opts.width) return;
+		if(size>this.opts.width) return;
 		this.width(col,size);
 	};
 	Gridstrap.prototype.width = function(col,size){
