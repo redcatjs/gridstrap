@@ -14,63 +14,11 @@ $gridstrap-columns: 12 !default;
 	padding-right: 15px;
 }
 .gs-canvas{
-	.gs-tools-drawer {
-		display: none;
-	}	
 	&.gs-editing{
-		.gs-tools-drawer {
-			-webkit-touch-callout: none;
-			-webkit-user-select: none;
-			-moz-user-select: none;
-			-ms-user-select: none;
-			user-select: none;
-			background: blue;
-			margin: 0 -5px 5px;
-			display: block;
-		}
-		.gs-tools-drawer{
-			 > a {
-				display: inline-block;
-				padding: 5px;
-				&:hover {
-					background: rgba(255, 255, 255, 0.5);
-					cursor: pointer;
-				}
-			}
-			.gs-details {
-				padding: 5px;
-				border-top: 1px solid rgba(0, 0, 0, 0.05);
-				display: none;
-			}
-			.gs-details .btn-group a {
-				color: #333;
-			}
-			.gs-details .btn-group a:hover {
-				text-decoration: none;
-				cursor: pointer;
-			}
-			.gs-details input.gs-id {
-				border: 1px solid #7F7F7F;
-				border-radius: 4px;
-				font-size: 11px;
-				padding: 2px 5px;
-				margin-right: 5px;
-				width: 80px;
-			}
-		}
 		[data-col] {
 			background-color: rgba(47, 164, 231, 0.15);
 			border: 1px solid #2FA4E7;
 			padding: 0 5px 5px;
-			> .gs-tools-drawer {
-				background: #afd5ea;
-				a {
-					color: #178acc;
-				}
-				> a.gs-add-col {
-					color: #666;
-				}
-			}
 		}
 		.gs-content-type.active {
 			outline: 1px dotted #333;
