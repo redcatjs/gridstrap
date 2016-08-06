@@ -36,7 +36,7 @@ $gridstrap-columns: 12 !default;
 			color: #2c3e50;
 			background-color: #fff;
             border:1px dashed rgba(93, 93, 93, 0.50);
-
+			overflow: hidden;
 			//box-shadow: 2px 2px 6px 0 $m-gray;
 			
 			&:hover{
@@ -46,6 +46,9 @@ $gridstrap-columns: 12 !default;
 				cursor: move;
 			}
 
+		}
+		&.delete .gs-content:hover {
+			border: 1px dashed #f00;
 		}
 		&.preview-mode{
 			.delete-tab,
@@ -80,5 +83,99 @@ $gridstrap-columns: 12 !default;
 		&.edit-mode > .gs-content{
 			
 		}
+		
+		.field-actions {
+			position:relative;
+			z-index: 10;
+		/*
+			padding-left: 5px;
+			padding-top: 5px;
+			padding-right:5px;
+		*/
+				
+			a:hover {
+				text-decoration: none;
+			}
+			.btn {
+				background-color: #fff;
+				float:left;
+				display: inline-block;
+				width: 32px;
+				height: 32px;
+				padding: 0;
+				visibility: hidden;
+				border-radius: 0;
+				border-color: #b3b3b3;
+				color: #b3b3b3;
+				line-height: 32px;
+				font-size: 12px;
+				border-width: 0 0 1px 1px;
+			}
+			
+			&.float-left {
+				.btn:last-child {
+					border-bottom-right-radius: 5px;
+				}
+			}
+			.edit-button,
+			.preview-button {
+				border-bottom-left-radius: 5px;
+			}
+			
+			.toggle-form {
+				font-size: .85em;
+				background-color: rgba(255, 255, 255, 0.75);
+			}
+			.toggle-form:hover {
+				color: #000;
+			}
+			.del-button:hover {
+				background-color: $m-red;
+				transition: background-color .2s ease-in, color .2s ease-in;
+				color: #fff;
+			}
+			.edit-button {
+				display:none;
+				&:hover{
+					background-color: $m-lightgreen;
+					transition: background-color .2s ease-in, color .2s ease-in;
+					color: #fff;
+				}
+			}
+			.preview-button {
+				&:hover {
+					background-color: $m-cyan;
+					transition: background-color .2s ease-in, color .2s ease-in;
+					color: #fff;
+				}
+			}
+			.column-minus,
+			.column-plus{
+				&:hover{
+					background-color: $m-amber;
+					transition: background-color .2s ease-in, color .2s ease-in;
+					color: #fff;
+				}
+			}
+		}
+	}
+	
+	.empty.gs-row{
+		border: 1px dashed $m-gray;
+	}
+
+	.gs-row{
+		position: relative;
+		float: left;
+		width: 100%;
+		height: auto;
+	}
+
+	.empty-get-started {
+		position: relative;
+		float: left;
+		width:100%;
+		top: 48%;
+		text-align: center;
 	}
 }
