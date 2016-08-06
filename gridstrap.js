@@ -31,39 +31,9 @@
 
 	};
 	
-	Gridstrap.prototype.createTool = function(drawer, title, className, iconClass, eventHandlers){
-		var tool = $('<a title="' + title + '" class="' + className + '"><span class="' + iconClass + '"></span></a>')
-			.appendTo(drawer)
-		;
-		if (typeof eventHandlers == 'function') {
-			tool.on('click', eventHandlers);
-		}
-		if (typeof eventHandlers == 'object') {
-			$.each(eventHandlers, function(name, func) {
-				tool.on(name, func);
-			});
-		}
-		
-	};
 	Gridstrap.prototype.init = function(){
 		var self = this;
 		var container = this.container;
-		
-		//create col controls
-		container.find('[data-col]').each(function() {
-			var col = $(this);
-			if (col.find('> .gs-tools-drawer').length) { return; }
-			
-			//col.addClass('col-md-'+col.attr('data-col'));
-			
-			var drawer = $('<div class="gs-tools-drawer" />').prependTo(col);
-
-			self.createTool(drawer, 'Add col', 'gs-add-col', 'fa fa-plus-circle', function() {
-				col.find('.gs-row').append('<div data-col="6" />');
-				self.init();
-			});
-			
-		});
 		
 		var sortStart = function(e, ui){
 			ui.placeholder.css({
