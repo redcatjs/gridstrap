@@ -84,13 +84,13 @@
 	
 	Gridstrap.prototype.widthMinus = function(col){
 		var size = (parseInt(col.attr('data-col'),10) || 1) - 1;
-		if(size<1) return;
-		this.width(col,size);
+		if(size<1) size = 1;
+		return this.width(col,size);
 	};
 	Gridstrap.prototype.widthPlus = function(col){
 		var size = (parseInt(col.attr('data-col'),10) || 1) + 1;
-		if(size>this.opts.width) return;
-		this.width(col,size);
+		if(size>this.opts.width) size = this.opts.width;
+		return this.width(col,size);
 	};
 	Gridstrap.prototype.width = function(col,size){
 		if(size){
