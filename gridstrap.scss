@@ -7,25 +7,32 @@ $gridstrap-columns: 12 !default;
 }
 
 [data-col]{
-	min-height: 100px;
 	position: relative;
 	float:left;
 	padding-left: 15px;
 	padding-right: 15px;
+	transition: width 400ms ease-out;
+	min-height: 100px;
+	z-index: 5;
+}
+.gs-cloned{
+	transition: left 400ms ease-out, top 400ms ease-out;
+	z-index: 10;
+}
+.gs-moving{
+	z-index: 15;
 }
 
 .gridstrap{
 	&.gs-editing{
-		[data-col] {
-			
-		}
-		.gs-content-type.active {
-			outline: 1px dotted #333;
-		}
 		.gs-sortable-placeholder {
-			background: #0f0;
+			float: left;
+			position: relative;
+			margin-top: 6px;
+			margin-bottom: 5px;
+			
+			background: transparent;
 			visibility: visible !important;
-			min-height: 50px;
 			border: 1px dashed #333;
 		}
 	}

@@ -35,25 +35,68 @@
 		var self = this;
 		var container = this.container;
 		
-		var sortStart = function(e, ui){
-			ui.placeholder.css({
-				height: ui.item.outerHeight(),
-				width: ui.item.outerWidth(),
-				background: '#0f0',
-				//position: 'absolute',
-			});
-		};
-		
 		//make sortable
 		container.find('.gs-row').each(function(){
+			var row = $(this);
+			var items = '> [data-col]';
 			$(this).sortable({
-				items: '> [data-col]',
+				items: items,
 				connectWith: '.gridstrap .gs-row',
-				start: sortStart,
-				//helper: 'clone',
+				revert: 400,
+				tolerance: 'pointer',
 				placeholder: 'gs-sortable-placeholder',
-				grid: self.getGridIntervals(this),
-				//axis: "x"
+				//helper: 'clone',
+				start: function(e, ui){
+					ui.placeholder.css({
+						height: ui.item.outerHeight(),
+						width: ui.item.outerWidth(),
+					});
+					
+					ui.item.addClass('gs-moving');
+					row.find(items).filter(':not(.gs-moving, .gs-cloned)').each(function(){
+						var item = $(this);
+						var position = item.position();
+						var clone = item.clone();
+						item.data('clone',clone);
+						clone.addClass('gs-cloned');
+						clone.css({
+							position: 'absolute',
+							top: position.top,
+							left: position.left,
+						});
+						item.after(clone);
+						item.css('visibility','hidden');
+					});
+					
+				},
+				change: function(e, ui){
+					
+					row.find(items).filter(':not(.gs-moving, .gs-cloned)').each(function(){
+						var item = $(this);
+						var position = item.position();
+						var clone = item.data('clone');
+						clone.css({
+							top: position.top,
+							left: position.left,
+						});
+					});
+					
+				},
+				stop: function(e, ui){
+					
+					row.find(items).filter(':not(.gs-moving, .gs-cloned)').each(function(){
+						var item = $(this);
+						var clone = item.data('clone');
+						item.css('visibility','visible');
+						clone.hide();
+						clone.remove();
+					});
+
+				},
+				over: function(e, ui){
+					
+					
+				},
 			});
 		});
 	};
@@ -68,6 +111,7 @@
 			container = this.container;
 		}
 		container.append(el);
+
 		this.init();
 		//this.container.sortable('refresh');
 	};
@@ -75,12 +119,6 @@
 		//el.remove();
 		//this.container.sortable('refresh');
 	//};
-	
-	Gridstrap.prototype.getGridIntervals = function(el){
-		var x = Math.floor( $(el).innerWidth()/this.opts.width );
-		var y = this.opts.cellHeight;
-		return [ x, y ];
-	};
 	
 	Gridstrap.prototype.widthMinus = function(col){
 		var size = (parseInt(col.attr('data-col'),10) || 1) - 1;
