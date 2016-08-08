@@ -6,37 +6,35 @@ $gridstrap-columns: 12 !default;
 	}
 }
 
-[data-col]{
-	position: relative;
-	float:left;
-	padding-left: 15px;
-	padding-right: 15px;
-	transition: width 400ms ease-out;
-	min-height: 100px;
-	z-index: 5;
-}
-.gs-cloned{
-	transition: left 400ms ease-out, top 400ms ease-out;
-	z-index: 10;
-}
-.gs-moving{
-	z-index: 15;
-}
 
 .gridstrap{
+	.gs-cloned{
+		transition: left 400ms ease-out, top 400ms ease-out;
+		z-index: 10;
+	}
+	.gs-moving{
+		z-index: 15;
+	}
+	.gs-sortable-placeholder {
+		float: left;
+		position: relative;
+		margin-top: 6px;
+		margin-bottom: 5px;
+		
+		background: transparent;
+		visibility: visible !important;
+		border: 1px dashed #333;
+	}
 	&.gs-editing{
-		.gs-sortable-placeholder {
-			float: left;
-			position: relative;
-			margin-top: 6px;
-			margin-bottom: 5px;
-			
-			background: transparent;
-			visibility: visible !important;
-			border: 1px dashed #333;
-		}
 	}
 	.gridstrap-item{
+		position: relative;
+		float:left;
+		padding-left: 15px;
+		padding-right: 15px;
+		transition: width 400ms ease-out;
+		min-height: 100px;
+		z-index: 5;
 		> .gs-content{
 			left: 0;
 			right: 0;
