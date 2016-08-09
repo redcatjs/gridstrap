@@ -36,9 +36,12 @@
 		var self = this;
 		var ttWidth = 0;
 		var currentRow = 1;
-		row.find(self.itemsSelector).filter(':not(.gs-cloned)').sort(function(a,b){
-			var ao = $(a).offset(),
-				bo = $(b).offset()
+		var sortedRow = row
+			.find(self.itemsSelector)
+			.filter(':not(.gs-cloned)')
+		.sort(function(a,b){
+			var ao = $(a).position(),
+				bo = $(b).position()
 				ac = ao.top,
 				bc = bo.top;
 			if(ac==bc){
@@ -46,7 +49,9 @@
 				bc = bo.left;
 			}
 			return ac > bc;
-		}).each(function(){
+		});
+		//console.log(sortedRow);
+		sortedRow.each(function(){
 			var $this = $(this);
 			ttWidth += self.width( $this );
 			if(ttWidth>self.opts.width){
@@ -118,7 +123,7 @@
 					
 				},
 				stop: function(e, ui){
-					
+					ui.item.removeClass('.gs-moving');
 					row.find(items).filter(':not(.gs-moving, .gs-cloned)').each(function(){
 						var item = $(this);
 						var clone = item.data('clone');
