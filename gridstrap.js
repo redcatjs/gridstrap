@@ -28,6 +28,14 @@
 			//})
 		//;
 		
+		container.on('mouseover', '.gridstrap-item', function(e){
+			e.stopPropagation();
+			$(this).addClass('mouseover');
+		}).on('mouseout', '.gridstrap-item', function(e){
+			e.stopPropagation();
+			$(this).removeClass('mouseover');
+		});	
+		
         self.init();
 
 	};
@@ -51,19 +59,33 @@
 			return ac > bc;
 		});
 		//console.log(sortedRow);
+		
+		var heights = {};
 		sortedRow.each(function(){
 			var $this = $(this);
 			ttWidth += self.width( $this );
 			if(ttWidth>self.opts.width){
 				ttWidth = 0;
 				currentRow += 1;
-				$this.css('clear','left');
+				//$this.css('clear','left');
 			}
 			else{
-				$this.css('clear','none');
+				//$this.css('clear','none');
 			}
 			$this.attr('data-row',currentRow);
+			
+			var
+				h = heights[currentRow] || 0,
+				h2 = $this.height();
+			if(h2>h){
+				heights[currentRow] = h2;
+			}
 		});
+		sortedRow.each(function(){
+			var currentRow = $(this).attr('data-row');
+			$(this).css('min-height',heights[currentRow]+'px');
+		});
+		
 	};
 	Gridstrap.prototype.init = function(){
 		var self = this;
