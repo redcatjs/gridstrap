@@ -7,6 +7,7 @@
 			cellHeight: 80,
 			defaultWidth: 3,
 		}, opts || {} );
+		this.itemsSelector = '> [data-col]';
 		
 		var self = this;
 		var container = this.container;
@@ -31,14 +32,48 @@
 
 	};
 	
+	Gridstrap.prototype.virtualRows = function(row){
+		var self = this;
+		var ttWidth = 0;
+		var currentRow = 1;
+		row.find(self.itemsSelector).filter(':not(.gs-cloned)').sort(function(a,b){
+			var ao = $(a).offset(),
+				bo = $(b).offset()
+				ac = ao.top,
+				bc = bo.top;
+			if(ac==bc){
+				ac = ao.left;
+				bc = bo.left;
+			}
+			return ac > bc;
+		}).each(function(){
+			var $this = $(this);
+			ttWidth += self.width( $this );
+			if(ttWidth>self.opts.width){
+				ttWidth = 0;
+				currentRow += 1;
+				$this.css('clear','left');
+			}
+			else{
+				$this.css('clear','none');
+			}
+			$this.attr('data-row',currentRow);
+		});
+	};
 	Gridstrap.prototype.init = function(){
 		var self = this;
 		var container = this.container;
+		var items = self.itemsSelector;
 		
-		//make sortable
+		//make sortable		
 		container.find('.gs-row').each(function(){
 			var row = $(this);
-			var items = '> [data-col]';
+			
+			self.virtualRows(row);
+			
+			if( row.data('ui-sortable') )
+				return;
+			
 			$(this).sortable({
 				items: items,
 				connectWith: '.gridstrap .gs-row',
@@ -70,7 +105,7 @@
 					
 				},
 				change: function(e, ui){
-					
+					self.virtualRows(row);
 					row.find(items).filter(':not(.gs-moving, .gs-cloned)').each(function(){
 						var item = $(this);
 						var position = item.position();
@@ -93,6 +128,9 @@
 					});
 
 				},
+				update: function(e, ui){
+					
+				},
 				over: function(e, ui){
 					
 					
@@ -102,6 +140,7 @@
 	};
 	
 	Gridstrap.prototype.addWidget = function(el,width,container){
+		//console.log(container);
 		if(!width){
 			width = el.attr('data-col') || this.defaultWidth;
 		}
@@ -113,11 +152,9 @@
 		container.append(el);
 
 		this.init();
-		//this.container.sortable('refresh');
 	};
 	//Gridstrap.prototype.removeWidget = function(el){
 		//el.remove();
-		//this.container.sortable('refresh');
 	//};
 	
 	Gridstrap.prototype.widthMinus = function(col){
