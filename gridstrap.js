@@ -28,10 +28,10 @@
 			//})
 		//;
 		
-		container.on('mouseover', '.gridstrap-item', function(e){
+		container.on('mouseover', '.gs-content', function(e){
 			e.stopPropagation();
 			$(this).addClass('mouseover');
-		}).on('mouseout', '.gridstrap-item', function(e){
+		}).on('mouseout', '.gs-content', function(e){
 			e.stopPropagation();
 			$(this).removeClass('mouseover');
 		});	
