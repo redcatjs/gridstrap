@@ -8,10 +8,10 @@ $gridstrap-columns: 12 !default;
 
 
 .gridstrap{
-	.gs-sortable-placeholder {
+	.gs-placeholder {
 		float: left;
 		position: relative;
-		margin-top: 6px;
+		margin-top: 5px;
 		margin-bottom: 5px;
 		
 		background: transparent;
@@ -20,9 +20,11 @@ $gridstrap-columns: 12 !default;
 	}
 	&.gs-editing{
 	}
-	.gridstrap-item{
+	.gs-col{
 		position: relative;
 		float:left;
+		padding-top: 5px;
+		padding-bottom: 5px;
 		padding-left: 15px;
 		padding-right: 15px;
 		transition: width 400ms ease-out;
@@ -61,7 +63,7 @@ $gridstrap-columns: 12 !default;
 				display: none;
 			}
 			
-			.gridstrap-item > .gs-content:hover,
+			.gs-col > .gs-content:hover,
 			.draggable-component:hover{
 				cursor: default;
 			}

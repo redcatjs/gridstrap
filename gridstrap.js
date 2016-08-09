@@ -7,7 +7,7 @@
 			cellHeight: 80,
 			defaultWidth: 3,
 		}, opts || {} );
-		this.itemsSelector = '> [data-col], > .gs-row > [data-col]';
+		this.itemsSelector = '> [data-col]';
 		
 		var self = this;
 		var container = this.container;
@@ -28,11 +28,11 @@
 			//})
 		//;
 		
-		container.on('mouseover.gs', '.gridstrap-item', function(e){
+		container.on('mouseover.gs', '.gs-col', function(e){
 			if(e.stopNamespacePropagation) return;
 			e.stopNamespacePropagation = true;
 			$(this).addClass('mouseover');
-		}).on('mouseout.gs', '.gridstrap-item', function(e){
+		}).on('mouseout.gs', '.gs-col', function(e){
 			if(e.stopNamespacePropagation) return;
 			e.stopNamespacePropagation = true;
 			$(this).removeClass('mouseover');
@@ -41,26 +41,11 @@
 		this.sortable(container);
 	};
 	
-	Gridstrap.prototype.virtualRows = function(row){
+	Gridstrap.prototype.virtualRows = function(cols){
 		var self = this;
 		var currentRow = 1;
-		var sortedRow = row
-			.find(self.itemsSelector)
-			.filter(':not(.gs-cloned)')
-		.sort(function(a,b){
-			var ao = $(a).offset(),
-				bo = $(b).offset()
-				ac = ao.top,
-				bc = bo.top;
-			if(ac==bc){
-				ac = ao.left;
-				bc = bo.left;
-			}
-			return ac > bc;
-		});
-		console.log(sortedRow);
 		var ttWidth = 0;
-		sortedRow.each(function(){
+		cols.each(function(){
 			var $this = $(this);
 			ttWidth += self.width( $this );
 			if(ttWidth>self.opts.width){
@@ -77,10 +62,7 @@
 	Gridstrap.prototype.sortable = function(row){
 		var self = this;
 		var container = this.container;
-		var items = self.itemsSelector;
-		
-		self.virtualRows( row );
-		
+		var items = self.itemsSelector;		
 		if(row.hasClass('ui-sortable')){
 			row.sortable('refresh');
 			return;
@@ -90,7 +72,7 @@
 			connectWith: '.gridstrap .gs-row',
 			revert: 400,
 			tolerance: 'pointer',
-			placeholder: 'gs-sortable-placeholder',
+			placeholder: 'gs-placeholder',
 			//helper: 'clone',
 			start: function(e, ui){
 				ui.placeholder.css({
@@ -103,7 +85,7 @@
 					var item = $(this);
 					var position = item.position();
 					var clone = item.clone();
-					item.data('clone',clone);
+					item.data('gs-clone',clone);
 					clone.addClass('gs-cloned');
 					clone.css({
 						position: 'absolute',
@@ -116,11 +98,24 @@
 				
 			},
 			change: function(e, ui){
-				self.virtualRows(row);
+				var cols = $([]);
+				var index = ui.placeholder.index();
+				row.closest('.gs-content').find('.gs-row .gs-col:not(.gs-cloned)').each(function(i){
+					if(i==index){
+						cols.add( ui.item );
+					}
+					if(this!==ui.item[0]){
+						cols.add( $(this) );
+					}
+				});
+				console.log(cols);
+				self.virtualRows(cols);
+				
+				
 				row.find(items).filter(':not(.gs-moving, .gs-cloned)').each(function(){
 					var item = $(this);
 					var position = item.position();
-					var clone = item.data('clone');
+					var clone = item.data('gs-clone');
 					clone.css({
 						top: position.top,
 						left: position.left,
@@ -132,7 +127,7 @@
 				ui.item.removeClass('.gs-moving');
 				row.find(items).filter(':not(.gs-moving, .gs-cloned)').each(function(){
 					var item = $(this);
-					var clone = item.data('clone');
+					var clone = item.data('gs-clone');
 					item.css('visibility','visible');
 					clone.hide();
 					clone.remove();
@@ -148,27 +143,27 @@
 			},
 		});
 	};
-	Gridstrap.prototype.handle = function(el){
-		var self = this;
-		el.find('.gs-row').each(function(){
-			var row = $(this);
-			self.sortable( row );
-		});
-	};
 	
 	Gridstrap.prototype.addWidget = function(el,width,container){
 		if(!width){
 			width = el.attr('data-col') || this.defaultWidth;
 		}
 		el.attr('data-col',width);
-		el.addClass('gridstrap-item');
+		el.addClass('gs-col');
 		if(!container){
 			container = this.container;
 		}
 		container.append(el);
 
+		this.virtualRows(container);
 		this.sortable(container);
-		this.handle(el);
+		
+		var rows = el.find('.gs-row');
+		this.virtualRows(rows);
+		rows.each(function(){
+			self.sortable( $(this) );
+		});
+		
 	};
 	//Gridstrap.prototype.removeWidget = function(el){
 		//el.remove();
