@@ -28,11 +28,13 @@
 			//})
 		//;
 		
-		container.on('mouseover', '.gridstrap-item', function(e){
-			e.stopPropagation();
+		container.on('mouseover.gs', '.gridstrap-item', function(e){
+			if(e.stopNamespacePropagation) return;
+			e.stopNamespacePropagation = true;
 			$(this).addClass('mouseover');
-		}).on('mouseout', '.gridstrap-item', function(e){
-			e.stopPropagation();
+		}).on('mouseout.gs', '.gridstrap-item', function(e){
+			if(e.stopNamespacePropagation) return;
+			e.stopNamespacePropagation = true;
 			$(this).removeClass('mouseover');
 		});	
 		
