@@ -8,13 +8,6 @@ $gridstrap-columns: 12 !default;
 
 
 .gridstrap{
-	.gs-cloned{
-		transition: left 400ms ease-out, top 400ms ease-out;
-		z-index: 10;
-	}
-	.gs-moving{
-		z-index: 15;
-	}
 	.gs-sortable-placeholder {
 		float: left;
 		position: relative;
@@ -35,6 +28,13 @@ $gridstrap-columns: 12 !default;
 		transition: width 400ms ease-out;
 		min-height: 100px;
 		z-index: 5;
+		&.gs-cloned{
+			transition: left 400ms ease-out, top 400ms ease-out;
+			z-index: 10;
+		}
+		&.gs-moving{
+			z-index: 15;
+		}
 		> .gs-content{
 			left: 0;
 			right: 0;
