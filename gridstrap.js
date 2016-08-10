@@ -66,8 +66,7 @@
 					
 					ui.item.addClass('gs-moving');
 					
-					
-					row.siblings('.gs-row').find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
+					row.find(items).filter(':not(.gs-moving)').each(function(){
 						var item = $(this);
 						var position = item.position();
 						var clone = item.clone();
@@ -104,7 +103,7 @@
 						clone.hide();
 						clone.remove();
 					});
-					row.siblings('.gs-row').find('.gs-moving').removeClass('gs-moving');
+					row.find('.gs-moving').removeClass('gs-moving');
 
 				},
 				update: function(e, ui){
