@@ -38,7 +38,7 @@
 			$(this).removeClass('mouseover');
 		});
 		
-		this.sortable(container);
+		this.hanldeSortable(container);
 	};
 	
 	Gridstrap.prototype.virtualRows = function(cols){
@@ -59,94 +59,92 @@
 		});
 		
 	};
-	Gridstrap.prototype.sortable = function(row){
+	Gridstrap.prototype.hanldeSortable = function(rows){
 		var self = this;
 		var container = this.container;
-		var items = self.itemsSelector;		
-		if(row.hasClass('ui-sortable')){
-			row.sortable('refresh');
-			return;
-		}
-		row.sortable({
-			items: items,
-			connectWith: '.gridstrap .gs-row',
-			revert: 400,
-			tolerance: 'pointer',
-			placeholder: 'gs-placeholder',
-			//helper: 'clone',
-			start: function(e, ui){
-				ui.placeholder.css({
-					height: ui.item.outerHeight(),
-					width: ui.item.outerWidth(),
-				});
-				
-				ui.item.addClass('gs-moving');
-				
-				
-				row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
-					var item = $(this);
-					var position = item.position();
-					var clone = item.clone();
-					item.data('gs-clone',clone);
-					clone.addClass('gs-clone');
-					clone.css({
-						position: 'absolute',
-						top: position.top,
-						left: position.left,
+		var items = self.itemsSelector;
+		rows.each(function(){
+			var row = $(this);
+			if(row.hasClass('ui-sortable')){
+				row.sortable('refresh');
+				return;
+			}
+			row.sortable({
+				items: items,
+				connectWith: '.gridstrap .gs-row',
+				revert: 400,
+				tolerance: 'pointer',
+				placeholder: 'gs-placeholder',
+				//helper: 'clone',
+				start: function(e, ui){
+					ui.placeholder.css({
+						height: ui.item.outerHeight(),
+						width: ui.item.outerWidth(),
 					});
-					item.after(clone);
-					item.css('visibility','hidden');
-				});
-			},
-			change: function(e, ui){
-				var sCols = [];
-				var cols = row.closest('.gs-content').find('> .gs-row').find('> .gs-placeholder, > .gs-col:not(.gs-moving, .gs-clone)');
-				
-				cols.each(function(){
-					if(this===ui.placeholder[0]){
-						sCols.push( ui.item );
-					}
-					else{
-						sCols.push( $(this) );
-					}
-				});
-				console.log(sCols);
-				
-				//$(sCols).each(function(i){
-					//$(this).html('<div style="font-size:50px;">'+i+'</div>');
-				//});
-				
-				self.virtualRows( $(sCols) );
-
-				row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
-					var item = $(this);
-					var position = item.position();
-					var clone = item.data('gs-clone');
-					clone.css({
-						top: position.top,
-						left: position.left,
+					
+					ui.item.addClass('gs-moving');
+					
+					
+					row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
+						var item = $(this);
+						var position = item.position();
+						var clone = item.clone();
+						item.data('gs-clone',clone);
+						clone.addClass('gs-clone');
+						clone.css({
+							position: 'absolute',
+							top: position.top,
+							left: position.left,
+						});
+						item.after(clone);
+						item.css('visibility','hidden');
 					});
-				});
-				
-			},
-			stop: function(e, ui){
-				row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
-					var item = $(this);
-					var clone = item.data('gs-clone');
-					item.css('visibility','visible');
-					clone.hide();
-					clone.remove();
-				});
-				row.closest('.gs-content').find('.gs-moving').removeClass('gs-moving');
+				},
+				change: function(e, ui){
+					var sCols = [];
+					var cols = row.closest('.gs-content').find('> .gs-row').find('> .gs-placeholder, > .gs-col:not(.gs-moving, .gs-clone)');
+					
+					cols.each(function(){
+						if(this===ui.placeholder[0]){
+							sCols.push( ui.item );
+						}
+						else{
+							sCols.push( $(this) );
+						}
+					});
+					
+					self.virtualRows( $(sCols) );
 
-			},
-			update: function(e, ui){
-				
-			},
-			over: function(e, ui){
-				
-				
-			},
+					row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
+						var item = $(this);
+						var position = item.position();
+						var clone = item.data('gs-clone');
+						clone.css({
+							top: position.top,
+							left: position.left,
+						});
+					});
+					
+				},
+				stop: function(e, ui){
+					row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
+						var item = $(this);
+						var clone = item.data('gs-clone');
+						item.css('visibility','visible');
+						clone.hide();
+						clone.remove();
+					});
+					row.closest('.gs-content').find('.gs-moving').removeClass('gs-moving');
+
+				},
+				update: function(e, ui){
+					
+				},
+				over: function(e, ui){
+					
+					
+				},
+			});
 		});
 	};
 	
@@ -162,13 +160,12 @@
 		container.append(el);
 
 		this.virtualRows(container.find('> .gs-col'));
-		this.sortable(container);
+		this.hanldeSortable(container);
 		
 		var rows = el.find('.gs-row');
 		this.virtualRows(rows.find('> .gs-col'));
-		rows.each(function(){
-			self.sortable( $(this) );
-		});
+		
+		this.hanldeSortable(rows);
 		
 	};
 	//Gridstrap.prototype.removeWidget = function(el){
