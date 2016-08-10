@@ -76,12 +76,19 @@
 							position: 'absolute',
 							top: position.top,
 							left: position.left,
+							height: item.height(),
 						});
 						item.after(clone);
 						item.css('visibility','hidden');
 					});
 				},
 				change: function(e, ui){
+					
+					self.attribDataRow(row,ui);
+					
+					var h = $( row.find('[data-row="'+ui.item.attr('data-row')+'"]').not(ui.item)[0] ).height();
+					ui.item.css('min-height',h+'px');
+					ui.placeholder.css('min-height',h+'px');
 					
 					row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
 						var item = $(this);
@@ -90,6 +97,7 @@
 						clone.css({
 							top: position.top,
 							left: position.left,
+							height: item.height(),
 						});
 					});
 					
@@ -99,9 +107,8 @@
 					row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
 						var item = $(this);
 						var clone = item.data('gs-clone');
-						item.css('visibility','visible');
-						clone.hide();
 						clone.remove();
+						item.css('visibility','visible');
 					});
 					row.find('.gs-moving').removeClass('gs-moving');
 
@@ -114,6 +121,35 @@
 					
 				},
 			});
+		});
+	};
+	
+	Gridstrap.prototype.getCurrentOrderedCols = function(row,ui){
+		var sCols = [];
+		var cols = row.find('> .gs-placeholder, > .gs-col:not(.gs-moving, .gs-clone)');
+		cols.each(function(){
+			if(this===ui.placeholder[0]){
+				sCols.push( ui.item );
+			}
+			else{
+				sCols.push( $(this) );
+			}
+		});
+		return $(sCols);
+	};
+	Gridstrap.prototype.attribDataRow = function(row,ui){
+		var self = this;
+		var cols = self.getCurrentOrderedCols(row,ui);
+		var currentRow = 1;
+		var ttWidth = 0;
+		cols.each(function(){
+			var $this = $(this);
+			ttWidth += self.width( $this );
+			if(ttWidth>self.opts.width){
+				ttWidth = 0;
+				currentRow += 1;
+			}
+			$this.attr('data-row',currentRow);
 		});
 	};
 	
