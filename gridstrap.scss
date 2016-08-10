@@ -30,7 +30,7 @@ $gridstrap-columns: 12 !default;
 		transition: width 400ms ease-out;
 		min-height: 100px;
 		z-index: 5;
-		&.gs-cloned{
+		&.gs-clone{
 			transition: left 400ms ease-out, top 400ms ease-out;
 			z-index: 10;
 		}
