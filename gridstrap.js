@@ -41,24 +41,6 @@
 		this.hanldeSortable(container);
 	};
 	
-	Gridstrap.prototype.virtualRows = function(cols){
-		var self = this;
-		var currentRow = 1;
-		var ttWidth = 0;
-		cols.each(function(){
-			var $this = $(this);
-			ttWidth += self.width( $this );
-			if(ttWidth>self.opts.width){
-				ttWidth = 0;
-				currentRow += 1;
-				$this.css('clear','left');
-			}
-			else{
-				$this.css('clear','none');
-			}
-		});
-		
-	};
 	Gridstrap.prototype.hanldeSortable = function(rows){
 		var self = this;
 		var container = this.container;
@@ -85,7 +67,7 @@
 					ui.item.addClass('gs-moving');
 					
 					
-					row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
+					row.siblings('.gs-row').find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
 						var item = $(this);
 						var position = item.position();
 						var clone = item.clone();
@@ -101,20 +83,7 @@
 					});
 				},
 				change: function(e, ui){
-					var sCols = [];
-					var cols = row.closest('.gs-content').find('> .gs-row').find('> .gs-placeholder, > .gs-col:not(.gs-moving, .gs-clone)');
 					
-					cols.each(function(){
-						if(this===ui.placeholder[0]){
-							sCols.push( ui.item );
-						}
-						else{
-							sCols.push( $(this) );
-						}
-					});
-					
-					self.virtualRows( $(sCols) );
-
 					row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
 						var item = $(this);
 						var position = item.position();
@@ -127,6 +96,7 @@
 					
 				},
 				stop: function(e, ui){
+					
 					row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
 						var item = $(this);
 						var clone = item.data('gs-clone');
@@ -134,7 +104,7 @@
 						clone.hide();
 						clone.remove();
 					});
-					row.closest('.gs-content').find('.gs-moving').removeClass('gs-moving');
+					row.siblings('.gs-row').find('.gs-moving').removeClass('gs-moving');
 
 				},
 				update: function(e, ui){
@@ -159,11 +129,9 @@
 		}
 		container.append(el);
 
-		this.virtualRows(container.find('> .gs-col'));
 		this.hanldeSortable(container);
 		
 		var rows = el.find('.gs-row');
-		this.virtualRows(rows.find('> .gs-col'));
 		
 		this.hanldeSortable(rows);
 		

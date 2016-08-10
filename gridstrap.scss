@@ -38,6 +38,7 @@ $gridstrap-columns: 12 !default;
 			z-index: 15;
 		}
 		> .gs-content{
+			height: 100%;
 			left: 0;
 			right: 0;
 			color: #2c3e50;
@@ -176,6 +177,8 @@ $gridstrap-columns: 12 !default;
 		float: left;
 		width: 100%;
 		height: auto;
+		display: flex;
+		flex-wrap: wrap;
 	}
 
 	.empty-get-started {
