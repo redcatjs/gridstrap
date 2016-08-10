@@ -81,12 +81,14 @@
 				});
 				
 				ui.item.addClass('gs-moving');
-				row.find(items).filter(':not(.gs-moving, .gs-cloned)').each(function(){
+				
+				
+				row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
 					var item = $(this);
 					var position = item.position();
 					var clone = item.clone();
 					item.data('gs-clone',clone);
-					clone.addClass('gs-cloned');
+					clone.addClass('gs-clone');
 					clone.css({
 						position: 'absolute',
 						top: position.top,
@@ -95,24 +97,28 @@
 					item.after(clone);
 					item.css('visibility','hidden');
 				});
-				
 			},
 			change: function(e, ui){
-				var cols = $([]);
-				var index = ui.placeholder.index();
-				row.closest('.gs-content').find('.gs-row .gs-col:not(.gs-cloned)').each(function(i){
-					if(i==index){
-						cols.add( ui.item );
+				var sCols = [];
+				var cols = row.closest('.gs-content').find('> .gs-row').find('> .gs-placeholder, > .gs-col:not(.gs-moving, .gs-clone)');
+				
+				cols.each(function(){
+					if(this===ui.placeholder[0]){
+						sCols.push( ui.item );
 					}
-					if(this!==ui.item[0]){
-						cols.add( $(this) );
+					else{
+						sCols.push( $(this) );
 					}
 				});
-				console.log(cols);
-				self.virtualRows(cols);
+				console.log(sCols);
 				
+				//$(sCols).each(function(i){
+					//$(this).html('<div style="font-size:50px;">'+i+'</div>');
+				//});
 				
-				row.find(items).filter(':not(.gs-moving, .gs-cloned)').each(function(){
+				self.virtualRows( $(sCols) );
+
+				row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
 					var item = $(this);
 					var position = item.position();
 					var clone = item.data('gs-clone');
@@ -124,14 +130,14 @@
 				
 			},
 			stop: function(e, ui){
-				ui.item.removeClass('.gs-moving');
-				row.find(items).filter(':not(.gs-moving, .gs-cloned)').each(function(){
+				row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
 					var item = $(this);
 					var clone = item.data('gs-clone');
 					item.css('visibility','visible');
 					clone.hide();
 					clone.remove();
 				});
+				row.closest('.gs-content').find('.gs-moving').removeClass('gs-moving');
 
 			},
 			update: function(e, ui){
@@ -155,11 +161,11 @@
 		}
 		container.append(el);
 
-		this.virtualRows(container);
+		this.virtualRows(container.find('> .gs-col'));
 		this.sortable(container);
 		
 		var rows = el.find('.gs-row');
-		this.virtualRows(rows);
+		this.virtualRows(rows.find('> .gs-col'));
 		rows.each(function(){
 			self.sortable( $(this) );
 		});
