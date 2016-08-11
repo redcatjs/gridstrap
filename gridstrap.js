@@ -61,8 +61,9 @@
 		$this.addClass('no-transition');
 		$this.attr('data-col', col );
 		$this.css('width', '');
+		$this.css('left', '');
 		$this.removeClass('no-transition');
-		el.trigger('resized');
+		$this.trigger('resized');
 	};
 	
 	Gridstrap.prototype.hanldeSortable = function(rows){
