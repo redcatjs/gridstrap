@@ -2,15 +2,27 @@
 
 	var Gridstrap = function(el, opts) {
 		this.container = $(el);
-		this.opts = $.extend({
+		var self = this;
+		var container = this.container;
+		
+		this.opts = $.extend(true,{
 			width: 12,
 			cellHeight: 80,
 			defaultWidth: 3,
+			resizable:{
+				//helper: "resizable-helper",
+				//handles: 'e,w',
+				handles: {
+					'w':'.gs-resizer-w',
+					'e':'.gs-resizer-e',
+				},
+				resize:function(e,ui){
+					self.resizeCallback(this,ui,e);
+				}
+			},
 		}, opts || {} );
 		this.itemsSelector = '> [data-col]';
 		
-		var self = this;
-		var container = this.container;
 		
 		container.addClass('gs-editing');
 		container.addClass('gridstrap');
@@ -39,6 +51,18 @@
 		});
 		
 		this.hanldeSortable(container);
+	};
+	
+	Gridstrap.prototype.resizeCallback = function(el,ui,e){
+		var $this = $(el);
+		var containerW = $this.parent().innerWidth();
+		var colW = containerW/12;
+		var col = Math.ceil( ui.size.width/colW );
+		$this.addClass('no-transition');
+		$this.attr('data-col', col );
+		$this.css('width', '');
+		$this.removeClass('no-transition');
+		el.trigger('resized');
 	};
 	
 	Gridstrap.prototype.hanldeSortable = function(rows){
@@ -155,7 +179,8 @@
 		});
 	};
 	
-	Gridstrap.prototype.addWidget = function(el,width,container){
+	Gridstrap.prototype.add = function(el,width,container){
+		var self = this;
 		if(!width){
 			width = el.attr('data-col') || this.defaultWidth;
 		}
@@ -172,10 +197,10 @@
 		
 		this.hanldeSortable(rows);
 		
+		el.append('<div class="gs-resizer gs-resizer-w ui-resizable-handle ui-resizable-w"><i class="fa fa-long-arrow-left" style="display:block;"></i></div>');
+		el.append('<div class="gs-resizer gs-resizer-e ui-resizable-handle ui-resizable-e"><i class="fa fa-long-arrow-right" style="display:block;"></i></div>');
+		el.resizable(this.opts.resizable);
 	};
-	//Gridstrap.prototype.removeWidget = function(el){
-		//el.remove();
-	//};
 	
 	Gridstrap.prototype.widthMinus = function(col){
 		var size = (parseInt(col.attr('data-col'),10) || 1) - 1;

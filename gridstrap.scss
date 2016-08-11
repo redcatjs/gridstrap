@@ -37,6 +37,37 @@ $gridstrap-columns: 12 !default;
 		&.gs-moving{
 			z-index: 15;
 		}
+		&.gs-moving,
+		&.ui-resizable-resizing{
+			.gs-content {
+				box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.2);
+				opacity: 0.6;
+			}
+		}
+		.gs-resizer{
+			z-index:100;
+		}
+		> .ui-resizable-handle{
+			display: none !important;
+		}
+		&.mouseover{
+			> .ui-resizable-handle{
+				display: block !important;
+				font-size: 14px;
+				height: 100%;
+				width: 15px;
+				i{
+					position:absolute;
+					top:50%;
+				}
+			}
+			> .ui-resizable-w{
+				margin-left:5px;
+			}
+			> .ui-resizable-e{
+				margin-right:5px;
+			}
+		}
 		> .gs-content{
 			height: 100%;
 			left: 0;
@@ -187,5 +218,8 @@ $gridstrap-columns: 12 !default;
 		width:100%;
 		top: 48%;
 		text-align: center;
+	}
+	.no-transition {
+		transition: none !important;
 	}
 }
