@@ -11,10 +11,8 @@
 			defaultWidth: 3,
 			resizable:{
 				//helper: "resizable-helper",
-				//handles: 'e,w',
 				handles: {
-					'w':'.gs-resizer-w',
-					'e':'.gs-resizer-e',
+					'e':'.gs-resizer',
 				},
 				resize:function(e,ui){
 					self.resizeCallback(this,ui,e);
@@ -198,8 +196,7 @@
 		
 		this.hanldeSortable(rows);
 		
-		el.append('<div class="gs-resizer gs-resizer-w ui-resizable-handle ui-resizable-w"><i class="fa fa-long-arrow-left" style="display:block;"></i></div>');
-		el.append('<div class="gs-resizer gs-resizer-e ui-resizable-handle ui-resizable-e"><i class="fa fa-long-arrow-right" style="display:block;"></i></div>');
+		el.append('<div class="gs-resizer ui-resizable-handle ui-resizable-e"><i class="fa fa-arrows-h" style="display:block;"></i></div>');
 		el.resizable(this.opts.resizable);
 	};
 	
