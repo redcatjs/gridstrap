@@ -50,7 +50,8 @@ $gridstrap-columns: 12 !default;
 		> .ui-resizable-handle{
 			display: none !important;
 		}
-		&.mouseover{
+		&.mouseover,
+		.ui-resizable-resizing{
 			> .ui-resizable-handle{
 				display: block !important;
 				font-size: 14px;
