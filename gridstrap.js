@@ -92,13 +92,15 @@
 					
 					row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
 						var item = $(this);
-						var position = item.position();
 						var clone = item.data('gs-clone');
-						clone.css({
-							top: position.top,
-							left: position.left,
-							height: item.height(),
-						});
+						if(clone){
+							var position = item.position();
+							clone.css({
+								top: position.top,
+								left: position.left,
+								height: item.height(),
+							});
+						}
 					});
 					
 				},
