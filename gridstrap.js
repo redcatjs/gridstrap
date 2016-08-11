@@ -144,7 +144,6 @@
 		var cols = self.getCurrentOrderedCols(row,ui);
 		var currentRow = 1;
 		var ttWidth = 0;
-		var position = 1;
 		cols.each(function(){
 			var $this = $(this);
 			ttWidth += self.width( $this );
@@ -153,8 +152,6 @@
 				currentRow++;
 			}
 			$this.attr('data-row',currentRow);
-			$this.attr('data-position',position);
-			position++;
 		});
 	};
 	
