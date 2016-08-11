@@ -11,11 +11,13 @@
 			defaultWidth: 3,
 			resizable:{
 				//helper: "resizable-helper",
-				handles: {
-					'e':'.gs-resizer',
-				},
+				//handles: { 'e':'.gs-resizer' },
+				handles: 'e',
 				resize:function(e,ui){
 					self.resizeCallback(this,ui,e);
+				},
+				stop: function(){
+					$(this).css('width','');
 				}
 			},
 		}, opts || {} );
@@ -59,7 +61,6 @@
 		$this.addClass('no-transition');
 		$this.attr('data-col', col );
 		$this.css('width', '');
-		$this.css('left', '');
 		$this.removeClass('no-transition');
 		$this.trigger('resized');
 	};
@@ -196,7 +197,7 @@
 		
 		this.hanldeSortable(rows);
 		
-		el.append('<div class="gs-resizer ui-resizable-handle ui-resizable-e"><i class="fa fa-arrows-h" style="display:block;"></i></div>');
+		//el.append('<div class="gs-resizer ui-resizable-handle ui-resizable-e"><i class="fa fa-arrows-h" style="display:block;"></i></div>');
 		el.resizable(this.opts.resizable);
 	};
 	
