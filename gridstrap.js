@@ -18,6 +18,7 @@
 				},
 				stop: function(){
 					$(this).css('width','');
+					$(this).trigger('gs-resized');
 				}
 			},
 		}, opts || {} );
@@ -62,7 +63,7 @@
 		$this.attr('data-col', col );
 		$this.css('width', '');
 		$this.removeClass('no-transition');
-		$this.trigger('resized');
+		$this.trigger('gs-resizing');
 	};
 	
 	Gridstrap.prototype.hanldeSortable = function(rows){
