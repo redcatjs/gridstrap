@@ -142,14 +142,17 @@
 		var cols = self.getCurrentOrderedCols(row,ui);
 		var currentRow = 1;
 		var ttWidth = 0;
+		var position = 1;
 		cols.each(function(){
 			var $this = $(this);
 			ttWidth += self.width( $this );
 			if(ttWidth>self.opts.width){
 				ttWidth = 0;
-				currentRow += 1;
+				currentRow++;
 			}
 			$this.attr('data-row',currentRow);
+			$this.attr('data-position',position);
+			position++;
 		});
 	};
 	
