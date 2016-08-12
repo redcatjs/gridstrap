@@ -83,7 +83,9 @@
 				tolerance: 'pointer',
 				placeholder: 'gs-placeholder',
 				//helper: 'clone',
-				start: function(e, ui){
+				over: function(e, ui){
+					console.log('over');
+					
 					ui.placeholder.css({
 						height: ui.item.outerHeight(),
 						width: ui.item.outerWidth(),
@@ -107,7 +109,12 @@
 						item.css('visibility','hidden');
 					});
 				},
+				start: function(e, ui){
+					console.log('start');
+					
+				},
 				change: function(e, ui){
+					console.log('change');
 					
 					self.attribDataRow(row,ui);
 					
@@ -130,6 +137,12 @@
 					
 				},
 				stop: function(e, ui){
+					console.log('stop');
+					
+
+				},
+				out: function(e, ui){
+					console.log('out');
 					
 					row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
 						var item = $(this);
@@ -138,14 +151,34 @@
 						item.css('visibility','visible');
 					});
 					row.find('.gs-moving').removeClass('gs-moving');
-
 				},
 				update: function(e, ui){
+					console.log('update');
 					
 				},
-				over: function(e, ui){
+				activate: function(e, ui){
+					console.log('activate');
 					
-					
+					$(this).addClass('ui-state-highlight');
+				},
+				beforeStop: function(e, ui){
+					console.log('beforeStop');
+				},
+				create: function(e, ui){
+					console.log('create');
+				},
+				deactivate: function(e, ui){
+					console.log('deactivate');
+					$(this).removeClass('ui-state-highlight');
+				},
+				receive: function(e, ui){
+					console.log('receive');
+				},
+				remove: function(e, ui){
+					console.log('remove');
+				},
+				sort: function(e, ui){
+					console.log('sort');
 				},
 			});
 		});
