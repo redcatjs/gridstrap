@@ -84,7 +84,7 @@
 				placeholder: 'gs-placeholder',
 				//helper: 'clone',
 				over: function(e, ui){
-					console.log('over');
+					//console.log('over');
 					
 					ui.placeholder.css({
 						height: ui.item.outerHeight(),
@@ -110,11 +110,11 @@
 					});
 				},
 				start: function(e, ui){
-					console.log('start');
+					//console.log('start');
 					
 				},
 				change: function(e, ui){
-					console.log('change');
+					//console.log('change');
 					
 					self.attribDataRow(row,ui);
 					
@@ -137,12 +137,12 @@
 					
 				},
 				stop: function(e, ui){
-					console.log('stop');
+					//console.log('stop');
 					
 
 				},
 				out: function(e, ui){
-					console.log('out');
+					//console.log('out');
 					
 					row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
 						var item = $(this);
@@ -155,37 +155,36 @@
 					row.find('.gs-moving').removeClass('gs-moving');
 				},
 				update: function(e, ui){
-					console.log('update');
+					//console.log('update');
 					
 				},
 				activate: function(e, ui){
-					console.log('activate');
+					//console.log('activate');
 					
 					$(this).addClass('ui-state-highlight');
 				},
 				deactivate: function(e, ui){
-					console.log('deactivate');
+					//console.log('deactivate');
 					$(this).removeClass('ui-state-highlight');
 				},
 				beforeStop: function(e, ui){
-					console.log('beforeStop');
+					//console.log('beforeStop');
 				},
 				create: function(e, ui){
-					console.log('create');
+					//console.log('create');
 				},
 				receive: function(e, ui){
-					console.log('receive');
+					//console.log('receive');
 					var container = ui.item.attr('data-gs-accepted-container');
-					console.log(container, $(this).is(container));
 					if( container && !$(this).is(container) ){
 						$(ui.sender).sortable('cancel');
 					}
 				},
 				remove: function(e, ui){
-					console.log('remove');
+					//console.log('remove');
 				},
 				sort: function(e, ui){
-					console.log('sort');
+					//console.log('sort');
 				},
 			});
 		});
