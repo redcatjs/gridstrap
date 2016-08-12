@@ -175,7 +175,8 @@
 				},
 				receive: function(e, ui){
 					console.log('receive');
-					var container = ui.item.attr('data-container');
+					var container = ui.item.attr('data-gs-accepted-container');
+					console.log(container, $(this).is(container));
 					if( container && !$(this).is(container) ){
 						$(ui.sender).sortable('cancel');
 					}
