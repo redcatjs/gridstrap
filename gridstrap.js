@@ -147,7 +147,9 @@
 					row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
 						var item = $(this);
 						var clone = item.data('gs-clone');
-						clone.remove();
+						if(clone){
+							clone.remove();
+						}
 						item.css('visibility','visible');
 					});
 					row.find('.gs-moving').removeClass('gs-moving');
@@ -161,18 +163,22 @@
 					
 					$(this).addClass('ui-state-highlight');
 				},
+				deactivate: function(e, ui){
+					console.log('deactivate');
+					$(this).removeClass('ui-state-highlight');
+				},
 				beforeStop: function(e, ui){
 					console.log('beforeStop');
 				},
 				create: function(e, ui){
 					console.log('create');
 				},
-				deactivate: function(e, ui){
-					console.log('deactivate');
-					$(this).removeClass('ui-state-highlight');
-				},
 				receive: function(e, ui){
 					console.log('receive');
+					var container = ui.item.attr('data-container');
+					if( container && !$(this).is(container) ){
+						$(ui.sender).sortable('cancel');
+					}
 				},
 				remove: function(e, ui){
 					console.log('remove');
