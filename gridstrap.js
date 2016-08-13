@@ -94,7 +94,13 @@
 				},
 				over: function(e, ui){
 					console.log('over');
-
+					
+					//ext draggable
+					self.attribDataRow(row,ui);
+					var h = $( row.find('[data-row="'+ui.item.attr('data-row')+'"]').not(ui.item)[0] ).height();
+					ui.item.css('min-height',h+'px');
+					ui.placeholder.css('min-height',h+'px');
+					
 					row.find(items).filter(':not(.gs-moving)').each(function(){
 						var item = $(this);
 						var position = item.position();

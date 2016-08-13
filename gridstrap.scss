@@ -50,11 +50,6 @@ $gridstrap-columns: 12 !default;
 				opacity: 0.6;
 			}
 		}
-		&.ui-draggable-dragging{
-			border: 0;
-			background: transparent;
-			min-height: 150px;
-		}
 		.gs-resizer{
 			z-index:100;
 		}
@@ -237,5 +232,14 @@ $gridstrap-columns: 12 !default;
 	}
 	.ui-state-highlight{
 		
+	}
+}
+
+.gs-col.ui-draggable-dragging{
+	background: transparent;
+	.gs-content{
+		border: 0 !important;
+		box-shadow: none !important;
+		background: transparent;
 	}
 }
