@@ -138,7 +138,7 @@
 				items: items,
 				connectWith: '.gridstrap .gs-row',
 				revert: 400,
-				tolerance: 'pointer',
+				tolerance: 'intersect',
 				placeholder: 'gs-placeholder',
 				//helper: 'clone',
 				start: function(e, ui){
