@@ -217,6 +217,7 @@ $gridstrap-columns: 12 !default;
 		height: auto;
 		display: flex;
 		flex-wrap: wrap;
+		min-height:150px;
 	}
 
 	.empty-get-started {
