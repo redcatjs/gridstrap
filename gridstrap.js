@@ -115,7 +115,6 @@
 					});
 				}
 				if(!ok){
-					console.log($this);
 					$this.sortable('disable');
 					row.sortable('refresh');
 				}
