@@ -83,16 +83,18 @@
 				tolerance: 'pointer',
 				placeholder: 'gs-placeholder',
 				//helper: 'clone',
-				over: function(e, ui){
-					//console.log('over');
-					
+				start: function(e, ui){
+					console.log('start');
 					ui.placeholder.css({
-						height: ui.item.outerHeight(),
+						height: ui.item.height(),
 						width: ui.item.outerWidth(),
 					});
-					
+					ui.placeholder.html('<div class="gs-content"></div>');
 					ui.item.addClass('gs-moving');
-					
+				},
+				over: function(e, ui){
+					console.log('over');
+
 					row.find(items).filter(':not(.gs-moving)').each(function(){
 						var item = $(this);
 						var position = item.position();
@@ -108,10 +110,6 @@
 						item.after(clone);
 						item.css('visibility','hidden');
 					});
-				},
-				start: function(e, ui){
-					//console.log('start');
-					
 				},
 				change: function(e, ui){
 					//console.log('change');

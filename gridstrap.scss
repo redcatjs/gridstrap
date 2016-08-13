@@ -13,12 +13,16 @@ $gridstrap-columns: 12 !default;
 		position: relative;
 		margin-top: 5px;
 		margin-bottom: 5px;
-		margin-left:15px;
-		margin-right:15px;
+		padding-left:15px;
+		padding-right:15px;
 		
 		background: transparent;
 		visibility: visible !important;
-		border: 1px dashed #333;
+		.gs-content{
+			border: 1px dashed #333;
+			height:100%;
+			width:100%;
+		}
 	}
 	&.gs-editing{
 	}
@@ -45,6 +49,11 @@ $gridstrap-columns: 12 !default;
 				box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.2);
 				opacity: 0.6;
 			}
+		}
+		&.ui-draggable-dragging{
+			border: 0;
+			background: transparent;
+			min-height: 150px;
 		}
 		.gs-resizer{
 			z-index:100;
@@ -207,6 +216,7 @@ $gridstrap-columns: 12 !default;
 	}
 
 	.gs-row{
+		border: 1px solid transparent;
 		position: relative;
 		float: left;
 		width: 100%;
