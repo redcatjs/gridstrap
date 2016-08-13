@@ -100,14 +100,15 @@
 		};
 		var disableTargets = function(row,ui){
 			var el = ui.item;
-			var container = el.attr('data-gs-accepted-container');
+			var accepted = el.attr('data-gs-accepted-container');
 			$('.gridstrap .gs-row').each(function(){
 				var $this = $(this);
 				if($this.closest('.gs-clone').length) return;
-				var ok = !container || $this.is(container);
+				var ok = !accepted || $this.is(accepted);
 				if(ok){
 					el.find('[data-gs-accepted-container]').each(function(){
-						if(!row.is( $this.attr('data-gs-accepted-container') )){
+						var accepted = $(this).attr('data-gs-accepted-container');
+						if(!el.is(accepted)&&!row.is(accepted)){
 							ok = false;
 							return false;
 						}
