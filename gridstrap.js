@@ -118,7 +118,10 @@
 					});
 				},
 				change: function(e, ui){
-					//console.log('change');
+					console.log('change');
+					
+					$(ui.item).data('gs-changed',true);
+					row.data('gs-changed',true);
 					
 					self.attribDataRow(row,ui);
 					
@@ -141,12 +144,14 @@
 					
 				},
 				stop: function(e, ui){
-					//console.log('stop');
+					console.log('stop');
 					
+					$(ui.item).data('gs-changed',false);
+					row.data('gs-changed',false);
 
 				},
 				out: function(e, ui){
-					//console.log('out');
+					console.log('out');
 					
 					row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
 						var item = $(this);
@@ -159,8 +164,7 @@
 					row.find('.gs-moving').removeClass('gs-moving');
 				},
 				update: function(e, ui){
-					//console.log('update');
-					
+					console.log('update');
 				},
 				activate: function(e, ui){
 					//console.log('activate');
