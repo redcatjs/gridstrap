@@ -112,16 +112,19 @@
 				placeholder: 'gs-placeholder',
 				//helper: 'clone',
 				start: function(e, ui){
-					console.log('start',this);
+					//console.log('start',this);
 					ui.placeholder.css({
 						height: ui.item.height(),
 						width: ui.item.outerWidth(),
 					});
 					ui.placeholder.html('<div class="gs-content"></div>');
 					ui.item.addClass('gs-moving');
+					
+					makeTempItems(row);
+					
 				},
 				over: function(e, ui){
-					console.log('over',this);
+					//console.log('over',this);
 					
 					//ext draggable
 					self.attribDataRow(row,ui);
@@ -129,23 +132,19 @@
 					ui.item.css('min-height',h+'px');
 					ui.placeholder.css('min-height',h+'px');
 					
-					//makeTempItems(row);
 				},
 				change: function(e, ui){
-					console.log('change',this);
+					//console.log('change',this);
 					
 					$(ui.item).data('gs-changed',true);
 					row.data('gs-changed',true);
 					
 					self.attribDataRow(row,ui);
 					
-					var h = $( row.find('[data-row="'+ui.item.attr('data-row')+'"]').not(ui.item)[0] ).height();
-					if(h>3000){
-						console.log(h, row.find('[data-row="'+ui.item.attr('data-row')+'"]').not(ui.item)[0] );
-					}
+					var h = $( row.find('[data-row="'+ui.item.attr('data-row')+'"]').not(ui.item)[0] ).height();}
 					ui.item.css('min-height',h+'px');
 					ui.placeholder.css('min-height',h+'px');
-					//
+
 					row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
 						var item = $(this);
 						var clone = item.data('gs-clone');
@@ -161,20 +160,20 @@
 					
 				},
 				out: function(e, ui){
-					console.log('out',this);
+					//console.log('out',this);
 					
 					$(ui.item).data('gs-changed',false);
 					row.data('gs-changed',false);
 					cleanTempItems(row);
 				},
 				stop: function(e, ui){
-					console.log('stop',this);
+					//console.log('stop',this);
 				},
 				update: function(e, ui){
-					console.log('update',this);
+					//console.log('update',this);
 				},
 				activate: function(e, ui){
-					console.log('activate',this);
+					//console.log('activate',this);
 					
 					$(this).addClass('ui-state-highlight');
 				},
@@ -183,20 +182,20 @@
 					$(this).removeClass('ui-state-highlight');
 				},
 				beforeStop: function(e, ui){
-					console.log('beforeStop',this);
+					//console.log('beforeStop',this);
 				},
 				create: function(e, ui){
-					console.log('create',this);
+					//console.log('create',this);
 				},
 				receive: function(e, ui){
-					console.log('receive',this);
+					//console.log('receive',this);
 					//var container = ui.item.attr('data-gs-accepted-container');
 					//if( container && !$(this).is(container) ){
 						//$(ui.sender).sortable('cancel');
 					//}
 				},
 				remove: function(e, ui){
-					console.log('remove',this);
+					//console.log('remove',this);
 				},
 				sort: function(e, ui){
 					//console.log('sort',this);
