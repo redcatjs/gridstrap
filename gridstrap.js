@@ -122,8 +122,8 @@
 		};
 		var reenableTargets = function(row,ui){
 			$('.gridstrap .gs-row').each(function(){
-				if($this.closest('.gs-clone').length) return;
 				var $this = $(this);
+				if($this.closest('.gs-clone').length) return;
 				$this.sortable('enable');
 				row.sortable('refresh');
 			});
