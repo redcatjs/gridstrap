@@ -70,6 +70,34 @@
 		var self = this;
 		var container = this.container;
 		var items = self.itemsSelector;
+		var cleanTempItems = function(row){
+			row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
+				var item = $(this);
+				var clone = item.data('gs-clone');
+				if(clone){
+					clone.remove();
+				}
+				item.css('visibility','visible');
+			});
+			row.find('.gs-moving').removeClass('gs-moving');
+		};
+		var makeTempItems = function(row){
+			row.find(items).filter(':not(.gs-moving)').each(function(){
+				var item = $(this);
+				var position = item.position();
+				var clone = item.clone();
+				item.data('gs-clone',clone);
+				clone.addClass('gs-clone');
+				clone.css({
+					position: 'absolute',
+					top: position.top,
+					left: position.left,
+					height: item.height(),
+				});
+				item.after(clone);
+				item.css('visibility','hidden');
+			});
+		};
 		rows.each(function(){
 			var row = $(this);
 			if(row.hasClass('ui-sortable')){
@@ -84,7 +112,7 @@
 				placeholder: 'gs-placeholder',
 				//helper: 'clone',
 				start: function(e, ui){
-					console.log('start');
+					console.log('start',this);
 					ui.placeholder.css({
 						height: ui.item.height(),
 						width: ui.item.outerWidth(),
@@ -93,7 +121,7 @@
 					ui.item.addClass('gs-moving');
 				},
 				over: function(e, ui){
-					console.log('over');
+					console.log('over',this);
 					
 					//ext draggable
 					self.attribDataRow(row,ui);
@@ -101,24 +129,10 @@
 					ui.item.css('min-height',h+'px');
 					ui.placeholder.css('min-height',h+'px');
 					
-					row.find(items).filter(':not(.gs-moving)').each(function(){
-						var item = $(this);
-						var position = item.position();
-						var clone = item.clone();
-						item.data('gs-clone',clone);
-						clone.addClass('gs-clone');
-						clone.css({
-							position: 'absolute',
-							top: position.top,
-							left: position.left,
-							height: item.height(),
-						});
-						item.after(clone);
-						item.css('visibility','hidden');
-					});
+					//makeTempItems(row);
 				},
 				change: function(e, ui){
-					console.log('change');
+					console.log('change',this);
 					
 					$(ui.item).data('gs-changed',true);
 					row.data('gs-changed',true);
@@ -126,9 +140,12 @@
 					self.attribDataRow(row,ui);
 					
 					var h = $( row.find('[data-row="'+ui.item.attr('data-row')+'"]').not(ui.item)[0] ).height();
+					if(h>3000){
+						console.log(h, row.find('[data-row="'+ui.item.attr('data-row')+'"]').not(ui.item)[0] );
+					}
 					ui.item.css('min-height',h+'px');
 					ui.placeholder.css('min-height',h+'px');
-					
+					//
 					row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
 						var item = $(this);
 						var clone = item.data('gs-clone');
@@ -143,31 +160,21 @@
 					});
 					
 				},
-				stop: function(e, ui){
-					console.log('stop');
+				out: function(e, ui){
+					console.log('out',this);
 					
 					$(ui.item).data('gs-changed',false);
 					row.data('gs-changed',false);
-
+					cleanTempItems(row);
 				},
-				out: function(e, ui){
-					console.log('out');
-					
-					row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
-						var item = $(this);
-						var clone = item.data('gs-clone');
-						if(clone){
-							clone.remove();
-						}
-						item.css('visibility','visible');
-					});
-					row.find('.gs-moving').removeClass('gs-moving');
+				stop: function(e, ui){
+					console.log('stop',this);
 				},
 				update: function(e, ui){
-					console.log('update');
+					console.log('update',this);
 				},
 				activate: function(e, ui){
-					//console.log('activate');
+					console.log('activate',this);
 					
 					$(this).addClass('ui-state-highlight');
 				},
@@ -176,23 +183,23 @@
 					$(this).removeClass('ui-state-highlight');
 				},
 				beforeStop: function(e, ui){
-					//console.log('beforeStop');
+					console.log('beforeStop',this);
 				},
 				create: function(e, ui){
-					//console.log('create');
+					console.log('create',this);
 				},
 				receive: function(e, ui){
-					//console.log('receive');
-					var container = ui.item.attr('data-gs-accepted-container');
-					if( container && !$(this).is(container) ){
-						$(ui.sender).sortable('cancel');
-					}
+					console.log('receive',this);
+					//var container = ui.item.attr('data-gs-accepted-container');
+					//if( container && !$(this).is(container) ){
+						//$(ui.sender).sortable('cancel');
+					//}
 				},
 				remove: function(e, ui){
-					//console.log('remove');
+					console.log('remove',this);
 				},
 				sort: function(e, ui){
-					//console.log('sort');
+					//console.log('sort',this);
 				},
 			});
 		});
