@@ -98,6 +98,37 @@
 				item.css('visibility','hidden');
 			});
 		};
+		var disableTargets = function(row,ui){
+			var el = ui.item;
+			var container = el.attr('data-gs-accepted-container');
+			$('.gridstrap .gs-row').each(function(){
+				var $this = $(this);
+				if($this.closest('.gs-clone').length) return;
+				var ok = !container || $this.is(container);
+				if(ok){
+					el.find('[data-gs-accepted-container]').each(function(){
+						if(!row.is( $this.attr('data-gs-accepted-container') )){
+							ok = false;
+							return false;
+						}
+						
+					});
+				}
+				if(!ok){
+					console.log($this);
+					$this.sortable('disable');
+					row.sortable('refresh');
+				}
+			});
+		};
+		var reenableTargets = function(row,ui){
+			$('.gridstrap .gs-row').each(function(){
+				if($this.closest('.gs-clone').length) return;
+				var $this = $(this);
+				$this.sortable('enable');
+				row.sortable('refresh');
+			});
+		};
 		rows.each(function(){
 			var row = $(this);
 			if(row.hasClass('ui-sortable')){
@@ -121,7 +152,7 @@
 					ui.item.addClass('gs-moving');
 					
 					makeTempItems(row);
-					
+					disableTargets(row, ui);
 				},
 				over: function(e, ui){
 					//console.log('over',this);
@@ -141,7 +172,7 @@
 					
 					self.attribDataRow(row,ui);
 					
-					var h = $( row.find('[data-row="'+ui.item.attr('data-row')+'"]').not(ui.item)[0] ).height();}
+					var h = $( row.find('[data-row="'+ui.item.attr('data-row')+'"]').not(ui.item)[0] ).height();
 					ui.item.css('min-height',h+'px');
 					ui.placeholder.css('min-height',h+'px');
 
@@ -168,13 +199,13 @@
 				},
 				stop: function(e, ui){
 					//console.log('stop',this);
+					reenableTargets(row, ui);
 				},
 				update: function(e, ui){
 					//console.log('update',this);
 				},
 				activate: function(e, ui){
 					//console.log('activate',this);
-					
 					$(this).addClass('ui-state-highlight');
 				},
 				deactivate: function(e, ui){
@@ -244,10 +275,10 @@
 			container = this.container;
 		}
 		container.append(el);
-
 		this.hanldeSortable(container);
 		
 		var rows = el.find('.gs-row');
+		//console.log(el,rows);
 		
 		this.hanldeSortable(rows);
 		
