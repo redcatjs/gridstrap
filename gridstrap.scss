@@ -230,8 +230,9 @@ $gridstrap-columns: 12 !default;
 	.no-transition {
 		transition: none !important;
 	}
-	.ui-state-highlight{
-		
+	.gs-state-highlight{
+		border: 1px solid rgba(23, 161, 0, 0.5);
+		background-color: rgba(208, 233, 147, 0.5); 
 	}
 }
 

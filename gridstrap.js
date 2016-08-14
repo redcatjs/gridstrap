@@ -206,11 +206,11 @@
 				},
 				activate: function(e, ui){
 					//console.log('activate',this);
-					$(this).addClass('ui-state-highlight');
+					$(this).addClass('gs-state-highlight');
 				},
 				deactivate: function(e, ui){
 					//console.log('deactivate');
-					$(this).removeClass('ui-state-highlight');
+					$(this).removeClass('gs-state-highlight');
 				},
 				beforeStop: function(e, ui){
 					//console.log('beforeStop',this);
