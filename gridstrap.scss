@@ -221,11 +221,12 @@ $gridstrap-columns: 12 !default;
 	}
 
 	.empty-get-started {
-		position: relative;
+		align-items: center;
+		display: flex;
 		float: left;
-		width:100%;
-		top: 48%;
-		text-align: center;
+		justify-content: center;
+		position: relative;
+		width: 100%;
 	}
 	.no-transition {
 		transition: none !important;

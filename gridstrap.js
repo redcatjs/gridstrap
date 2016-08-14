@@ -312,13 +312,16 @@
 		return size;
 	};
 	Gridstrap.prototype.remove = function(col){
+		var defer = $.Deferred();
 		col.animate({
 			opacity: 'hide',
 			width: 'hide',
 			height: 'hide'
 		}, 400, function() {
 			col.remove();
+			defer.resolve();
 		});
+		return defer;
 	};
 	
 	$.fn.gridstrap = function(opts) {
