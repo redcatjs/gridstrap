@@ -101,7 +101,7 @@
 		var disableTargets = function(row,ui){
 			var el = ui.item;
 			var accepted = el.attr('data-gs-accepted-container');
-			$('.gridstrap .gs-row').each(function(){
+			$('.gs-row.ui-sortable',self.container).each(function(){
 				var $this = $(this);
 				if($this.closest('.gs-clone').length) return;
 				var ok = !accepted || $this.is(accepted);
@@ -122,7 +122,7 @@
 			});
 		};
 		var reenableTargets = function(row,ui){
-			$('.gridstrap .gs-row').each(function(){
+			$('.gs-row.ui-sortable',self.container).each(function(){
 				var $this = $(this);
 				if($this.closest('.gs-clone').length) return;
 				$this.sortable('enable');
@@ -138,12 +138,15 @@
 			row.sortable({
 				items: items,
 				connectWith: '.gridstrap .gs-row',
-				revert: 400,
+				revert: 200,
+				//tolerance: 'pointer',
+				//cursorAt: {left:100,top:100},
 				tolerance: 'intersect',
+				//delay: 150,
 				placeholder: 'gs-placeholder',
 				//helper: 'clone',
 				start: function(e, ui){
-					//console.log('start',this);
+					console.log('start',this);
 					ui.placeholder.css({
 						height: ui.item.height(),
 						width: ui.item.outerWidth(),
@@ -155,7 +158,7 @@
 					disableTargets(row, ui);
 				},
 				over: function(e, ui){
-					//console.log('over',this);
+					console.log('over',this);
 					
 					//ext draggable
 					self.attribDataRow(row,ui);
@@ -165,7 +168,7 @@
 					
 				},
 				change: function(e, ui){
-					//console.log('change',this);
+					console.log('change',this);
 					
 					$(ui.item).data('gs-changed',true);
 					row.data('gs-changed',true);
@@ -191,42 +194,41 @@
 					
 				},
 				out: function(e, ui){
-					//console.log('out',this);
-					
-					$(ui.item).data('gs-changed',false);
-					row.data('gs-changed',false);
+					console.log('out',this);
 					cleanTempItems(row);
 				},
 				stop: function(e, ui){
-					//console.log('stop',this);
+					console.log('stop',this);
+					$(ui.item).data('gs-changed',false);
+					row.data('gs-changed',false);
 					reenableTargets(row, ui);
 				},
 				update: function(e, ui){
-					//console.log('update',this);
+					console.log('update',this);
 				},
 				activate: function(e, ui){
-					//console.log('activate',this);
+					console.log('activate',this);
 					$(this).addClass('gs-state-highlight');
 				},
 				deactivate: function(e, ui){
-					//console.log('deactivate');
+					console.log('deactivate');
 					$(this).removeClass('gs-state-highlight');
 				},
 				beforeStop: function(e, ui){
-					//console.log('beforeStop',this);
+					console.log('beforeStop',this);
 				},
 				create: function(e, ui){
-					//console.log('create',this);
+					console.log('create',this);
 				},
 				receive: function(e, ui){
-					//console.log('receive',this);
+					console.log('receive',this);
 					//var container = ui.item.attr('data-gs-accepted-container');
 					//if( container && !$(this).is(container) ){
 						//$(ui.sender).sortable('cancel');
 					//}
 				},
 				remove: function(e, ui){
-					//console.log('remove',this);
+					console.log('remove',this);
 				},
 				sort: function(e, ui){
 					//console.log('sort',this);
