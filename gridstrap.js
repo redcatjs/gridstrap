@@ -51,7 +51,12 @@
 			$(this).removeClass('mouseover');
 		});
 		
-		this.hanldeSortable(container);
+		var rootRow = container.find('>.gs-row');
+		if(!rootRow.length){
+			rootRow = $('<div class="gs-row" />').appendTo(container);
+		}
+		
+		this.hanldeSortable(rootRow);
 	};
 	
 	Gridstrap.prototype.resizeCallback = function(el,ui,e){
@@ -161,10 +166,10 @@
 					console.log('over',this);
 					
 					//ext draggable
-					self.attribDataRow(row,ui);
-					var h = $( row.find('[data-row="'+ui.item.attr('data-row')+'"]').not(ui.item)[0] ).height();
-					ui.item.css('min-height',h+'px');
-					ui.placeholder.css('min-height',h+'px');
+					//self.attribDataRow(row,ui);
+					//var h = $( row.find('[data-row="'+ui.item.attr('data-row')+'"]').not(ui.item)[0] ).height();
+					//ui.item.css('min-height',h+'px');
+					//ui.placeholder.css('min-height',h+'px');
 					
 				},
 				change: function(e, ui){
@@ -173,11 +178,10 @@
 					$(ui.item).data('gs-changed',true);
 					row.data('gs-changed',true);
 					
-					self.attribDataRow(row,ui);
-					
-					var h = $( row.find('[data-row="'+ui.item.attr('data-row')+'"]').not(ui.item)[0] ).height();
-					ui.item.css('min-height',h+'px');
-					ui.placeholder.css('min-height',h+'px');
+					//self.attribDataRow(row,ui);
+					//var h = $( row.find('[data-row="'+ui.item.attr('data-row')+'"]').not(ui.item)[0] ).height();
+					//ui.item.css('min-height',h+'px');
+					//ui.placeholder.css('min-height',h+'px');
 
 					row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
 						var item = $(this);
