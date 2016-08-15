@@ -144,9 +144,11 @@
 				items: items,
 				connectWith: '.gridstrap .gs-row',
 				revert: 200,
-				//tolerance: 'pointer',
-				//cursorAt: {left:100,top:100},
-				tolerance: 'intersect',
+				scroll: true,
+				scrollSensitivity: 30,
+				tolerance: 'pointer',
+				cursorAt: {left:100,top:100},
+				//tolerance: 'intersect',
 				//delay: 150,
 				placeholder: 'gs-placeholder',
 				//helper: 'clone',
@@ -226,16 +228,12 @@
 				},
 				receive: function(e, ui){
 					console.log('receive',this);
-					//var container = ui.item.attr('data-gs-accepted-container');
-					//if( container && !$(this).is(container) ){
-						//$(ui.sender).sortable('cancel');
-					//}
 				},
 				remove: function(e, ui){
 					console.log('remove',this);
 				},
 				sort: function(e, ui){
-					//console.log('sort',this);
+					//console.log('sort',this);	
 				},
 			});
 		});
