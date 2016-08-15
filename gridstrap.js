@@ -134,8 +134,18 @@
 				row.sortable('refresh');
 			});
 		};
+		var autoMinHeight = function(row,ui,autoHeightTimeout){
+			if(autoHeightTimeout){ clearTimeout(autoHeightTimeout); }
+			return setTimeout(function(){
+				self.attribDataRow(row,ui);
+				var h = $( row.find('>[data-row="'+ui.item.attr('data-row')+'"]').not(ui.item)[0] ).height();
+				ui.item.css('min-height',h+'px');
+				ui.placeholder.css('min-height',h+'px');
+			},400);
+		};
 		rows.each(function(){
 			var row = $(this);
+			var autoHeightTimeout;
 			if(row.hasClass('ui-sortable')){
 				row.sortable('refresh');
 				return;
@@ -147,7 +157,7 @@
 				scroll: true,
 				scrollSensitivity: 30,
 				tolerance: 'pointer',
-				cursorAt: {left:100,top:100},
+				cursorAt: {left:150,top:150},
 				//tolerance: 'intersect',
 				//delay: 150,
 				placeholder: 'gs-placeholder',
@@ -166,13 +176,7 @@
 				},
 				over: function(e, ui){
 					console.log('over',this);
-					
-					//auto-min-height for ext draggable
-					self.attribDataRow(row,ui);
-					var h = $( row.find('[data-row="'+ui.item.attr('data-row')+'"]').not(ui.item)[0] ).height();
-					ui.item.css('min-height',h+'px');
-					ui.placeholder.css('min-height',h+'px');
-					
+					autoHeightTimeout = autoMinHeight(row,ui,autoHeightTimeout); //for ext draggable
 				},
 				change: function(e, ui){
 					console.log('change',this);
@@ -180,12 +184,8 @@
 					$(ui.item).data('gs-changed',true);
 					row.data('gs-changed',true);
 					
-					//auto-min-height
-					self.attribDataRow(row,ui);
-					var h = $( row.find('[data-row="'+ui.item.attr('data-row')+'"]').not(ui.item)[0] ).height();
-					ui.item.css('min-height',h+'px');
-					ui.placeholder.css('min-height',h+'px');
-
+					autoHeightTimeout = autoMinHeight(row,ui,autoHeightTimeout);
+					
 					row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
 						var item = $(this);
 						var clone = item.data('gs-clone');
@@ -202,7 +202,7 @@
 				},
 				out: function(e, ui){
 					console.log('out',this);
-					cleanTempItems(row);
+					//cleanTempItems(row);
 				},
 				stop: function(e, ui){
 					console.log('stop',this);
@@ -216,10 +216,12 @@
 				activate: function(e, ui){
 					console.log('activate',this);
 					$(this).addClass('gs-state-highlight');
+					//makeTempItems(row);
 				},
 				deactivate: function(e, ui){
 					console.log('deactivate');
 					$(this).removeClass('gs-state-highlight');
+					cleanTempItems(row);
 				},
 				beforeStop: function(e, ui){
 					console.log('beforeStop',this);
