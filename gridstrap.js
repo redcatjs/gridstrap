@@ -9,6 +9,7 @@
 			width: 12,
 			cellHeight: 80,
 			defaultWidth: 3,
+			connectWith: '.gridstrap:visible .gs-row',
 			resizable:{
 				//helper: "resizable-helper",
 				//handles: { 'e':'.gs-resizer' },
@@ -84,7 +85,6 @@
 				}
 				item.css('visibility','visible');
 			});
-			row.find('.gs-moving').removeClass('gs-moving');
 		};
 		var makeTempItems = function(row){
 			row.find(items).filter(':not(.gs-moving)').each(function(){
@@ -103,17 +103,33 @@
 				item.css('visibility','hidden');
 			});
 		};
+		var updateTempItems = function(row){
+			row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
+				var item = $(this);
+				var clone = item.data('gs-clone');
+				if(clone){
+					var position = item.position();
+					clone.css({
+						top: position.top,
+						left: position.left,
+						height: item.height(),
+					});
+				}
+			});
+		};
 		var disableTargets = function(row,ui){
 			var el = ui.item;
 			var accepted = el.attr('data-gs-accepted-container');
+			var rowCol = row.closest('.gs-col');
 			$('.gs-row.ui-sortable',self.container).each(function(){
 				var $this = $(this);
 				if($this.closest('.gs-clone').length) return;
-				var ok = !accepted || $this.is(accepted);
+				var ok = !accepted || $this.closest('.gs-col').is(accepted);
+				console.log('ok',ok,$this);
 				if(ok){
 					el.find('[data-gs-accepted-container]').each(function(){
 						var accepted = $(this).attr('data-gs-accepted-container');
-						if(!el.is(accepted)&&!row.is(accepted)){
+						if(!el.is(accepted)&&!rowCol.is(accepted)){
 							ok = false;
 							return false;
 						}
@@ -143,7 +159,7 @@
 			}
 			row.sortable({
 				items: items,
-				connectWith: '.gridstrap .gs-row',
+				connectWith: self.opts.connectWith,
 				revert: 200,
 				scroll: true,
 				scrollSensitivity: 30,
@@ -153,6 +169,7 @@
 				//delay: 150,
 				placeholder: 'gs-placeholder',
 				//helper: 'clone',
+				appendTo: 'body',
 				start: function(e, ui){
 					console.log('start',this);
 					ui.placeholder.css({
@@ -162,7 +179,7 @@
 					ui.placeholder.html('<div class="gs-content"></div>');
 					ui.item.addClass('gs-moving');
 					
-					makeTempItems(row);
+					//makeTempItems(row);
 					disableTargets(row, ui);
 				},
 				over: function(e, ui){
@@ -174,23 +191,11 @@
 					$(ui.item).data('gs-changed',true);
 					row.data('gs-changed',true);
 					
-					row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
-						var item = $(this);
-						var clone = item.data('gs-clone');
-						if(clone){
-							var position = item.position();
-							clone.css({
-								top: position.top,
-								left: position.left,
-								height: item.height(),
-							});
-						}
-					});
+					//updateTempItems(row);
 					
 				},
 				out: function(e, ui){
 					console.log('out',this);
-					//cleanTempItems(row);
 				},
 				stop: function(e, ui){
 					console.log('stop',this);
@@ -204,12 +209,12 @@
 				activate: function(e, ui){
 					console.log('activate',this);
 					$(this).addClass('gs-state-highlight');
-					//makeTempItems(row);
 				},
 				deactivate: function(e, ui){
 					console.log('deactivate');
 					$(this).removeClass('gs-state-highlight');
-					cleanTempItems(row);
+					//cleanTempItems(row);
+					row.find('.gs-moving').removeClass('gs-moving');
 				},
 				beforeStop: function(e, ui){
 					console.log('beforeStop',this);
@@ -259,7 +264,7 @@
 		});
 	};
 	
-	Gridstrap.prototype.add = function(el,width,container){
+	Gridstrap.prototype.prepareAdd = function(el,width,container){
 		var self = this;
 		if(!width){
 			width = el.attr('data-col') || this.defaultWidth;
@@ -271,7 +276,8 @@
 		}
 		container.append(el);
 		this.hanldeSortable(container);
-		
+	};
+	Gridstrap.prototype.handleAdd = function(el){
 		var rows = el.find('.gs-row');
 		//console.log(el,rows);
 		
@@ -279,6 +285,10 @@
 		
 		//el.append('<div class="gs-resizer ui-resizable-handle ui-resizable-e"><i class="fa fa-arrows-h" style="display:block;"></i></div>');
 		el.resizable(this.opts.resizable);
+	};
+	Gridstrap.prototype.add = function(el,width,container){
+		this.prepareAdd(el,width,container);
+		this.handleAdd(el);
 	};
 	
 	Gridstrap.prototype.widthMinus = function(col){

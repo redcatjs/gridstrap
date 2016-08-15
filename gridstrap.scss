@@ -15,7 +15,7 @@ $gridstrap-columns: 12 !default;
 		margin-bottom: 5px;
 		padding-left:15px;
 		padding-right:15px;
-		z-index:1000;
+		z-index:99999;
 		background: transparent;
 		visibility: visible !important;
 		.gs-content{
