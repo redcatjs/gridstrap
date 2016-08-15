@@ -134,15 +134,6 @@
 				row.sortable('refresh');
 			});
 		};
-		var autoMinHeight = function(row,ui,autoHeightTimeout){
-			if(autoHeightTimeout){ clearTimeout(autoHeightTimeout); }
-			return setTimeout(function(){
-				self.attribDataRow(row,ui);
-				var h = $( row.find('>[data-row="'+ui.item.attr('data-row')+'"]').not(ui.item)[0] ).height();
-				ui.item.css('min-height',h+'px');
-				ui.placeholder.css('min-height',h+'px');
-			},400);
-		};
 		rows.each(function(){
 			var row = $(this);
 			var autoHeightTimeout;
@@ -176,15 +167,12 @@
 				},
 				over: function(e, ui){
 					console.log('over',this);
-					autoHeightTimeout = autoMinHeight(row,ui,autoHeightTimeout); //for ext draggable
 				},
 				change: function(e, ui){
 					console.log('change',this);
 					
 					$(ui.item).data('gs-changed',true);
 					row.data('gs-changed',true);
-					
-					autoHeightTimeout = autoMinHeight(row,ui,autoHeightTimeout);
 					
 					row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
 						var item = $(this);
