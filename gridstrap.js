@@ -1,34 +1,4 @@
 (function($){
-	
-	/*
-	var rearrange = $.ui.sortable.prototype._rearrange;
-	$.widget("ui.sortable", $.extend($.ui.sortable.prototype, {
-		_rearrange: function( event, i, a, hardRefresh ) {
-			if(!a){ //the hook
-				var el = i.item;
-				if(!el.data('gs-clone')){
-					var position = el.position();
-					var clone = el.clone();
-					el.data('gs-clone',clone);
-					clone.addClass('gs-clone');
-					clone.css({
-						position: 'absolute',
-						top: position.top,
-						left: position.left,
-						height: el.height(),
-						'z-index': 4,
-						//background: '#f00', //debug
-					});	
-					//item.css('background', '#00f'); //debug
-					el.after(clone);
-					el.css('opacity',0);
-				}
-			}
-			return rearrange.apply(this, arguments);
-		},
-	}));
-	*/
-
 	var Gridstrap = function(el, opts) {
 		this.container = $(el);
 		var self = this;
@@ -43,8 +13,6 @@
 			scrollParent: false,
 			scrollCallback: false,
 			resizable:{
-				//helper: "resizable-helper",
-				//handles: { 'e':'.gs-resizer' },
 				handles: 'e',
 				resize:function(e,ui){
 					self.resizeCallback(this,ui,e);
@@ -59,19 +27,6 @@
 		
 		container.addClass('gs-editing');
 		container.addClass('gridstrap');
-
-		//$(document)
-			//.on('click', '.gm-preview', function() {
-				//if(!self.hasClass('gs-editing')) {
-					//self.addClass('gs-editing');
-					//$(this).addClass('active');
-				//}
-				//else{
-					//self.removeClass('gs-editing');
-					//$(this).removeClass('active');
-				//}
-			//})
-		//;
 		
 		container.on('mouseover.gs', '.gs-col', function(e){
 			if(e.stopNamespacePropagation) return;
@@ -109,7 +64,6 @@
 		var items = self.itemsSelector;
 		var makeTempItems = function(row){
 			row.find(items).filter(':not(.gs-moving, .gs-nested)').each(function(){
-			//row.find(items).filter(':not(.gs-moving)').each(function(){
 				var item = $(this);
 				if(item.data('gs-clone')) return;
 				var position = item.position();
@@ -122,16 +76,13 @@
 					left: position.left,
 					height: item.height(),
 					'z-index': 4,
-					//background: '#f00', //debug
 				});	
-				//item.css('background', '#00f'); //debug
 				item.after(clone);
 				item.css('opacity',0);
 			});
 		};
 		var updateTempItems = function(row){			
 			row.find(items).filter(':not(.gs-moving, .gs-clone, .gs-nested)').each(function(){
-			//row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
 				var item = $(this);
 				var clone = item.data('gs-clone');
 				if(clone){
@@ -146,7 +97,6 @@
 		};
 		var cleanTempItems = function(row){
 			row.find(items).filter(':not(.gs-moving, .gs-clone, .gs-nested)').each(function(){
-			//row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
 				var item = $(this);
 				var clone = item.data('gs-clone');
 				if(clone){
@@ -207,14 +157,11 @@
 				scrollSensitivity: 100, //default 20
 				scrollSpeed: 50, //default 20
 				tolerance: 'pointer',
-				//cursorAt: {left:150,top:150},
-				//tolerance: 'intersect',
-				//delay: 150,
 				placeholder: 'gs-placeholder',
 				//helper: 'clone',
 				appendTo: document.body,
 				start: function(e, ui){
-					console.log('start',this);
+					//console.log('start',this);
 					ui.placeholder.css({
 						height: ui.item.height(),
 						width: ui.item.width(),
@@ -227,11 +174,11 @@
 					
 				},
 				over: function(e, ui){
-					console.log('over',this);
+					//console.log('over',this);
 					ui.item.parents('.gs-col').addClass('gs-moving-parent');
 				},
 				change: function(e, ui){
-					console.log('change',this);
+					//console.log('change',this);
 					
 					$(ui.item).data('gs-changed',true);
 					row.data('gs-changed',true);
@@ -240,7 +187,7 @@
 					
 				},
 				out: function(e, ui){
-					console.log('out',this);
+					//console.log('out',this);
 					cleanTempItems(row);
 				},
 				stop: function(e, ui){
@@ -288,11 +235,9 @@
 						var overflowOffset = scrollParent.offset();
 						scrollParentEl = scrollParent[0];
 						if( overflowOffset.top + scrollParentEl.offsetHeight - event.pageY < o.scrollSensitivity ){
-							//scrollParentEl.scrollTop = scrollParentEl.scrollTop + o.scrollSpeed;
 							self.opts.scrollCallback(scrollParentEl.scrollTop + o.scrollSpeed, scrollParent);
 						}
 						else if( event.pageY - overflowOffset.top < o.scrollSensitivity ){
-							//scrollParentEl.scrollTop = scrollParentEl.scrollTop - o.scrollSpeed;
 							self.opts.scrollCallback(scrollParentEl.scrollTop - o.scrollSpeed, scrollParent);
 						}
 					}
@@ -351,7 +296,6 @@
 		
 		this.hanldeSortable(rows);
 		
-		//el.append('<div class="gs-resizer ui-resizable-handle ui-resizable-e"><i class="fa fa-arrows-h" style="display:block;"></i></div>');
 		el.resizable(this.opts.resizable);
 	};
 	Gridstrap.prototype.add = function(el,width,container){
