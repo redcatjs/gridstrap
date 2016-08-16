@@ -9,7 +9,7 @@
 			width: 12,
 			cellHeight: 80,
 			defaultWidth: 3,
-			connectWith: '.gridstrap:visible .gs-row',
+			connectWith: '.gridstrap:visible .gs-col:not(.gs-clone) .gs-row',
 			resizable:{
 				//helper: "resizable-helper",
 				//handles: { 'e':'.gs-resizer' },
@@ -76,18 +76,8 @@
 		var self = this;
 		var container = this.container;
 		var items = self.itemsSelector;
-		var cleanTempItems = function(row){
-			row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
-				var item = $(this);
-				var clone = item.data('gs-clone');
-				if(clone){
-					clone.remove();
-				}
-				item.css('visibility','visible');
-			});
-		};
 		var makeTempItems = function(row){
-			row.find(items).filter(':not(.gs-moving)').each(function(){
+			row.find(items).filter(':not(.gs-moving, .gs-nested)').each(function(){
 				var item = $(this);
 				var position = item.position();
 				var clone = item.clone();
@@ -98,13 +88,16 @@
 					top: position.top,
 					left: position.left,
 					height: item.height(),
-				});
+					'z-index': 4,
+					//background: '#f00', //debug
+				});	
+				//item.css('background', '#00f'); //debug
 				item.after(clone);
-				item.css('visibility','hidden');
+				item.css('opacity',0);
 			});
 		};
-		var updateTempItems = function(row){
-			row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
+		var updateTempItems = function(row){			
+			row.find(items).filter(':not(.gs-moving, .gs-clone, .gs-nested)').each(function(){
 				var item = $(this);
 				var clone = item.data('gs-clone');
 				if(clone){
@@ -117,6 +110,16 @@
 				}
 			});
 		};
+		var cleanTempItems = function(row){
+			row.find(items).filter(':not(.gs-moving, .gs-clone, .gs-nested)').each(function(){
+				var item = $(this);
+				var clone = item.data('gs-clone');
+				if(clone){
+					clone.remove();
+				}
+				item.css('opacity',1);
+			});
+		};
 		var disableTargets = function(row,ui){
 			var el = ui.item;
 			var accepted = el.attr('data-gs-accepted-container');
@@ -125,7 +128,6 @@
 				var $this = $(this);
 				if($this.closest('.gs-clone').length) return;
 				var ok = !accepted || $this.closest('.gs-col').is(accepted);
-				console.log('ok',ok,$this);
 				if(ok){
 					el.find('[data-gs-accepted-container]').each(function(){
 						var accepted = $(this).attr('data-gs-accepted-container');
@@ -169,7 +171,7 @@
 				//delay: 150,
 				placeholder: 'gs-placeholder',
 				//helper: 'clone',
-				appendTo: 'body',
+				appendTo: document.body,
 				start: function(e, ui){
 					console.log('start',this);
 					ui.placeholder.css({
@@ -179,8 +181,8 @@
 					ui.placeholder.html('<div class="gs-content"></div>');
 					ui.item.addClass('gs-moving');
 					
-					//makeTempItems(row);
 					disableTargets(row, ui);
+					makeTempItems(row);
 				},
 				over: function(e, ui){
 					console.log('over',this);
@@ -191,11 +193,12 @@
 					$(ui.item).data('gs-changed',true);
 					row.data('gs-changed',true);
 					
-					//updateTempItems(row);
+					updateTempItems(row);
 					
 				},
 				out: function(e, ui){
 					console.log('out',this);
+					cleanTempItems(row);
 				},
 				stop: function(e, ui){
 					console.log('stop',this);
@@ -213,7 +216,6 @@
 				deactivate: function(e, ui){
 					console.log('deactivate');
 					$(this).removeClass('gs-state-highlight');
-					//cleanTempItems(row);
 					row.find('.gs-moving').removeClass('gs-moving');
 				},
 				beforeStop: function(e, ui){
@@ -279,7 +281,9 @@
 	};
 	Gridstrap.prototype.handleAdd = function(el){
 		var rows = el.find('.gs-row');
-		//console.log(el,rows);
+		if(rows.length){
+			el.addClass('gs-nested');
+		}
 		
 		this.hanldeSortable(rows);
 		
