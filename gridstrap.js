@@ -1,68 +1,33 @@
-$.widget("ui.sortablegs", $.extend({}, $.ui.sortable.prototype, {
-
-	_init: function(){
-		this.element.data('sortable', this.element.data('sortablegs'));
-		return $.ui.sortable.prototype._init.apply(this, arguments);
-	},
-	_rearrange: function( event, i, a, hardRefresh ) {
-		/*
-		if(!a){ //the hook
-			var el = i.item;
-			if(!el.data('gs-clone')){
-				var position = el.position();
-				var clone = el.clone();
-				el.data('gs-clone',clone);
-				clone.addClass('gs-clone');
-				clone.css({
-					position: 'absolute',
-					top: position.top,
-					left: position.left,
-					height: el.height(),
-					'z-index': 4,
-					//background: '#f00', //debug
-				});	
-				//item.css('background', '#00f'); //debug
-				el.after(clone);
-				el.css('opacity',0);
-			}
-		}
-		*/
-		return $.ui.sortable.prototype._rearrange.apply(this, arguments);
-	},
-
-}));
-$.widget("ui.draggablegs", $.extend({}, $.ui.draggable.prototype, {
-	_init: function(){
-		this.element.data('draggable', this.element.data('draggablegs'));
-		return $.ui.draggable.prototype._init.apply(this, arguments);
-	},
-}));
-$.ui.sortablegs.defaults = $.extend({}, $.ui.sortable.defaults);
-$.ui.plugin.add( "draggablegs", "connectToSortableGs", {
-	start: function( event, ui, draggable ) {
-		var uiSortable = $.extend( {}, ui, {
-			item: draggable.element
-		} );
-
-		draggable.sortables = [];
-		$( draggable.options.connectToSortableGs ).each( function() {
-			var sortable = $( this ).sortablegs( "instance" );
-
-			if ( sortable && !sortable.options.disabled ) {
-				draggable.sortables.push( sortable );
-
-				// RefreshPositions is called at drag start to refresh the containerCache
-				// which is used in drag. This ensures it's initialized and synchronized
-				// with any changes that might have happened on the page since initialization.
-				sortable.refreshPositions();
-				sortable._trigger( "activate", event, uiSortable );
-			}
-		} );
-	},
-});
-
-
 (function($){
+	
+	/*
+	var rearrange = $.ui.sortable.prototype._rearrange;
+	$.widget("ui.sortable", $.extend($.ui.sortable.prototype, {
+		_rearrange: function( event, i, a, hardRefresh ) {
+			if(!a){ //the hook
+				var el = i.item;
+				if(!el.data('gs-clone')){
+					var position = el.position();
+					var clone = el.clone();
+					el.data('gs-clone',clone);
+					clone.addClass('gs-clone');
+					clone.css({
+						position: 'absolute',
+						top: position.top,
+						left: position.left,
+						height: el.height(),
+						'z-index': 4,
+						//background: '#f00', //debug
+					});	
+					//item.css('background', '#00f'); //debug
+					el.after(clone);
+					el.css('opacity',0);
+				}
+			}
+			return rearrange.apply(this, arguments);
+		},
+	}));
+	*/
 
 	var Gridstrap = function(el, opts) {
 		this.container = $(el);
@@ -143,9 +108,10 @@ $.ui.plugin.add( "draggablegs", "connectToSortableGs", {
 		var container = this.container;
 		var items = self.itemsSelector;
 		var makeTempItems = function(row){
-			//row.find(items).filter(':not(.gs-moving, .gs-nested)').each(function(){
-			row.find(items).filter(':not(.gs-moving)').each(function(){
+			row.find(items).filter(':not(.gs-moving, .gs-nested)').each(function(){
+			//row.find(items).filter(':not(.gs-moving)').each(function(){
 				var item = $(this);
+				if(item.data('gs-clone')) return;
 				var position = item.position();
 				var clone = item.clone();
 				item.data('gs-clone',clone);
@@ -164,8 +130,8 @@ $.ui.plugin.add( "draggablegs", "connectToSortableGs", {
 			});
 		};
 		var updateTempItems = function(row){			
-			//row.find(items).filter(':not(.gs-moving, .gs-clone, .gs-nested)').each(function(){
-			row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
+			row.find(items).filter(':not(.gs-moving, .gs-clone, .gs-nested)').each(function(){
+			//row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
 				var item = $(this);
 				var clone = item.data('gs-clone');
 				if(clone){
@@ -179,8 +145,8 @@ $.ui.plugin.add( "draggablegs", "connectToSortableGs", {
 			});
 		};
 		var cleanTempItems = function(row){
-			//row.find(items).filter(':not(.gs-moving, .gs-clone, .gs-nested)').each(function(){
-			row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
+			row.find(items).filter(':not(.gs-moving, .gs-clone, .gs-nested)').each(function(){
+			//row.find(items).filter(':not(.gs-moving, .gs-clone)').each(function(){
 				var item = $(this);
 				var clone = item.data('gs-clone');
 				if(clone){
@@ -257,12 +223,11 @@ $.ui.plugin.add( "draggablegs", "connectToSortableGs", {
 					ui.item.addClass('gs-moving');
 					
 					disableTargets(row, ui);
-					//makeTempItems(row);
+					makeTempItems(row);
 					
 				},
 				over: function(e, ui){
 					console.log('over',this);
-					//makeTempItems(row);
 					ui.item.parents('.gs-col').addClass('gs-moving-parent');
 				},
 				change: function(e, ui){
@@ -270,13 +235,13 @@ $.ui.plugin.add( "draggablegs", "connectToSortableGs", {
 					
 					$(ui.item).data('gs-changed',true);
 					row.data('gs-changed',true);
-					
-					//updateTempItems(row);
+
+					updateTempItems(row);
 					
 				},
 				out: function(e, ui){
 					console.log('out',this);
-					//cleanTempItems(row);
+					cleanTempItems(row);
 				},
 				stop: function(e, ui){
 					//console.log('stop',this);
