@@ -246,9 +246,6 @@
 						
 						var overflowOffset = scrollParent.offset();
 						scrollParentEl = scrollParent[0];
-						console.log('overflowOffset.top',overflowOffset.top);
-						console.log('scrollParentEl.offsetHeight',scrollParentEl.offsetHeight);
-						console.log('event.pageY',event.pageY);
 						if( overflowOffset.top + scrollParentEl.offsetHeight - event.pageY < o.scrollSensitivity ){
 							//scrollParentEl.scrollTop = scrollParentEl.scrollTop + o.scrollSpeed;
 							self.opts.scrollCallback(scrollParentEl.scrollTop + o.scrollSpeed, scrollParent);
