@@ -168,9 +168,9 @@
 				scroll: self.opts.scroll,
 				scrollSensitivity: 100, //default 20
 				scrollSpeed: 50, //default 20
-				tolerance: 'pointer',
-				cursorAt: {left:150,top:150},
-				//tolerance: 'intersect',
+				//tolerance: 'pointer',
+				//cursorAt: {left:150,top:150},
+				tolerance: 'intersect',
 				//delay: 150,
 				placeholder: 'gs-placeholder',
 				//helper: 'clone',
