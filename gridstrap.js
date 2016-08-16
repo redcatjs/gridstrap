@@ -10,6 +10,9 @@
 			cellHeight: 80,
 			defaultWidth: 3,
 			connectWith: '.gridstrap:visible .gs-col:not(.gs-clone) .gs-row',
+			scroll: true,
+			scrollParent: false,
+			scrollCallback: false,
 			resizable:{
 				//helper: "resizable-helper",
 				//handles: { 'e':'.gs-resizer' },
@@ -163,8 +166,9 @@
 				items: items,
 				connectWith: self.opts.connectWith,
 				revert: 200,
-				scroll: true,
-				scrollSensitivity: 30,
+				scroll: self.opts.scroll,
+				scrollSensitivity: 30, //default 20
+				scrollSpeed: 20, //default 20
 				tolerance: 'pointer',
 				cursorAt: {left:150,top:150},
 				//tolerance: 'intersect',
@@ -230,8 +234,20 @@
 				remove: function(e, ui){
 					console.log('remove',this);
 				},
-				sort: function(e, ui){
-					//console.log('sort',this);	
+				sort: function(event, ui){
+					//console.log('sort',this);
+					
+					if(self.opts.scrollCallback){						
+						var o = row.sortable('option');
+						var scrollParent = self.opts.scrollParent || row.scrollParent();
+						var overflowOffset = scrollParent.offset();
+						scrollParentEl = scrollParent[0];
+						if( ( overflowOffset.top + scrollParentEl.offsetHeight - event.pageY < o.scrollSensitivity )
+							|| ( event.pageY - overflowOffset.top < o.scrollSensitivity ) ){
+							//scrollParentEl.scrollTop = scrollParentEl.scrollTop + o.scrollSpeed;
+							self.opts.scrollCallback(scrollParentEl.scrollTop + o.scrollSpeed, scrollParent);
+						}
+					}
 				},
 			});
 		});
