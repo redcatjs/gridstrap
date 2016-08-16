@@ -180,7 +180,7 @@
 				//helper: 'clone',
 				appendTo: document.body,
 				start: function(e, ui){
-					//console.log('start',this);
+					console.log('start',this);
 					ui.placeholder.css({
 						height: ui.item.height(),
 						width: ui.item.width(),
@@ -193,7 +193,8 @@
 					
 				},
 				over: function(e, ui){
-					//console.log('over',this);
+					console.log('over',this);
+					ui.item.parents('.gs-col').addClass('gs-moving-parent');
 				},
 				change: function(e, ui){
 					//console.log('change',this);
@@ -205,7 +206,7 @@
 					
 				},
 				out: function(e, ui){
-					//console.log('out',this);
+					console.log('out',this);
 					cleanTempItems(row);
 				},
 				stop: function(e, ui){
@@ -213,6 +214,7 @@
 					$(ui.item).data('gs-changed',false);
 					row.data('gs-changed',false);
 					reenableTargets(row, ui);
+					self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
 				},
 				update: function(e, ui){
 					//console.log('update',this);
