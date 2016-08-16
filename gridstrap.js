@@ -28,7 +28,6 @@
 		}, opts || {} );
 		this.itemsSelector = '> [data-col]';
 		
-		
 		container.addClass('gs-editing');
 		container.addClass('gridstrap');
 
@@ -240,12 +239,23 @@
 					if(self.opts.scrollCallback){						
 						var o = row.sortable('option');
 						var scrollParent = self.opts.scrollParent || row.scrollParent();
+						
+						if(typeof(scrollParent)=='function'){
+							scrollParent = scrollParent(row);
+						}
+						
 						var overflowOffset = scrollParent.offset();
 						scrollParentEl = scrollParent[0];
-						if( ( overflowOffset.top + scrollParentEl.offsetHeight - event.pageY < o.scrollSensitivity )
-							|| ( event.pageY - overflowOffset.top < o.scrollSensitivity ) ){
+						console.log('overflowOffset.top',overflowOffset.top);
+						console.log('scrollParentEl.offsetHeight',scrollParentEl.offsetHeight);
+						console.log('event.pageY',event.pageY);
+						if( overflowOffset.top + scrollParentEl.offsetHeight - event.pageY < o.scrollSensitivity ){
 							//scrollParentEl.scrollTop = scrollParentEl.scrollTop + o.scrollSpeed;
 							self.opts.scrollCallback(scrollParentEl.scrollTop + o.scrollSpeed, scrollParent);
+						}
+						else if( event.pageY - overflowOffset.top < o.scrollSensitivity ){
+							//scrollParentEl.scrollTop = scrollParentEl.scrollTop - o.scrollSpeed;
+							self.opts.scrollCallback(scrollParentEl.scrollTop - o.scrollSpeed, scrollParent);
 						}
 					}
 				},
