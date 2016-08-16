@@ -179,7 +179,7 @@
 					//console.log('start',this);
 					ui.placeholder.css({
 						height: ui.item.height(),
-						width: ui.item.outerWidth(),
+						width: ui.item.width(),
 					});
 					ui.placeholder.html('<div class="gs-content"></div>');
 					ui.item.addClass('gs-moving');
