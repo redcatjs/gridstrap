@@ -166,8 +166,8 @@
 				connectWith: self.opts.connectWith,
 				revert: 200,
 				scroll: self.opts.scroll,
-				scrollSensitivity: 30, //default 20
-				scrollSpeed: 20, //default 20
+				scrollSensitivity: 100, //default 20
+				scrollSpeed: 50, //default 20
 				tolerance: 'pointer',
 				cursorAt: {left:150,top:150},
 				//tolerance: 'intersect',
@@ -186,6 +186,7 @@
 					
 					disableTargets(row, ui);
 					makeTempItems(row);
+					
 				},
 				over: function(e, ui){
 					console.log('over',this);
