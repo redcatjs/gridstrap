@@ -128,8 +128,12 @@
 			var rowCol = row.closest('.gs-col');
 			$('.gs-row.ui-sortable',self.container).each(function(){
 				var $this = $(this);
-				if($this.closest('.gs-clone, .gs-moving').length) return;
-				var ok = !accepted || $this.closest('.gs-col').is(accepted);
+				if($this.closest('.gs-clone').length) return;
+				var ok;
+				ok = !$this.closest('.gs-moving').length;
+				if(ok){
+					ok = !accepted || $this.closest('.gs-col').is(accepted);
+				}
 				if(ok){
 					el.find('[data-gs-accepted-container]').each(function(){
 						var accepted = $(this).attr('data-gs-accepted-container');
