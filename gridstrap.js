@@ -176,7 +176,7 @@
 				//helper: 'clone',
 				appendTo: document.body,
 				start: function(e, ui){
-					console.log('start',this);
+					//console.log('start',this);
 					ui.placeholder.css({
 						height: ui.item.height(),
 						width: ui.item.outerWidth(),
@@ -189,10 +189,10 @@
 					
 				},
 				over: function(e, ui){
-					console.log('over',this);
+					//console.log('over',this);
 				},
 				change: function(e, ui){
-					console.log('change',this);
+					//console.log('change',this);
 					
 					$(ui.item).data('gs-changed',true);
 					row.data('gs-changed',true);
@@ -201,38 +201,38 @@
 					
 				},
 				out: function(e, ui){
-					console.log('out',this);
+					//console.log('out',this);
 					cleanTempItems(row);
 				},
 				stop: function(e, ui){
-					console.log('stop',this);
+					//console.log('stop',this);
 					$(ui.item).data('gs-changed',false);
 					row.data('gs-changed',false);
 					reenableTargets(row, ui);
 				},
 				update: function(e, ui){
-					console.log('update',this);
+					//console.log('update',this);
 				},
 				activate: function(e, ui){
-					console.log('activate',this);
+					//console.log('activate',this);
 					$(this).addClass('gs-state-highlight');
 				},
 				deactivate: function(e, ui){
-					console.log('deactivate');
+					//console.log('deactivate');
 					$(this).removeClass('gs-state-highlight');
 					row.find('.gs-moving').removeClass('gs-moving');
 				},
 				beforeStop: function(e, ui){
-					console.log('beforeStop',this);
+					//console.log('beforeStop',this);
 				},
 				create: function(e, ui){
-					console.log('create',this);
+					//console.log('create',this);
 				},
 				receive: function(e, ui){
-					console.log('receive',this);
+					//console.log('receive',this);
 				},
 				remove: function(e, ui){
-					console.log('remove',this);
+					//console.log('remove',this);
 				},
 				sort: function(event, ui){
 					//console.log('sort',this);
