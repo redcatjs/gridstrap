@@ -1,6 +1,12 @@
 (function($){
 	
-
+	var _rearrange = $.ui.sortable.prototype._rearrange;
+	$.widget('ui.sortable',$.extend($.ui.sortable.prototype,{
+		_rearrange: function( event, i, a, hardRefresh ) {
+			if(!( !a&&!i.item[ 0 ].parentNode ))
+				return _rearrange.apply(this,arguments);
+		},
+	}));
 	
 	var Gridstrap = function(el, opts) {
 		this.container = $(el);
