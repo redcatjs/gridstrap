@@ -2,12 +2,12 @@ $gridstrap-columns: 12 !default;
 $gs-percent: (100% / $gridstrap-columns);
 @for $i from 1 through $gridstrap-columns {
 	[data-col='#{$i}']{
-		width: ($gs-percent * $i);
+		width: ($gs-percent * $i);		
 	}
-	[data-col-left='#{($i - 1)}']{
+	[data-left='#{($i - 1)}']{
 		margin-left: ($gs-percent * ($i - 1) );
 	}
-	[data-col-right='#{($i - 1)}']{
+	[data-right='#{($i - 1)}']{
 		margin-right: ($gs-percent * ($i - 1) );
 	}
 }
@@ -98,6 +98,14 @@ $gs-percent: (100% / $gridstrap-columns);
 				transition: border 500ms ease-in;
 				cursor: move;
 			}
+		}
+		.gs-margin{
+			visibility: hidden;
+			background: #333;
+			position: absolute;
+		}
+		&.mouseover .gs-margin{
+			visibility: visible;
 		}
 	}
 	

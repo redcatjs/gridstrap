@@ -32,6 +32,8 @@
 				}
 			},
 			boxPadding: 30, //15*2 .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
+			gsColTransitionWidth: 400, //.gs-col{ transition width duration }
+			gsColPaddingTop: 5, //.gs-col{ padding-top }
 		}, opts || {} );
 		this.itemsSelector = '> .gs-col:not(.gs-clone, .gs-moving)';
 		
@@ -59,13 +61,17 @@
 	Gridstrap.prototype.resizeCallback = function(el,ui,e){
 		var $this = $(el);
 		var containerW = $this.parent().innerWidth();
-		var colW = containerW/12;
+		var colW = containerW/self.opts.width;
 		var col = Math.ceil( ui.size.width/colW );
 		$this.addClass('no-transition');
 		$this.attr('data-col', col );
 		$this.css('width', '');
 		$this.removeClass('no-transition');
 		$this.trigger('gs-resizing');
+	};
+	
+	Gridstrap.prototype.rowWidth = function(row, n){
+		return row.width() * n/this.opts.width - this.opts.boxPadding;
 	};
 	
 	Gridstrap.prototype.hanldeSortable = function(rows){
@@ -154,7 +160,7 @@
 			});
 		};
 		var autoAdjustWidth = function(row, ui){
-			var w = row.innerWidth() * parseInt(ui.item.attr('data-col'),10)/12 - self.opts.boxPadding;
+			var w = self.rowWidth(row,self.width(ui.item));
 			ui.placeholder.width( w );
 			ui.item.width( w );
 		};
@@ -339,10 +345,18 @@
 		this.hanldeSortable(container);
 	};
 	Gridstrap.prototype.handleAdd = function(el){
+		var self = this;
+		
 		var rows = el.find('.gs-row');
 		if(rows.length){
 			el.addClass('gs-nested');
 		}
+		
+		el.prepend('<div class="gs-margin gs-margin-left" />');
+		el.append('<div class="gs-margin gs-margin-right" />');
+		el.on('mouseover',function(){
+			self.setMargin(el);
+		});
 		
 		this.hanldeSortable(rows);
 		
@@ -353,25 +367,98 @@
 		this.handleAdd(el);
 	};
 	
+	Gridstrap.prototype.setMargin = function(col){
+		var self = this;
+		var row = col.closest('.gs-row');
+		var h = col.find('>.gs-content').outerHeight();
+		
+		var w = self.rowWidth(row,self.left(col));
+		col.find('>.gs-margin-left').css({
+			top : self.opts.gsColPaddingTop,
+			left: (-1*w),
+			width: w,
+			height: h,
+		});
+		
+		var w = self.rowWidth(row,self.right(col));
+		col.find('>.gs-margin-right').css({
+			top : self.opts.gsColPaddingTop,
+			width: w,
+			right: (-1*w),
+			height: h,
+		});
+	};
+	
 	Gridstrap.prototype.widthMinus = function(col){
-		var size = (parseInt(col.attr('data-col'),10) || 1) - 1;
-		if(size<1) size = 1;
-		return this.width(col,size);
+		return this.width( col, this.width(col)-1 );
 	};
 	Gridstrap.prototype.widthPlus = function(col){
-		var size = (parseInt(col.attr('data-col'),10) || 1) + 1;
-		if(size>this.opts.width) size = this.opts.width;
-		return this.width(col,size);
+		return this.width( col, this.width(col)+1 );
 	};
-	Gridstrap.prototype.width = function(col,size){
-		if(size){
-			col.attr('data-col' ,size);
+	Gridstrap.prototype.width = function(col,width){
+		if(width){
+			var size = this.left(col)+width+this.right(col);
+			if(size<=this.opts.width&&width>=1){
+				col.attr('data-col' ,width);
+				this._afterWidth(col);
+				return width;
+			}
 		}
-		else{
-			size = parseInt(col.attr('data-col'),10) || 1;
-		}
-		return size;
+		width = parseInt(col.attr('data-col'),10) || 1;
+		return width;
 	};
+	
+	Gridstrap.prototype._afterWidth = function(col){
+		var self = this;
+		var timeout;
+		timeout = col.data('gs-width-timeout');
+		if(timeout){
+			clearTimeout(timeout);
+		}
+		timeout = setTimeout(function(){
+			self.setMargin( col );
+		},self.opts.gsColTransitionWidth);
+		col.data('gs-width-timeout',timeout);
+	};
+	
+	Gridstrap.prototype.leftMinus = function(col){
+		return this.left( col, this.left(col)-1 );
+	};
+	Gridstrap.prototype.leftPlus = function(col){
+		return this.left( col, this.left(col)+1 );
+	};
+	Gridstrap.prototype.rightMinus = function(col){
+		return this.right( col, this.right(col)-1 );
+	};
+	Gridstrap.prototype.rightPlus = function(col){
+		return this.right( col, this.right(col)+1 );
+	};
+	
+	Gridstrap.prototype.left = function(col,offset){
+		if(typeof(offset)!='undefined'&&offset!==false&&offset>=0){
+			var size = offset+this.width(col)+this.right(col);
+			if(size<=this.opts.width&&size>=1){
+				col.attr('data-left' ,offset);
+				this.setMargin(col);
+				return offset;
+			}
+		}
+		offset = parseInt(col.attr('data-left'),10) || 0;
+		return offset;
+	};
+	Gridstrap.prototype.right = function(col,offset){
+		if(typeof(offset)!='undefined'&&offset!==false&&offset>=0){
+			var size = this.left(col)+this.width(col)+offset;
+			if(size<=this.opts.width&&size>=1){
+				col.attr('data-right' ,offset);
+				this.setMargin(col);
+				return offset;
+			}
+		}
+		offset = parseInt(col.attr('data-right'),10) || 0;
+		return offset;
+	};
+	
 	Gridstrap.prototype.remove = function(col){
 		var defer = $.Deferred();
 		col.animate({
