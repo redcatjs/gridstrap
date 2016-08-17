@@ -32,7 +32,7 @@
 				}
 			},
 		}, opts || {} );
-		this.itemsSelector = '> [data-col]';
+		this.itemsSelector = '> .gs-col:not(.gs-clone, .gs-moving)';
 		
 		container.addClass('gs-editing');
 		container.addClass('gridstrap');
@@ -73,7 +73,8 @@
 		var items = self.itemsSelector;
 		var makeTempItems = function(row){
 			//row.find(items).not('.gs-moving, .gs-nested').each(function(){
-			row.find(items).not('.gs-moving').each(function(){
+			//row.find(items).not('.gs-moving').each(function(){
+			row.find(items).each(function(){
 				var item = $(this);
 				if(item.data('gs-clone')) return;
 				var position = item.position();
@@ -94,7 +95,8 @@
 		};
 		var updateTempItems = function(row){
 			//row.find(items).not('.gs-moving, .gs-clone, .gs-nested').each(function(){
-			row.find(items).not('.gs-moving, .gs-clone').each(function(){
+			//row.find(items).not('.gs-moving, .gs-clone').each(function(){
+			row.find(items).each(function(){
 				var item = $(this);
 				var clone = item.data('gs-clone');
 				if(clone){
@@ -109,7 +111,8 @@
 		};
 		var cleanTempItems = function(row){
 			//row.find(items).not('.gs-moving, .gs-clone, .gs-nested').each(function(){
-			row.find(items).not('.gs-moving, .gs-clone').each(function(){
+			//row.find(items).not('.gs-moving, .gs-clone').each(function(){
+			row.find(items).each(function(){
 				var item = $(this);
 				var clone = item.data('gs-clone');
 				if(clone){
@@ -169,6 +172,7 @@
 				scroll: self.opts.scroll,
 				scrollSensitivity: 100, //default 20
 				scrollSpeed: 50, //default 20
+				delay: 50,
 				tolerance: 'pointer',
 				placeholder: 'gs-placeholder',
 				//helper: 'clone',
