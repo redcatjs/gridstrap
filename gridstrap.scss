@@ -1,8 +1,8 @@
 $gridstrap-columns: 12 !default;
-
+$gs-percent: (100% / $gridstrap-columns);
 @for $i from 1 through $gridstrap-columns {
 	[data-col='#{$i}']{
-		width: (100% / $gridstrap-columns) * $i;
+		width: ($gs-percent * $i);
 	}
 }
 
@@ -87,124 +87,10 @@ $gridstrap-columns: 12 !default;
 			background-color: #fff;
             border:1px dashed rgba(93, 93, 93, 0.50);
 			overflow: visible;
-			
 			&:hover{
-
 				border:1px dashed rgba(93, 93, 93, 0.50);
 				transition: border 500ms ease-in;
 				cursor: move;
-			}
-
-		}
-		&.delete .gs-content:hover {
-			border: 1px dashed #f00;
-		}
-		&.preview-mode{
-			.delete-tab,
-			.add-tab{
-				display: none;
-			}
-			
-			.gs-col > .gs-content:hover,
-			.draggable-component:hover{
-				cursor: default;
-			}
-			
-			> .gs-content{
-				border-color: transparent;
-				&:hover{
-					cursor: normal;
-				}
-				>.field-label{
-					display: none;
-				}
-				>.field-actions-resize{
-					display: none;
-				}
-				>.field-actions-plus{
-					
-				}
-				.ui-resizable-handle{
-					display: none !important;
-				}
-			}
-		}
-		&.edit-mode > .gs-content{
-			
-		}
-		
-		.field-actions {
-			position:relative;
-			z-index: 10;
-		/*
-			padding-left: 5px;
-			padding-top: 5px;
-			padding-right:5px;
-		*/
-				
-			a:hover {
-				text-decoration: none;
-			}
-			.btn {
-				background-color: #fff;
-				float:left;
-				display: inline-block;
-				width: 32px;
-				height: 32px;
-				padding: 0;
-				visibility: hidden;
-				border-radius: 0;
-				border-color: #b3b3b3;
-				color: #b3b3b3;
-				line-height: 32px;
-				font-size: 12px;
-				border-width: 0 0 1px 1px;
-			}
-			
-			&.float-left {
-				.btn:last-child {
-					border-bottom-right-radius: 5px;
-				}
-			}
-			.edit-button,
-			.preview-button {
-				border-bottom-left-radius: 5px;
-			}
-			
-			.toggle-form {
-				font-size: .85em;
-				background-color: rgba(255, 255, 255, 0.75);
-			}
-			.toggle-form:hover {
-				color: #000;
-			}
-			.del-button:hover {
-				background-color: $m-red;
-				transition: background-color .2s ease-in, color .2s ease-in;
-				color: #fff;
-			}
-			.edit-button {
-				display:none;
-				&:hover{
-					background-color: $m-lightgreen;
-					transition: background-color .2s ease-in, color .2s ease-in;
-					color: #fff;
-				}
-			}
-			.preview-button {
-				&:hover {
-					background-color: $m-cyan;
-					transition: background-color .2s ease-in, color .2s ease-in;
-					color: #fff;
-				}
-			}
-			.column-minus,
-			.column-plus{
-				&:hover{
-					background-color: $m-amber;
-					transition: background-color .2s ease-in, color .2s ease-in;
-					color: #fff;
-				}
 			}
 		}
 	}
