@@ -73,8 +73,6 @@
 		var container = this.container;
 		var items = self.itemsSelector;
 		var makeTempItems = function(row){
-			//row.find(items).not('.gs-moving, .gs-nested').each(function(){
-			//row.find(items).not('.gs-moving').each(function(){
 			row.find(items).each(function(){
 				var item = $(this);
 				if(item.data('gs-clone')) return;
@@ -95,8 +93,6 @@
 			row.sortable('refresh');
 		};
 		var updateTempItems = function(row){
-			//row.find(items).not('.gs-moving, .gs-clone, .gs-nested').each(function(){
-			//row.find(items).not('.gs-moving, .gs-clone').each(function(){
 			row.find(items).each(function(){
 				var item = $(this);
 				var clone = item.data('gs-clone');
@@ -111,8 +107,6 @@
 			});
 		};
 		var cleanTempItems = function(row){
-			//row.find(items).not('.gs-moving, .gs-clone, .gs-nested').each(function(){
-			//row.find(items).not('.gs-moving, .gs-clone').each(function(){
 			row.find(items).each(function(){
 				var item = $(this);
 				var clone = item.data('gs-clone');
@@ -177,7 +171,6 @@
 			self.attribDataRow(row, ui);
 			var hOrigin = row.find('[data-row="'+ui.item.attr('data-row')+'"]:not(.gs-placeholder)').eq(0).height();
 			h = Math.max(hOrigin,ui.item.data('gs-auto-height'));
-			console.log(ui.item.data('gs-auto-height'), h);
 			ui.item.height(h);
 			ui.placeholder.height(h);
 		};
@@ -216,7 +209,7 @@
 					
 				},
 				over: function(e, ui){
-					console.log('over',this);
+					//console.log('over',this);
 					ui.item.parents('.gs-col').addClass('gs-moving-parent');
 					$(this).addClass('gs-moving-parent').parents('.gs-col').addClass('gs-moving-parent');
 					
@@ -224,7 +217,7 @@
 					autoAdjustHeight(row,ui);
 				},
 				change: function(e, ui){
-					console.log('change',this);
+					//console.log('change',this);
 					
 					$(ui.item).data('gs-changed',true);
 					row.data('gs-changed',true);
