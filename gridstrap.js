@@ -175,7 +175,6 @@
 				delay: 50,
 				tolerance: 'pointer',
 				placeholder: 'gs-placeholder',
-				//helper: 'clone',
 				appendTo: document.body,
 				start: function(e, ui){
 					console.log('start',this);
@@ -287,6 +286,8 @@
 		});
 		return $(sCols);
 	};
+	
+	/*
 	Gridstrap.prototype.attribDataRow = function(row,ui){
 		var self = this;
 		var cols = self.getCurrentOrderedCols(row,ui);
@@ -302,6 +303,7 @@
 			$this.attr('data-row',currentRow);
 		});
 	};
+	*/
 	
 	Gridstrap.prototype.prepareAdd = function(el,width,container){
 		var self = this;
