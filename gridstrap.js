@@ -1,4 +1,7 @@
 (function($){
+	
+
+	
 	var Gridstrap = function(el, opts) {
 		this.container = $(el);
 		var self = this;
@@ -63,7 +66,8 @@
 		var container = this.container;
 		var items = self.itemsSelector;
 		var makeTempItems = function(row){
-			row.find(items).filter(':not(.gs-moving, .gs-nested)').each(function(){
+			//row.find(items).not('.gs-moving, .gs-nested').each(function(){
+			row.find(items).not('.gs-moving').each(function(){
 				var item = $(this);
 				if(item.data('gs-clone')) return;
 				var position = item.position();
@@ -80,9 +84,11 @@
 				item.after(clone);
 				item.css('opacity',0);
 			});
+			row.sortable('refresh');
 		};
-		var updateTempItems = function(row){			
-			row.find(items).filter(':not(.gs-moving, .gs-clone, .gs-nested)').each(function(){
+		var updateTempItems = function(row){
+			//row.find(items).not('.gs-moving, .gs-clone, .gs-nested').each(function(){
+			row.find(items).not('.gs-moving, .gs-clone').each(function(){
 				var item = $(this);
 				var clone = item.data('gs-clone');
 				if(clone){
@@ -96,7 +102,8 @@
 			});
 		};
 		var cleanTempItems = function(row){
-			row.find(items).filter(':not(.gs-moving, .gs-clone, .gs-nested)').each(function(){
+			//row.find(items).not('.gs-moving, .gs-clone, .gs-nested').each(function(){
+			row.find(items).not('.gs-moving, .gs-clone').each(function(){
 				var item = $(this);
 				var clone = item.data('gs-clone');
 				if(clone){
@@ -161,7 +168,7 @@
 				//helper: 'clone',
 				appendTo: document.body,
 				start: function(e, ui){
-					//console.log('start',this);
+					console.log('start',this);
 					ui.placeholder.css({
 						height: ui.item.height(),
 						width: ui.item.width(),
@@ -174,11 +181,12 @@
 					
 				},
 				over: function(e, ui){
-					//console.log('over',this);
+					console.log('over',this);
 					ui.item.parents('.gs-col').addClass('gs-moving-parent');
+					$(this).addClass('gs-moving-parent').parents('.gs-col').addClass('gs-moving-parent');
 				},
 				change: function(e, ui){
-					//console.log('change',this);
+					console.log('change',this);
 					
 					$(ui.item).data('gs-changed',true);
 					row.data('gs-changed',true);
@@ -187,25 +195,35 @@
 					
 				},
 				out: function(e, ui){
-					//console.log('out',this);
+					console.log('out',this);
 					cleanTempItems(row);
+					$(this).removeClass('gs-moving-parent').parents('.gs-col').removeClass('gs-moving-parent');
 				},
 				stop: function(e, ui){
-					//console.log('stop',this);
+					console.log('stop',this);
 					$(ui.item).data('gs-changed',false);
 					row.data('gs-changed',false);
 					reenableTargets(row, ui);
 					self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
 				},
 				update: function(e, ui){
-					//console.log('update',this);
+					console.log('update',this);
 				},
 				activate: function(e, ui){
-					//console.log('activate',this);
+					console.log('activate',this);
 					$(this).addClass('gs-state-highlight');
+					
+					var parentCol = $(this).closest('.gs-col');
+					console.log(parentCol);
+					if(parentCol.length){
+						var parentClone = parentCol.data('gs-clone');
+						if(parentClone){
+							parentClone.find('>.gs-content>.gs-row').addClass('gs-state-highlight');
+						}
+					}
 				},
 				deactivate: function(e, ui){
-					//console.log('deactivate');
+					console.log('deactivate');
 					$(this).removeClass('gs-state-highlight');
 					row.find('.gs-moving').removeClass('gs-moving');
 				},
@@ -213,13 +231,13 @@
 					//console.log('beforeStop',this);
 				},
 				create: function(e, ui){
-					//console.log('create',this);
+					console.log('create',this);
 				},
 				receive: function(e, ui){
-					//console.log('receive',this);
+					console.log('receive',this);
 				},
 				remove: function(e, ui){
-					//console.log('remove',this);
+					console.log('remove',this);
 				},
 				sort: function(event, ui){
 					//console.log('sort',this);

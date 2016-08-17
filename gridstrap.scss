@@ -45,6 +45,7 @@ $gridstrap-columns: 12 !default;
 		}
 		&.gs-moving-parent{
 			z-index: 15;
+			opacity: 1 !important;
 		}
 		&.gs-moving,
 		&.ui-resizable-resizing{
