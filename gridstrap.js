@@ -31,6 +31,7 @@
 					$(this).trigger('gs-resized');
 				}
 			},
+			boxPadding: 30, //15*2 .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
 		}, opts || {} );
 		this.itemsSelector = '> .gs-col:not(.gs-clone, .gs-moving)';
 		
@@ -158,6 +159,11 @@
 				row.sortable('refresh');
 			});
 		};
+		var autoAdjustWidth = function(row, ui){
+			var w = row.innerWidth() * parseInt(ui.item.attr('data-col'),10)/12 - self.opts.boxPadding;
+			ui.placeholder.width( w );
+			ui.item.width( w );
+		};
 		rows.each(function(){
 			var row = $(this);
 			var autoHeightTimeout;
@@ -177,7 +183,7 @@
 				placeholder: 'gs-placeholder',
 				appendTo: document.body,
 				start: function(e, ui){
-					console.log('start',this);
+					//console.log('start',this);
 					ui.placeholder.css({
 						height: ui.item.height(),
 						width: ui.item.width(),
@@ -190,12 +196,14 @@
 					
 				},
 				over: function(e, ui){
-					console.log('over',this);
+					//console.log('over',this);
 					ui.item.parents('.gs-col').addClass('gs-moving-parent');
 					$(this).addClass('gs-moving-parent').parents('.gs-col').addClass('gs-moving-parent');
+					
+					autoAdjustWidth(row, ui);
 				},
 				change: function(e, ui){
-					console.log('change',this);
+					//console.log('change',this);
 					
 					$(ui.item).data('gs-changed',true);
 					row.data('gs-changed',true);
@@ -204,26 +212,25 @@
 					
 				},
 				out: function(e, ui){
-					console.log('out',this);
+					//console.log('out',this);
 					cleanTempItems(row);
 					$(this).removeClass('gs-moving-parent').parents('.gs-col').removeClass('gs-moving-parent');
 				},
 				stop: function(e, ui){
-					console.log('stop',this);
+					//console.log('stop',this);
 					$(ui.item).data('gs-changed',false);
 					row.data('gs-changed',false);
 					reenableTargets(row, ui);
 					self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
 				},
 				update: function(e, ui){
-					console.log('update',this);
+					//console.log('update',this);
 				},
 				activate: function(e, ui){
-					console.log('activate',this);
+					//console.log('activate',this);
 					$(this).addClass('gs-state-highlight');
 					
 					var parentCol = $(this).closest('.gs-col');
-					console.log(parentCol);
 					if(parentCol.length){
 						var parentClone = parentCol.data('gs-clone');
 						if(parentClone){
@@ -232,7 +239,7 @@
 					}
 				},
 				deactivate: function(e, ui){
-					console.log('deactivate');
+					//console.log('deactivate');
 					$(this).removeClass('gs-state-highlight');
 					row.find('.gs-moving').removeClass('gs-moving');
 				},
@@ -240,13 +247,13 @@
 					//console.log('beforeStop',this);
 				},
 				create: function(e, ui){
-					console.log('create',this);
+					//console.log('create',this);
 				},
 				receive: function(e, ui){
-					console.log('receive',this);
+					//console.log('receive',this);
 				},
 				remove: function(e, ui){
-					console.log('remove',this);
+					//console.log('remove',this);
 				},
 				sort: function(event, ui){
 					//console.log('sort',this);
