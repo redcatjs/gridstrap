@@ -86,7 +86,7 @@
 					position: 'absolute',
 					top: position.top,
 					left: position.left,
-					height: item.height(),
+					height: item.outerHeight(),
 					'z-index': 4,
 				});	
 				item.after(clone);
@@ -105,7 +105,7 @@
 					clone.css({
 						top: position.top,
 						left: position.left,
-						height: item.height(),
+						height: item.outerHeight(),
 					});
 				}
 			});
@@ -164,6 +164,23 @@
 			ui.placeholder.width( w );
 			ui.item.width( w );
 		};
+		var autoAdjustHeightInit = function(row, ui){
+			var tempContainer = $('<div style="position:absolute;visibility:hidden;"></div>').appendTo(document.body);
+			var clone = ui.item.clone();
+			clone.css('height','auto');
+			tempContainer.append(clone);
+			var h = clone.height();
+			tempContainer.remove();
+			ui.item.data('gs-auto-height',h);
+		};
+		var autoAdjustHeight = function(row, ui){
+			self.attribDataRow(row, ui);
+			var hOrigin = row.find('[data-row="'+ui.item.attr('data-row')+'"]:not(.gs-placeholder)').eq(0).height();
+			h = Math.max(hOrigin,ui.item.data('gs-auto-height'));
+			console.log(ui.item.data('gs-auto-height'), h);
+			ui.item.height(h);
+			ui.placeholder.height(h);
+		};
 		rows.each(function(){
 			var row = $(this);
 			var autoHeightTimeout;
@@ -184,6 +201,9 @@
 				appendTo: document.body,
 				start: function(e, ui){
 					//console.log('start',this);
+					
+					autoAdjustHeightInit(row,ui);
+					
 					ui.placeholder.css({
 						height: ui.item.height(),
 						width: ui.item.width(),
@@ -196,20 +216,22 @@
 					
 				},
 				over: function(e, ui){
-					//console.log('over',this);
+					console.log('over',this);
 					ui.item.parents('.gs-col').addClass('gs-moving-parent');
 					$(this).addClass('gs-moving-parent').parents('.gs-col').addClass('gs-moving-parent');
 					
 					autoAdjustWidth(row, ui);
+					autoAdjustHeight(row,ui);
 				},
 				change: function(e, ui){
-					//console.log('change',this);
+					console.log('change',this);
 					
 					$(ui.item).data('gs-changed',true);
 					row.data('gs-changed',true);
 
 					updateTempItems(row);
 					
+					autoAdjustHeight(row,ui);
 				},
 				out: function(e, ui){
 					//console.log('out',this);
@@ -294,7 +316,6 @@
 		return $(sCols);
 	};
 	
-	/*
 	Gridstrap.prototype.attribDataRow = function(row,ui){
 		var self = this;
 		var cols = self.getCurrentOrderedCols(row,ui);
@@ -310,7 +331,6 @@
 			$this.attr('data-row',currentRow);
 		});
 	};
-	*/
 	
 	Gridstrap.prototype.prepareAdd = function(el,width,container){
 		var self = this;
