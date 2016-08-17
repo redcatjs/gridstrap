@@ -4,6 +4,12 @@ $gs-percent: (100% / $gridstrap-columns);
 	[data-col='#{$i}']{
 		width: ($gs-percent * $i);
 	}
+	[data-col-left='#{($i - 1)}']{
+		margin-left: ($gs-percent * ($i - 1) );
+	}
+	[data-col-right='#{($i - 1)}']{
+		margin-right: ($gs-percent * ($i - 1) );
+	}
 }
 
 
