@@ -387,20 +387,20 @@
 		var row = col.closest('.gs-row');
 		var ml = col.find('>.gs-margin-left');
 		var mr = col.find('>.gs-margin-right');
-		var l = self.left(col)
-		var r = self.right(col)
+		var l = self.left(col);
+		var r = self.right(col);
 		var wr = r ? self._rowWidth(row,r) : 0;
 		var wl = l ? self._rowWidth(row,l) : 0;
 		
 		ml.css({
 			top : self.opts.gsColPaddingTop,
-			left: (-1*wl),
+			left: (l ? (-1*wl) - self.opts.boxPadding : 0),
 		});
 		ml.width(wl);
 		
 		mr.css({
 			top : self.opts.gsColPaddingTop,
-			right: (-1*wr),
+			right: (r ? (-1*wr) - self.opts.boxPadding : 0),
 		});
 		mr.width(wr);
 		self._setMarginHeight(col);
