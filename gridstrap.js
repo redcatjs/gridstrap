@@ -75,9 +75,16 @@
 		return row.width() * n/this.opts.width - this.opts.boxPadding*2;
 	};
 	
-	Gridstrap.prototype._makeTempItems = function(row){
+	Gridstrap.prototype._makeTempItems = function(row, filter, not){
 		var self = this;
-		row.find(self.itemsSelector).each(function(){
+		var rows = row.find(self.itemsSelector);
+		if(filter){
+			rows = rows.filter(filter);
+		}
+		if(not){
+			rows = rows.not(not);
+		}
+		rows.each(function(){
 			var item = $(this);
 			if(item.data('gs-clone')) return;
 			var position = item.position();
@@ -413,11 +420,16 @@
 		return this.width( col, this.width(col)+1 );
 	};
 	Gridstrap.prototype.width = function(col,width){
+		var self = this;
 		if(width){
-			var size = this.left(col)+width+this.right(col);
+			var size = this.left(col)+width+self.right(col);
 			if(size<=this.opts.width&&width>=1){
+				
+				var row = col.closest('.gs-row');
+				self._makeTempItems(row, false, col);
+				
 				col.attr('data-col' ,width);
-				this._afterWidth(col);
+				self._afterWidth(col);
 				return width;
 			}
 		}
@@ -435,6 +447,13 @@
 		}
 		timeout = setTimeout(function(){
 			self._setMarginHeight( col );
+			
+			var row = col.closest('.gs-row');
+			self._updateTempItems(row);
+			setTimeout(function(){
+				self._cleanTempItems(row);
+			},self.opts.gsColTransitionWidth);
+			
 		},self.opts.gsColTransitionWidth);
 		col.data('gs-width-timeout',timeout);
 	};
