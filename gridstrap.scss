@@ -1,4 +1,7 @@
 $gridstrap-columns: 12 !default;
+$gs-col-transition-width: 400ms;
+$box-padding: 15px;
+
 $gs-percent: (100% / $gridstrap-columns);
 @for $i from 1 through $gridstrap-columns {
 	[data-col='#{$i}']{
@@ -19,8 +22,8 @@ $gs-percent: (100% / $gridstrap-columns);
 		position: relative;
 		margin-top: 5px;
 		margin-bottom: 5px;
-		padding-left:15px;
-		padding-right:15px;
+		padding-left: $box-padding;
+		padding-right: $box-padding;
 		z-index:99999;
 		background: transparent;
 		visibility: visible !important;
@@ -37,13 +40,13 @@ $gs-percent: (100% / $gridstrap-columns);
 		float:left;
 		padding-top: 5px;
 		padding-bottom: 5px;
-		padding-left: 15px;
-		padding-right: 15px;
-		transition: width 400ms ease-out, margin 400ms ease-out;
+		padding-left: $box-padding;
+		padding-right: $box-padding;
+		transition: width $gs-col-transition-width ease-out, margin $gs-col-transition-width ease-out;
 		min-height: 100px;
 		z-index: 5;
 		&.gs-clone{
-			transition: left 400ms ease-out, top 400ms ease-out;
+			transition: left $gs-col-transition-width ease-out, top $gs-col-transition-width ease-out;
 			z-index: 10;
 		}
 		&.gs-moving{
@@ -103,7 +106,7 @@ $gs-percent: (100% / $gridstrap-columns);
 			visibility: hidden;
 			background: #333;
 			position: absolute;
-			transition: width 400ms ease-out, left 400ms ease-out;
+			transition: width $gs-col-transition-width ease-out, left $gs-col-transition-width ease-out;
 		}
 		&.mouseover .gs-margin{
 			visibility: visible;

@@ -31,8 +31,8 @@
 					$(this).trigger('gs-resized');
 				}
 			},
-			boxPadding: 30, //15*2 .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
-			gsColTransitionWidth: 400, //.gs-col{ transition width duration }
+			boxPadding: 15, //$box-padding .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
+			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
 			gsColPaddingTop: 5, //.gs-col{ padding-top }
 			debugEvents: true,
 		}, opts || {} );
@@ -72,7 +72,7 @@
 	};
 	
 	Gridstrap.prototype._rowWidth = function(row, n){
-		return row.width() * n/this.opts.width - this.opts.boxPadding;
+		return row.width() * n/this.opts.width - this.opts.boxPadding*2;
 	};
 	
 	Gridstrap.prototype._makeTempItems = function(row){
