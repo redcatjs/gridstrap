@@ -39,7 +39,7 @@ $gs-percent: (100% / $gridstrap-columns);
 		padding-bottom: 5px;
 		padding-left: 15px;
 		padding-right: 15px;
-		transition: width 400ms ease-out;
+		transition: width 400ms ease-out, margin 400ms ease-out;
 		min-height: 100px;
 		z-index: 5;
 		&.gs-clone{
@@ -103,6 +103,7 @@ $gs-percent: (100% / $gridstrap-columns);
 			visibility: hidden;
 			background: #333;
 			position: absolute;
+			transition: width 400ms ease-out, left 400ms ease-out;
 		}
 		&.mouseover .gs-margin{
 			visibility: visible;

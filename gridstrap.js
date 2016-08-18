@@ -374,26 +374,33 @@
 		this.handleAdd(el);
 	};
 	
+	Gridstrap.prototype._setMarginHeight = function(col){
+		var self = this;
+		var ml = col.find('>.gs-margin-left');
+		var mr = col.find('>.gs-margin-right');
+		var h = col.find('>.gs-content').outerHeight();
+		ml.height(h);
+		mr.height(h);
+	};
 	Gridstrap.prototype._setMargin = function(col){
 		var self = this;
 		var row = col.closest('.gs-row');
-		var h = col.find('>.gs-content').outerHeight();
-		
+		var ml = col.find('>.gs-margin-left');
+		var mr = col.find('>.gs-margin-right');
 		var w = self._rowWidth(row,self.left(col));
-		col.find('>.gs-margin-left').css({
+		ml.css({
 			top : self.opts.gsColPaddingTop,
 			left: (-1*w),
-			width: w,
-			height: h,
 		});
+		ml.width(w);
 		
 		var w = self._rowWidth(row,self.right(col));
-		col.find('>.gs-margin-right').css({
+		mr.css({
 			top : self.opts.gsColPaddingTop,
-			width: w,
 			right: (-1*w),
-			height: h,
 		});
+		mr.width(w);
+		self._setMarginHeight(col);
 	};
 	
 	Gridstrap.prototype.widthMinus = function(col){
@@ -417,13 +424,14 @@
 	
 	Gridstrap.prototype._afterWidth = function(col){
 		var self = this;
+		self._setMargin( col );
 		var timeout;
 		timeout = col.data('gs-width-timeout');
 		if(timeout){
 			clearTimeout(timeout);
 		}
 		timeout = setTimeout(function(){
-			self._setMargin( col );
+			self._setMarginHeight( col );
 		},self.opts.gsColTransitionWidth);
 		col.data('gs-width-timeout',timeout);
 	};
