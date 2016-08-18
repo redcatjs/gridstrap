@@ -74,112 +74,119 @@
 		return row.width() * n/this.opts.width - this.opts.boxPadding;
 	};
 	
-	Gridstrap.prototype._hanldeSortable = function(rows){
+	Gridstrap.prototype._makeTempItems = function(row){
 		var self = this;
-		var container = this.container;
-		var items = self.itemsSelector;
-		var makeTempItems = function(row){
-			row.find(items).each(function(){
-				var item = $(this);
-				if(item.data('gs-clone')) return;
+		row.find(self.itemsSelector).each(function(){
+			var item = $(this);
+			if(item.data('gs-clone')) return;
+			var position = item.position();
+			var clone = item.clone();
+			item.data('gs-clone',clone);
+			clone.addClass('gs-clone');
+			clone.css({
+				position: 'absolute',
+				top: position.top,
+				left: position.left,
+				height: item.outerHeight(),
+				'z-index': 4,
+			});	
+			item.after(clone);
+			item.css('opacity',0);
+		});
+		row.sortable('refresh');
+	};
+	Gridstrap.prototype._updateTempItems = function(row){
+		var self = this;
+		row.find(self.itemsSelector).each(function(){
+			var item = $(this);
+			var clone = item.data('gs-clone');
+			if(clone){
 				var position = item.position();
-				var clone = item.clone();
-				item.data('gs-clone',clone);
-				clone.addClass('gs-clone');
 				clone.css({
-					position: 'absolute',
 					top: position.top,
 					left: position.left,
 					height: item.outerHeight(),
-					'z-index': 4,
-				});	
-				item.after(clone);
-				item.css('opacity',0);
-			});
-			row.sortable('refresh');
-		};
-		var updateTempItems = function(row){
-			row.find(items).each(function(){
-				var item = $(this);
-				var clone = item.data('gs-clone');
-				if(clone){
-					var position = item.position();
-					clone.css({
-						top: position.top,
-						left: position.left,
-						height: item.outerHeight(),
-					});
-				}
-			});
-		};
-		var cleanTempItems = function(row){
-			row.find(items).each(function(){
-				var item = $(this);
-				var clone = item.data('gs-clone');
-				if(clone){
-					clone.remove();
-					item.data('gs-clone',false);
-				}
-				item.css('opacity',1);
-			});
-		};
-		var disableTargets = function(row,ui){
-			var el = ui.item;
-			var accepted = el.attr('data-gs-accepted-container');
-			var rowCol = row.closest('.gs-col');
-			$('.gs-row.ui-sortable',self.container).each(function(){
-				var $this = $(this);
-				if($this.closest('.gs-clone').length) return;
-				var ok;
-				ok = !$this.closest('.gs-moving').length;
-				if(ok){
-					ok = !accepted || $this.closest('.gs-col').is(accepted);
-				}
-				if(ok){
-					el.find('[data-gs-accepted-container]').each(function(){
-						var accepted = $(this).attr('data-gs-accepted-container');
-						if(!el.is(accepted)&&!rowCol.is(accepted)){
-							ok = false;
-							return false;
-						}
-						
-					});
-				}
-				if(!ok){
-					$this.sortable('disable');
-					row.sortable('refresh');
-				}
-			});
-		};
-		var reenableTargets = function(row,ui){
-			$('.gs-row.ui-sortable',self.container).each(function(){
-				var $this = $(this);
-				if($this.closest('.gs-clone').length) return;
-				$this.sortable('enable');
+				});
+			}
+		});
+	};
+	Gridstrap.prototype._cleanTempItems = function(row){
+		var self = this;
+		row.find(self.itemsSelector).each(function(){
+			var item = $(this);
+			var clone = item.data('gs-clone');
+			if(clone){
+				clone.remove();
+				item.data('gs-clone',false);
+			}
+			item.css('opacity',1);
+		});
+	};
+	
+	Gridstrap.prototype._disableTargets = function(row,ui){
+		var self = this;
+		var el = ui.item;
+		var accepted = el.attr('data-gs-accepted-container');
+		var rowCol = row.closest('.gs-col');
+		$('.gs-row.ui-sortable',self.container).each(function(){
+			var $this = $(this);
+			if($this.closest('.gs-clone').length) return;
+			var ok;
+			ok = !$this.closest('.gs-moving').length;
+			if(ok){
+				ok = !accepted || $this.closest('.gs-col').is(accepted);
+			}
+			if(ok){
+				el.find('[data-gs-accepted-container]').each(function(){
+					var accepted = $(this).attr('data-gs-accepted-container');
+					if(!el.is(accepted)&&!rowCol.is(accepted)){
+						ok = false;
+						return false;
+					}
+					
+				});
+			}
+			if(!ok){
+				$this.sortable('disable');
 				row.sortable('refresh');
-			});
-		};
-		var autoAdjustWidth = function(row, ui){
-			var w = self._rowWidth(row,self.width(ui.item));
-			ui.placeholder.width( w );
-			ui.item.width( w );
-		};
-		var autoAdjustHeightInit = function(row, ui){
-			var tempContainer = $('<div style="position:absolute;visibility:hidden;"></div>').appendTo(document.body);
-			var clone = ui.item.clone();
-			clone.css('height','auto');
-			tempContainer.append(clone);
-			var h = clone.height();
-			tempContainer.remove();
-			ui.item.data('gs-auto-height',h);
-		};
-		var autoAdjustHeight = function(row, ui){
-			self._attribDataRow(row, ui);
-			var hOrigin = row.find('[data-row="'+ui.item.attr('data-row')+'"]:not(.gs-placeholder)').eq(0).height();
-			h = Math.max(hOrigin,ui.item.data('gs-auto-height'));
-			ui.item.height(h);
-			ui.placeholder.height(h);
-		};
+			}
+		});
+	};
+	Gridstrap.prototype._reenableTargets = function(row,ui){
+		var self = this;
+		$('.gs-row.ui-sortable',self.container).each(function(){
+			var $this = $(this);
+			if($this.closest('.gs-clone').length) return;
+			$this.sortable('enable');
+			row.sortable('refresh');
+		});
+	};
+	Gridstrap.prototype._autoAdjustWidth = function(row,ui){
+		var self = this;
+		var w = self._rowWidth(row,self.width(ui.item));
+		ui.placeholder.width( w );
+		ui.item.width( w );
+	};
+	Gridstrap.prototype._autoAdjustHeightInit = function(row,ui){		
+		var self = this;
+		var tempContainer = $('<div style="position:absolute;visibility:hidden;"></div>').appendTo(document.body);
+		var clone = ui.item.clone();
+		clone.css('height','auto');
+		tempContainer.append(clone);
+		var h = clone.height();
+		tempContainer.remove();
+		ui.item.data('gs-auto-height',h);
+	};
+	Gridstrap.prototype._autoAdjustHeight = function(row,ui){		
+		var self = this;
+		self._attribDataRow(row, ui);
+		var hOrigin = row.find('[data-row="'+ui.item.attr('data-row')+'"]:not(.gs-placeholder)').eq(0).height();
+		h = Math.max(hOrigin,ui.item.data('gs-auto-height'));
+		ui.item.height(h);
+		ui.placeholder.height(h);
+	};
+	Gridstrap.prototype._hanldeSortable = function(rows){
+		var self = this;
 		rows.each(function(){
 			var row = $(this);
 			var autoHeightTimeout;
@@ -188,7 +195,7 @@
 				return;
 			}
 			row.sortable({
-				items: items,
+				items: self.itemsSelector,
 				connectWith: self.opts.connectWith,
 				revert: 200,
 				scroll: self.opts.scroll,
@@ -201,7 +208,7 @@
 				start: function(e, ui){
 					//console.log('start',this);
 					
-					autoAdjustHeightInit(row,ui);
+					self._autoAdjustHeightInit(row,ui);
 					
 					ui.placeholder.css({
 						height: ui.item.height(),
@@ -210,8 +217,8 @@
 					ui.placeholder.html('<div class="gs-content"></div>');
 					ui.item.addClass('gs-moving');
 					
-					disableTargets(row, ui);
-					makeTempItems(row);
+					self._disableTargets(row, ui);
+					self._makeTempItems(row);
 					
 				},
 				over: function(e, ui){
@@ -219,8 +226,8 @@
 					ui.item.parents('.gs-col').addClass('gs-moving-parent');
 					$(this).addClass('gs-moving-parent').parents('.gs-col').addClass('gs-moving-parent');
 					
-					autoAdjustWidth(row, ui);
-					autoAdjustHeight(row,ui);
+					self._autoAdjustWidth(row, ui);
+					self._autoAdjustHeight(row,ui);
 				},
 				change: function(e, ui){
 					//console.log('change',this);
@@ -228,20 +235,20 @@
 					$(ui.item).data('gs-changed',true);
 					row.data('gs-changed',true);
 
-					updateTempItems(row);
+					self._updateTempItems(row);
 					
-					autoAdjustHeight(row,ui);
+					self._autoAdjustHeight(row,ui);
 				},
 				out: function(e, ui){
 					//console.log('out',this);
-					cleanTempItems(row);
+					self._cleanTempItems(row);
 					$(this).removeClass('gs-moving-parent').parents('.gs-col').removeClass('gs-moving-parent');
 				},
 				stop: function(e, ui){
 					//console.log('stop',this);
 					$(ui.item).data('gs-changed',false);
 					row.data('gs-changed',false);
-					reenableTargets(row, ui);
+					self._reenableTargets(row, ui);
 					self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
 				},
 				update: function(e, ui){
