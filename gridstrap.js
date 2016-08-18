@@ -34,6 +34,7 @@
 			boxPadding: 30, //15*2 .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
 			gsColTransitionWidth: 400, //.gs-col{ transition width duration }
 			gsColPaddingTop: 5, //.gs-col{ padding-top }
+			debugEvents: true,
 		}, opts || {} );
 		this.itemsSelector = '> .gs-col:not(.gs-clone, .gs-moving)';
 		
@@ -206,7 +207,7 @@
 				placeholder: 'gs-placeholder',
 				appendTo: document.body,
 				start: function(e, ui){
-					//console.log('start',this);
+					if(self.opts.debugEvents) console.log('start',this);
 					
 					self._autoAdjustHeightInit(row,ui);
 					
@@ -222,7 +223,8 @@
 					
 				},
 				over: function(e, ui){
-					//console.log('over',this);
+					if(self.opts.debugEvents) console.log('over',this);
+					
 					ui.item.parents('.gs-col').addClass('gs-moving-parent');
 					$(this).addClass('gs-moving-parent').parents('.gs-col').addClass('gs-moving-parent');
 					
@@ -230,7 +232,7 @@
 					self._autoAdjustHeight(row,ui);
 				},
 				change: function(e, ui){
-					//console.log('change',this);
+					if(self.opts.debugEvents) console.log('change',this);
 					
 					$(ui.item).data('gs-changed',true);
 					row.data('gs-changed',true);
@@ -240,22 +242,22 @@
 					self._autoAdjustHeight(row,ui);
 				},
 				out: function(e, ui){
-					//console.log('out',this);
+					if(self.opts.debugEvents) console.log('out',this);
 					self._cleanTempItems(row);
 					$(this).removeClass('gs-moving-parent').parents('.gs-col').removeClass('gs-moving-parent');
 				},
 				stop: function(e, ui){
-					//console.log('stop',this);
+					if(self.opts.debugEvents) console.log('stop',this);
 					$(ui.item).data('gs-changed',false);
 					row.data('gs-changed',false);
 					self._reenableTargets(row, ui);
 					self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
 				},
 				update: function(e, ui){
-					//console.log('update',this);
+					if(self.opts.debugEvents) console.log('update',this);
 				},
 				activate: function(e, ui){
-					//console.log('activate',this);
+					if(self.opts.debugEvents) console.log('activate',this);
 					$(this).addClass('gs-state-highlight');
 					
 					var parentCol = $(this).closest('.gs-col');
@@ -267,25 +269,23 @@
 					}
 				},
 				deactivate: function(e, ui){
-					//console.log('deactivate');
+					if(self.opts.debugEvents) console.log('deactivate',this);
 					$(this).removeClass('gs-state-highlight');
 					row.find('.gs-moving').removeClass('gs-moving');
 				},
 				beforeStop: function(e, ui){
-					//console.log('beforeStop',this);
+					if(self.opts.debugEvents) console.log('beforeStop',this);
 				},
 				create: function(e, ui){
-					//console.log('create',this);
+					if(self.opts.debugEvents) console.log('create',this);
 				},
 				receive: function(e, ui){
-					//console.log('receive',this);
+					if(self.opts.debugEvents) console.log('receive',this);
 				},
 				remove: function(e, ui){
-					//console.log('remove',this);
+					if(self.opts.debugEvents) console.log('remove',this);
 				},
-				sort: function(event, ui){
-					//console.log('sort',this);
-					
+				sort: function(event, ui){					
 					if(self.opts.scrollCallback){						
 						var o = row.sortable('option');
 						var scrollParent = self.opts.scrollParent || row.scrollParent();
