@@ -24,7 +24,7 @@
 			resizable:{
 				handles: 'e',
 				resize:function(e,ui){
-					self.resizeCallback(this,ui,e);
+					self._resizeCallback(this,ui,e);
 				},
 				stop: function(){
 					$(this).css('width','');
@@ -55,10 +55,10 @@
 			rootRow = $('<div class="gs-row" />').appendTo(container);
 		}
 		
-		this.hanldeSortable(rootRow);
+		this._hanldeSortable(rootRow);
 	};
 	
-	Gridstrap.prototype.resizeCallback = function(el,ui,e){
+	Gridstrap.prototype._resizeCallback = function(el,ui,e){
 		var $this = $(el);
 		var containerW = $this.parent().innerWidth();
 		var colW = containerW/self.opts.width;
@@ -70,11 +70,11 @@
 		$this.trigger('gs-resizing');
 	};
 	
-	Gridstrap.prototype.rowWidth = function(row, n){
+	Gridstrap.prototype._rowWidth = function(row, n){
 		return row.width() * n/this.opts.width - this.opts.boxPadding;
 	};
 	
-	Gridstrap.prototype.hanldeSortable = function(rows){
+	Gridstrap.prototype._hanldeSortable = function(rows){
 		var self = this;
 		var container = this.container;
 		var items = self.itemsSelector;
@@ -160,7 +160,7 @@
 			});
 		};
 		var autoAdjustWidth = function(row, ui){
-			var w = self.rowWidth(row,self.width(ui.item));
+			var w = self._rowWidth(row,self.width(ui.item));
 			ui.placeholder.width( w );
 			ui.item.width( w );
 		};
@@ -174,7 +174,7 @@
 			ui.item.data('gs-auto-height',h);
 		};
 		var autoAdjustHeight = function(row, ui){
-			self.attribDataRow(row, ui);
+			self._attribDataRow(row, ui);
 			var hOrigin = row.find('[data-row="'+ui.item.attr('data-row')+'"]:not(.gs-placeholder)').eq(0).height();
 			h = Math.max(hOrigin,ui.item.data('gs-auto-height'));
 			ui.item.height(h);
@@ -301,7 +301,7 @@
 		});
 	};
 	
-	Gridstrap.prototype.getCurrentOrderedCols = function(row,ui){
+	Gridstrap.prototype._getCurrentOrderedCols = function(row,ui){
 		var sCols = [];
 		var cols = row.find('> .gs-placeholder, > .gs-col:not(.gs-moving, .gs-clone)');
 		cols.each(function(){
@@ -315,9 +315,9 @@
 		return $(sCols);
 	};
 	
-	Gridstrap.prototype.attribDataRow = function(row,ui){
+	Gridstrap.prototype._attribDataRow = function(row,ui){
 		var self = this;
-		var cols = self.getCurrentOrderedCols(row,ui);
+		var cols = self._getCurrentOrderedCols(row,ui);
 		var currentRow = 1;
 		var ttWidth = 0;
 		cols.each(function(){
@@ -342,7 +342,7 @@
 			container = this.container;
 		}
 		container.append(el);
-		this.hanldeSortable(container);
+		this._hanldeSortable(container);
 	};
 	Gridstrap.prototype.handleAdd = function(el){
 		var self = this;
@@ -355,10 +355,10 @@
 		el.prepend('<div class="gs-margin gs-margin-left" />');
 		el.append('<div class="gs-margin gs-margin-right" />');
 		el.on('mouseover',function(){
-			self.setMargin(el);
+			self._setMargin(el);
 		});
 		
-		this.hanldeSortable(rows);
+		this._hanldeSortable(rows);
 		
 		el.resizable(this.opts.resizable);
 	};
@@ -367,12 +367,12 @@
 		this.handleAdd(el);
 	};
 	
-	Gridstrap.prototype.setMargin = function(col){
+	Gridstrap.prototype._setMargin = function(col){
 		var self = this;
 		var row = col.closest('.gs-row');
 		var h = col.find('>.gs-content').outerHeight();
 		
-		var w = self.rowWidth(row,self.left(col));
+		var w = self._rowWidth(row,self.left(col));
 		col.find('>.gs-margin-left').css({
 			top : self.opts.gsColPaddingTop,
 			left: (-1*w),
@@ -380,7 +380,7 @@
 			height: h,
 		});
 		
-		var w = self.rowWidth(row,self.right(col));
+		var w = self._rowWidth(row,self.right(col));
 		col.find('>.gs-margin-right').css({
 			top : self.opts.gsColPaddingTop,
 			width: w,
@@ -416,7 +416,7 @@
 			clearTimeout(timeout);
 		}
 		timeout = setTimeout(function(){
-			self.setMargin( col );
+			self._setMargin( col );
 		},self.opts.gsColTransitionWidth);
 		col.data('gs-width-timeout',timeout);
 	};
@@ -439,7 +439,7 @@
 			var size = offset+this.width(col)+this.right(col);
 			if(size<=this.opts.width&&size>=1){
 				col.attr('data-left' ,offset);
-				this.setMargin(col);
+				this._setMargin(col);
 				return offset;
 			}
 		}
@@ -451,7 +451,7 @@
 			var size = this.left(col)+this.width(col)+offset;
 			if(size<=this.opts.width&&size>=1){
 				col.attr('data-right' ,offset);
-				this.setMargin(col);
+				this._setMargin(col);
 				return offset;
 			}
 		}
