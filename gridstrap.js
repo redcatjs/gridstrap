@@ -44,11 +44,11 @@
 		container.on('mouseover.gs', '.gs-col', function(e){
 			if(e.stopNamespacePropagation) return;
 			e.stopNamespacePropagation = true;
-			$(this).addClass('mouseover');
+			$(this).addClass('gs-mouseover');
 		}).on('mouseout.gs', '.gs-col', function(e){
 			if(e.stopNamespacePropagation) return;
 			e.stopNamespacePropagation = true;
-			$(this).removeClass('mouseover');
+			$(this).removeClass('gs-mouseover');
 		});
 		
 		var rootRow = container.find('>.gs-row');

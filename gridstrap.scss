@@ -69,7 +69,7 @@ $gs-percent: (100% / $gridstrap-columns);
 		> .ui-resizable-handle{
 			display: none !important;
 		}
-		&.mouseover,
+		&.gs-mouseover,
 		.ui-resizable-resizing{
 			> .ui-resizable-handle{
 				display: block !important;
@@ -108,7 +108,7 @@ $gs-percent: (100% / $gridstrap-columns);
 			position: absolute;
 			transition: width $gs-col-transition-width ease-out, left $gs-col-transition-width ease-out, right $gs-col-transition-width ease-out;
 		}
-		&.mouseover .gs-margin{
+		&.gs-mouseover .gs-margin{
 			visibility: visible;
 		}
 	}
