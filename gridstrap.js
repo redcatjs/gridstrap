@@ -65,7 +65,7 @@
 		var colW = containerW/self.opts.width;
 		var col = Math.ceil( ui.size.width/colW );
 		$this.addClass('no-transition');
-		$this.attr('data-col', col );
+		$this.attr('data-gs-col', col );
 		$this.css('width', '');
 		$this.removeClass('no-transition');
 		$this.trigger('gs-resizing');
@@ -181,7 +181,7 @@
 	Gridstrap.prototype._autoAdjustHeight = function(row,ui){		
 		var self = this;
 		self._attribDataRow(row, ui);
-		var hOrigin = row.find('[data-row="'+ui.item.attr('data-row')+'"]:not(.gs-placeholder)').eq(0).height();
+		var hOrigin = row.find('[data-gs-row="'+ui.item.attr('data-gs-row')+'"]:not(.gs-placeholder)').eq(0).height();
 		h = Math.max(hOrigin,ui.item.data('gs-auto-height'));
 		ui.item.height(h);
 		ui.placeholder.height(h);
@@ -349,16 +349,16 @@
 				ttWidth = 0;
 				currentRow++;
 			}
-			$this.attr('data-row',currentRow);
+			$this.attr('data-gs-row',currentRow);
 		});
 	};
 	
 	Gridstrap.prototype.prepareAdd = function(el,width,container){
 		var self = this;
 		if(!width){
-			width = el.attr('data-col') || this.defaultWidth;
+			width = el.attr('data-gs-col') || this.defaultWidth;
 		}
-		el.attr('data-col',width);
+		el.attr('data-gs-col',width);
 		el.addClass('gs-col');
 		el.data('gs-integrated', true);
 		if(!container){
@@ -433,12 +433,12 @@
 		if(width){
 			var size = this.left(col)+width+self.right(col);
 			if(size<=this.opts.width&&width>=1){
-				col.attr('data-col' ,width);
+				col.attr('data-gs-col' ,width);
 				self._afterWidth(col);
 				return width;
 			}
 		}
-		width = parseInt(col.attr('data-col'),10) || 1;
+		width = parseInt(col.attr('data-gs-col'),10) || 1;
 		return width;
 	};
 	
@@ -474,24 +474,24 @@
 		if(typeof(offset)!='undefined'&&offset!==false&&offset>=0){
 			var size = offset+this.width(col)+this.right(col);
 			if(size<=this.opts.width&&size>=1){
-				col.attr('data-left' ,offset);
+				col.attr('data-gs-left' ,offset);
 				this._setMargin(col);
 				return offset;
 			}
 		}
-		offset = parseInt(col.attr('data-left'),10) || 0;
+		offset = parseInt(col.attr('data-gs-left'),10) || 0;
 		return offset;
 	};
 	Gridstrap.prototype.right = function(col,offset){
 		if(typeof(offset)!='undefined'&&offset!==false&&offset>=0){
 			var size = this.left(col)+this.width(col)+offset;
 			if(size<=this.opts.width&&size>=1){
-				col.attr('data-right' ,offset);
+				col.attr('data-gs-right' ,offset);
 				this._setMargin(col);
 				return offset;
 			}
 		}
-		offset = parseInt(col.attr('data-right'),10) || 0;
+		offset = parseInt(col.attr('data-gs-right'),10) || 0;
 		return offset;
 	};
 	

@@ -4,13 +4,13 @@ $box-padding: 15px;
 
 $gs-percent: (100% / $gridstrap-columns);
 @for $i from 1 through $gridstrap-columns {
-	[data-col='#{$i}']{
+	[data-gs-col='#{$i}']{
 		width: ($gs-percent * $i);		
 	}
-	[data-left='#{($i - 1)}']{
+	[data-gs-left='#{($i - 1)}']{
 		margin-left: ($gs-percent * ($i - 1) );
 	}
-	[data-right='#{($i - 1)}']{
+	[data-gs-right='#{($i - 1)}']{
 		margin-right: ($gs-percent * ($i - 1) );
 	}
 }
