@@ -207,20 +207,23 @@
 				placeholder: 'gs-placeholder',
 				appendTo: document.body,
 				start: function(e, ui){
+					var item = ui.item;
 					if(self.opts.debugEvents) console.log('start',this);
+					
+					item.data('gs-startrow',row.get(0));
+					item.data('gs-startindex',item.index());
 					
 					self._autoAdjustHeightInit(row,ui);
 					
 					ui.placeholder.css({
-						height: ui.item.height(),
-						width: ui.item.width(),
+						height: item.height(),
+						width: item.width(),
 					});
 					ui.placeholder.html('<div class="gs-content"></div>');
-					ui.item.addClass('gs-moving');
+					item.addClass('gs-moving');
 					
 					self._disableTargets(row, ui);
 					self._makeTempItems(row);
-					
 				},
 				over: function(e, ui){
 					if(self.opts.debugEvents) console.log('over',this);
@@ -233,9 +236,6 @@
 				},
 				change: function(e, ui){
 					if(self.opts.debugEvents) console.log('change',this);
-					
-					$(ui.item).data('gs-changed',true);
-					row.data('gs-changed',true);
 
 					self._updateTempItems(row);
 					
@@ -249,22 +249,21 @@
 				stop: function(e, ui){
 					if(self.opts.debugEvents) console.log('stop',this);
 					
-					var el = $(ui.item);
-					if(el.data('gs-changed')){
+					var item = ui.item;
+					if(item.data('gs-startrow')!==item.closest('.gs-row').get(0)){
+						if(self.opts.debugEvents) console.log('gs-col-changed',this);
 						row.trigger('gs-col-changed',[ui]);
 					}
-					if(row.data('gs-changed')){
+					if(item.data('gs-startindex')!==item.index()){
+						if(self.opts.debugEvents) console.log('gs-row-changed',this);
 						row.trigger('gs-row-changed',[ui]);
 					}
 					
-					if(!el.data('gs-integrated')){
+					if(!item.data('gs-integrated')){
 						row.trigger('gs-received',[ui]);
 					}
 					
-					el.data('gs-changed',false);
-					row.data('gs-changed',false);
-					
-					el.data('gs-integrated',true);
+					item.data('gs-integrated',true);
 					
 					self._reenableTargets(row, ui);
 					self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
