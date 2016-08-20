@@ -164,9 +164,15 @@
 	};
 	Gridstrap.prototype._autoAdjustWidth = function(row,ui){
 		var self = this;
-		var w = self._rowWidth(row,self.width(ui.item));
-		ui.placeholder.width( w );
-		ui.item.width( w );
+		var item = ui.item;
+		var placeholder = ui.placeholder;
+		var w = self._rowWidth(row,self.width(item));
+		placeholder.css({
+			width: w,
+			'margin-left': ( self.left(item) * 100 / self.opts.width ) + '%',
+			'margin-right': ( self.right(item) * 100 / self.opts.width ) + '%',
+		});
+		item.width( w );
 	};
 	Gridstrap.prototype._autoAdjustHeightInit = function(row,ui){		
 		var self = this;
@@ -218,6 +224,8 @@
 					ui.placeholder.css({
 						height: item.height(),
 						width: item.width(),
+						'margin-left': ( self.left(item) * 100 / self.opts.width ) + '%',
+						'margin-right': ( self.right(item) * 100 / self.opts.width ) + '%',
 					});
 					ui.placeholder.html('<div class="gs-content"></div>');
 					item.addClass('gs-moving');
