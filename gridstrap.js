@@ -71,8 +71,8 @@
 		$this.trigger('gs-resizing');
 	};
 	
-	Gridstrap.prototype._rowWidth = function(row, n){
-		return row.width() * n/this.opts.width - this.opts.boxPadding*2;
+	Gridstrap.prototype._rowWidth = function(row, n, padding){
+		return row.width() * n/this.opts.width - (padding ? this.opts.boxPadding*2 : 0);
 	};
 	
 	Gridstrap.prototype._makeTempItems = function(row){
@@ -402,7 +402,7 @@
 		var self = this;
 		var ml = col.find('>.gs-margin-left');
 		var mr = col.find('>.gs-margin-right');
-		var h = col.find('>.gs-content').outerHeight();
+		var h = col.find('>.gs-content').outerHeight() - 1;
 		ml.height(h);
 		mr.height(h);
 	};
@@ -413,20 +413,20 @@
 		var mr = col.find('>.gs-margin-right');
 		var l = self.left(col);
 		var r = self.right(col);
-		var wr = r ? self._rowWidth(row,r) : 0;
-		var wl = l ? self._rowWidth(row,l) : 0;
+		var wr = r ? self._rowWidth(row,r,false) : 0;
+		var wl = l ? self._rowWidth(row,l,false) : 0;
 		
 		ml.css({
 			top : self.opts.gsColPaddingTop,
-			left: (l ? (-1*wl) - self.opts.boxPadding : 0),
+			left: (l ? (-1*wl) + self.opts.boxPadding -1 : 0),
 		});
-		ml.width(wl);
+		ml.width(wl-1);
 		
 		mr.css({
 			top : self.opts.gsColPaddingTop,
-			right: (r ? (-1*wr) - self.opts.boxPadding : 0),
+			right: (r ? (-1*wr) + self.opts.boxPadding -1 : 0),
 		});
-		mr.width(wr);
+		mr.width(wr-1);
 		self._setMarginHeight(col);
 	};
 	
