@@ -108,7 +108,7 @@ $gs-percent: (100% / $gridstrap-columns);
 			position: absolute;
 			transition: width $gs-col-transition-width ease-out, left $gs-col-transition-width ease-out, right $gs-col-transition-width ease-out;
 		}
-		&.gs-mouseover .gs-margin{
+		&.gs-mouseover > .gs-margin{
 			visibility: visible;
 		}
 	}
