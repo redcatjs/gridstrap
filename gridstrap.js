@@ -33,7 +33,6 @@
 			},
 			boxPadding: 15, //$box-padding .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
 			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
-			gsColPaddingTop: 5, //.gs-col{ padding-top }
 			debugEvents: true,
 		}, opts || {} );
 		this.itemsSelector = '> .gs-col:not(.gs-clone, .gs-moving)';
@@ -416,16 +415,10 @@
 		var wr = r ? self._rowWidth(row,r,false) : 0;
 		var wl = l ? self._rowWidth(row,l,false) : 0;
 		
-		ml.css({
-			top : self.opts.gsColPaddingTop,
-			left: (l ? (-1*wl) + self.opts.boxPadding -1 : 0),
-		});
+		ml.css('left', (l ? (-1*wl) + self.opts.boxPadding -1 : 0));
 		ml.width(wl-1);
 		
-		mr.css({
-			top : self.opts.gsColPaddingTop,
-			right: (r ? (-1*wr) + self.opts.boxPadding -1 : 0),
-		});
+		mr.css('right', (r ? (-1*wr) + self.opts.boxPadding -1 : 0));
 		mr.width(wr-1);
 		self._setMarginHeight(col);
 	};
