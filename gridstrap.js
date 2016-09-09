@@ -434,7 +434,11 @@
 		if(width){
 			var size = this.left(col)+width+self.right(col);
 			if(size<=this.opts.width&&width>=1){
-				col.attr('data-gs-col' ,width);
+				var oldw = col.attr('data-gs-col');
+				if(parseInt(oldw,10)!=width){
+					col.attr('data-gs-col' ,width);
+					col.trigger('gs-width-change');
+				}
 				self._afterWidth(col);
 				return width;
 			}
