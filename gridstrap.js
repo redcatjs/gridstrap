@@ -167,7 +167,7 @@
 		var placeholder = ui.placeholder;
 		var w = self._rowWidth(row,self.width(item));
 		placeholder.css({
-			width: w,
+			width: Math.floor(w),
 			'margin-left': ( self.left(item) * 100 / self.opts.width ) + '%',
 			'margin-right': ( self.right(item) * 100 / self.opts.width ) + '%',
 		});
@@ -222,7 +222,7 @@
 					
 					ui.placeholder.css({
 						height: item.height(),
-						width: item.width(),
+						width: Math.floor(item.width()),
 						'margin-left': ( self.left(item) * 100 / self.opts.width ) + '%',
 						'margin-right': ( self.right(item) * 100 / self.opts.width ) + '%',
 					});
