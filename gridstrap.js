@@ -189,7 +189,7 @@
 		var hOrigin = row.find('[data-gs-row="'+ui.item.attr('data-gs-row')+'"]:not(.gs-placeholder)').eq(0).height();
 		h = Math.max(hOrigin,ui.item.data('gs-auto-height'));
 		ui.item.height(h);
-		ui.placeholder.height(h);
+		//ui.placeholder.height(h);
 	};
 	Gridstrap.prototype._hanldeSortable = function(rows){
 		var self = this;
