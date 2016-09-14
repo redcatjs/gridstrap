@@ -207,9 +207,9 @@
 				connectWith: self.opts.connectWith,
 				revert: 200,
 				scroll: self.opts.scroll,
-				scrollSensitivity: 100, //default 20
-				scrollSpeed: 50, //default 20
-				delay: 50,
+				scrollSensitivity: 20, //default 20
+				scrollSpeed: 20, //default 20
+				delay: 0,
 				tolerance: 'pointer',
 				placeholder: 'gs-placeholder',
 				appendTo: document.body,
