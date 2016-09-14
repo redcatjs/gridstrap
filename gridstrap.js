@@ -222,7 +222,6 @@
 					item.data('gs-startindex',item.index());
 					
 					//self._autoAdjustHeightInit(row,ui);
-					
 					ui.placeholder.css({
 						height: item.height(),
 						width: Math.floor(item.width()),
@@ -270,6 +269,10 @@
 					}
 					
 					if(!item.data('gs-integrated')){
+						item.css('height','');
+						item.css('left','');
+						item.css('top','');
+						item.css('width','');
 						row.trigger('gs-received',[ui]);
 					}
 					
