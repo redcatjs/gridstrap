@@ -245,6 +245,8 @@
 					
 					self._autoAdjustWidth(row, ui);
 					//self._autoAdjustHeight(row,ui);
+					
+					self._updateTempItems(row); //fix dirty adjustment on first drag'n'drop
 				},
 				change: function(e, ui){
 					if(self.opts.debugEvents) console.log('change',this);
