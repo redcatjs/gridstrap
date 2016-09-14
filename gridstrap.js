@@ -59,6 +59,7 @@
 	};
 	
 	Gridstrap.prototype._resizeCallback = function(el,ui,e){
+		var self = this;
 		var $this = $(el);
 		var containerW = $this.parent().innerWidth();
 		var colW = containerW/self.opts.width;
