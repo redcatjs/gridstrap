@@ -22,9 +22,10 @@
 			scrollParent: false,
 			scrollCallback: false,
 			resizable:{
+				gost: true,
 				handles: 'e',
 				start: function(e,ui){
-					ui.element.css('transition-duration','50ms');
+					ui.element.css('transition-duration','0s');
 				},
 				resize:function(e,ui){
 					self._resizeCallback(this,ui,e);
@@ -67,9 +68,10 @@
 		var $this = $(el);
 		var containerW = $this.parent().innerWidth();
 		var colW = containerW/self.opts.width;
-		var col = Math.ceil( ui.size.width/colW );
+		var padding = 15;
+		var col = (ui.size.width+padding) /colW;
+		col = Math.round( col );
 		$this.attr('data-gs-col', col );
-		$this.css('width', '');
 		$this.trigger('gs-resizing');
 	};
 	
