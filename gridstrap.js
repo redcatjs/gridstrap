@@ -23,12 +23,16 @@
 			scrollCallback: false,
 			resizable:{
 				handles: 'e',
+				start: function(e,ui){
+					ui.element.css('transition-duration','50ms');
+				},
 				resize:function(e,ui){
 					self._resizeCallback(this,ui,e);
 				},
-				stop: function(){
+				stop: function(e,ui){
 					$(this).css('width','');
 					$(this).trigger('gs-resized');
+					ui.element.css('transition-duration','');
 				}
 			},
 			boxPadding: 15, //$box-padding .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
@@ -64,10 +68,8 @@
 		var containerW = $this.parent().innerWidth();
 		var colW = containerW/self.opts.width;
 		var col = Math.ceil( ui.size.width/colW );
-		$this.addClass('no-transition');
 		$this.attr('data-gs-col', col );
 		$this.css('width', '');
-		$this.removeClass('no-transition');
 		$this.trigger('gs-resizing');
 	};
 	

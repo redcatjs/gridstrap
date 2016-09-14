@@ -137,9 +137,6 @@ $gs-percent: (100% / $gridstrap-columns);
 		position: relative;
 		width: 100%;
 	}
-	.no-transition {
-		transition: none !important;
-	}
 	.gs-state-highlight{
 		border: 1px solid rgba(23, 161, 0, 0.5);
 		background-color: rgba(208, 233, 147, 0.5); 
