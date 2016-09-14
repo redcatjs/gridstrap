@@ -22,7 +22,6 @@
 			scrollParent: false,
 			scrollCallback: false,
 			resizable:{
-				gost: true,
 				handles: 'e',
 				start: function(e,ui){
 					ui.element.css('transition-duration','0s');
