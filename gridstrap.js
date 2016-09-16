@@ -210,11 +210,10 @@
 			var sortableOptions = {
 				items: self.itemsSelector,
 				connectWith: self.opts.connectWith,
-				revert: 200,
+				revert: false,
 				scroll: self.opts.scroll,
 				scrollSensitivity: 20, //default 20
 				scrollSpeed: 20, //default 20
-				delay: 10,
 				tolerance: 'pointer',
 				placeholder: 'gs-placeholder',
 				appendTo: document.body,
