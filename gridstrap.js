@@ -217,6 +217,7 @@
 				tolerance: 'pointer',
 				placeholder: 'gs-placeholder',
 				appendTo: document.body,
+				cursorAt: { left: 15, top: 10 },
 				start: function(e, ui){
 					var item = ui.item;
 					if(self.opts.debugEvents) console.log('start',this);
