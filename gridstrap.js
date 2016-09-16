@@ -249,9 +249,8 @@
 					$(this).addClass('gs-moving-parent').parents('.gs-col').addClass('gs-moving-parent');
 					
 					self._autoAdjustWidth(row, ui);
-					//self._autoAdjustHeight(row,ui);
 					
-					//self._updateTempItems(row);
+					//self._autoAdjustHeight(row,ui);
 				},
 				change: function(e, ui){
 					if(self.opts.debugEvents) console.log('change',this);
