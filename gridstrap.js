@@ -236,6 +236,8 @@
 					
 					self._disableTargets(row, ui);
 					self._makeTempItems(row);
+					
+					ui.helper.addClass('gs-sortable-helper');
 				},
 				over: function(e, ui){
 					if(self.opts.debugEvents) console.log('over',this);
