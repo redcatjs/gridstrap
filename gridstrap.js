@@ -37,7 +37,7 @@
 			},
 			boxPadding: 15, //$box-padding .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
 			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
-			debugEvents: false,
+			debugEvents: true,
 		}, opts || {} );
 		this.itemsSelector = '> .gs-col:not(.gs-clone, .gs-moving)';
 		
@@ -206,14 +206,15 @@
 				row.sortable('refresh');
 				return;
 			}
-			row.sortable({
+			
+			var sortableOptions = {
 				items: self.itemsSelector,
 				connectWith: self.opts.connectWith,
 				revert: 200,
 				scroll: self.opts.scroll,
 				scrollSensitivity: 20, //default 20
 				scrollSpeed: 20, //default 20
-				delay: 0,
+				delay: 10,
 				tolerance: 'pointer',
 				placeholder: 'gs-placeholder',
 				appendTo: document.body,
@@ -246,7 +247,7 @@
 					self._autoAdjustWidth(row, ui);
 					//self._autoAdjustHeight(row,ui);
 					
-					self._updateTempItems(row); //fix dirty adjustment on first drag'n'drop
+					//self._updateTempItems(row);
 				},
 				change: function(e, ui){
 					if(self.opts.debugEvents) console.log('change',this);
@@ -279,9 +280,8 @@
 						item.css('top','');
 						item.css('width','');
 						row.trigger('gs-received',[ui]);
+						item.data('gs-integrated',true);
 					}
-					
-					item.data('gs-integrated',true);
 					
 					self._reenableTargets(row, ui);
 					self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
@@ -318,26 +318,32 @@
 				remove: function(e, ui){
 					if(self.opts.debugEvents) console.log('remove',this);
 				},
-				sort: function(event, ui){					
-					if(self.opts.scrollCallback){						
-						var o = row.sortable('option');
-						var scrollParent = self.opts.scrollParent || row.scrollParent();
-						
-						if(typeof(scrollParent)=='function'){
-							scrollParent = scrollParent(row);
-						}
-						
-						var overflowOffset = scrollParent.offset();
-						scrollParentEl = scrollParent[0];
-						if( overflowOffset.top + scrollParentEl.offsetHeight - event.pageY < o.scrollSensitivity ){
-							self.opts.scrollCallback(scrollParentEl.scrollTop + o.scrollSpeed, scrollParent);
-						}
-						else if( event.pageY - overflowOffset.top < o.scrollSensitivity ){
-							self.opts.scrollCallback(scrollParentEl.scrollTop - o.scrollSpeed, scrollParent);
-						}
+				sort: function(event, ui){
+					if(scrollCallback){
+						scrollCallback(event, ui);
 					}
 				},
-			});
+			};
+			
+			var scrollCallback;
+			if(self.opts.scrollCallback){
+				var scrollParent = self.opts.scrollParent || row.scrollParent();
+				if(typeof(scrollParent)=='function'){
+					scrollParent = scrollParent(row);
+				}
+				var scrollParentEl = scrollParent[0];
+				scrollCallback = function(event, ui){
+					var overflowOffset = scrollParent.offset();
+					if( overflowOffset.top + scrollParentEl.offsetHeight - event.pageY < sortableOptions.scrollSensitivity ){
+						self.opts.scrollCallback(scrollParentEl.scrollTop + sortableOptions.scrollSpeed, scrollParent);
+					}
+					else if( event.pageY - overflowOffset.top < sortableOptions.scrollSensitivity ){
+						self.opts.scrollCallback(scrollParentEl.scrollTop - sortableOptions.scrollSpeed, scrollParent);
+					}
+				};
+			}
+			
+			row.sortable(sortableOptions);
 		});
 	};
 	
