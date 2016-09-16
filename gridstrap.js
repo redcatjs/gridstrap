@@ -237,7 +237,9 @@
 					self._disableTargets(row, ui);
 					self._makeTempItems(row);
 					
-					ui.helper.addClass('gs-sortable-helper');
+					if(!item.data('gs-integrated')){
+						ui.helper.addClass('gs-sortable-helper');
+					}
 				},
 				over: function(e, ui){
 					if(self.opts.debugEvents) console.log('over',this);
@@ -282,6 +284,7 @@
 						item.css('width','');
 						row.trigger('gs-received',[ui]);
 						item.data('gs-integrated',true);
+						item.removeClass('gs-sortable-helper');
 					}
 					
 					self._reenableTargets(row, ui);
