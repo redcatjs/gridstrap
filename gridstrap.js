@@ -263,11 +263,17 @@
 					
 					$(this).addClass('gs-moving-parent').parents('.gs-col').addClass('gs-moving-parent');
 					
+					if(!ui.item.data('gs-integrated')){
+						ui.helper.height(ui.placeholder.height());
+					}
 					self._updateTempItemsAll();
 				},
 				change: function(e, ui){
 					if(self.opts.debugEvents) console.log('change',this);
 					
+					if(!ui.item.data('gs-integrated')){
+						ui.helper.height(ui.placeholder.height());
+					}
 					self._updateTempItemsAll();
 				},
 				out: function(e, ui){
