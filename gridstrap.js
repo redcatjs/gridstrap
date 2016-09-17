@@ -226,16 +226,19 @@
 					item.data('gs-startindex',item.index());
 					
 					//self._autoAdjustHeightInit(row,ui);
+					
 					ui.placeholder.css({
 						height: item.height(),
 						width: Math.floor(item.width()),
 						'margin-left': ( self.left(item) * 100 / self.opts.width ) + '%',
 						'margin-right': ( self.right(item) * 100 / self.opts.width ) + '%',
 					});
+					
 					ui.placeholder.html('<div class="gs-content"></div>');
 					item.addClass('gs-moving');
 					
 					self._disableTargets(row, ui);
+					
 					self._makeTempItems(row);
 					
 					if(!item.data('gs-integrated')){
@@ -251,10 +254,11 @@
 					self._autoAdjustWidth(row, ui);
 					
 					//self._autoAdjustHeight(row,ui);
+					
 					self._updateTempItems(row);
 					
 					if(self.sortusing){
-						self._cleanTempItems(self.sortusing);
+						self._updateTempItems(self.sortusing);
 						self.sortusing.removeClass('gs-moving-parent').parents('.gs-col').removeClass('gs-moving-parent');
 					}
 					self.sortusing = row;
