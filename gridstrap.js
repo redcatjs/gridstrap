@@ -242,12 +242,16 @@
 					
 					//self._autoAdjustHeightInit(row,ui);
 					
+					var external = !item.data('gs-integrated');
 					ui.placeholder.css({
-						height: item.data('gs-integrated')?item.height():'auto',
+						height: external?'auto':item.height(),
 						width: Math.floor(item.width()),
 						'margin-left': ( self.left(item) * 100 / self.opts.width ) + '%',
 						'margin-right': ( self.right(item) * 100 / self.opts.width ) + '%',
 					});
+					if(external){
+						ui.placeholder.css('min-height',90);
+					}
 					
 					ui.placeholder.html('<div class="gs-content"></div>');
 					item.addClass('gs-moving');
@@ -299,6 +303,7 @@
 					
 					if(!item.data('gs-integrated')){
 						item.css('height','');
+						item.css('min-height','');
 						item.css('left','');
 						item.css('top','');
 						item.css('width','');
