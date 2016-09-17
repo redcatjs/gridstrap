@@ -251,6 +251,13 @@
 					self._autoAdjustWidth(row, ui);
 					
 					//self._autoAdjustHeight(row,ui);
+					self._updateTempItems(row);
+					
+					if(self.sortusing){
+						self._cleanTempItems(self.sortusing);
+						self.sortusing.removeClass('gs-moving-parent').parents('.gs-col').removeClass('gs-moving-parent');
+					}
+					self.sortusing = row;
 				},
 				change: function(e, ui){
 					if(self.opts.debugEvents) console.log('change',this);
