@@ -185,27 +185,6 @@
 		item.width( w );
 	};
 
-	/*
-	Gridstrap.prototype._autoAdjustHeightInit = function(row,ui){		
-		var self = this;
-		var tempContainer = $('<div style="position:absolute;visibility:hidden;"></div>').appendTo(document.body);
-		var clone = ui.item.clone();
-		clone.css('height','auto');
-		tempContainer.append(clone);
-		var h = clone.height();
-		tempContainer.remove();
-		ui.item.data('gs-auto-height',h);
-	};
-	Gridstrap.prototype._autoAdjustHeight = function(row,ui){
-		var self = this;
-		self._attribDataRow(row, ui);
-		var hOrigin = row.find('[data-gs-row="'+ui.item.attr('data-gs-row')+'"]:not(.gs-placeholder)').eq(0).height();
-		h = Math.max(hOrigin,ui.item.data('gs-auto-height'));
-		ui.item.height(h);
-		ui.placeholder.height(h);
-	};
-	*/
-
 	Gridstrap.prototype._updateTempItemsAll = function(rows){
 		var self = this;
 		$.each(self.currentActiveSortables,function(i,row){
@@ -236,15 +215,12 @@
 				tolerance: 'pointer',
 				placeholder: 'gs-placeholder',
 				appendTo: document.body,
-				//cursorAt: { left: 15, top: 10 },
 				start: function(e, ui){
 					var item = ui.item;
 					if(self.opts.debugEvents) console.log('start',this);
 					
 					item.data('gs-startrow',row.get(0));
 					item.data('gs-startindex',item.index());
-					
-					//self._autoAdjustHeightInit(row,ui);
 					
 					var external = !item.data('gs-integrated');
 					ui.placeholder.css({
@@ -285,8 +261,6 @@
 					
 					self._autoAdjustWidth(row, ui);
 					
-					//self._autoAdjustHeight(row,ui);
-					
 					$(this).addClass('gs-moving-parent').parents('.gs-col').addClass('gs-moving-parent');
 					
 					self._updateTempItemsAll();
@@ -295,8 +269,6 @@
 					if(self.opts.debugEvents) console.log('change',this);
 					
 					self._updateTempItemsAll();
-					
-					//self._autoAdjustHeight(row,ui);
 				},
 				out: function(e, ui){
 					if(self.opts.debugEvents) console.log('out',this);
