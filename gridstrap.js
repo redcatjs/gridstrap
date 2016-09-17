@@ -80,6 +80,7 @@
 	
 	Gridstrap.prototype._makeTempItems = function(row){
 		var self = this;
+		if(row.data('gs-temp-item')) return;
 		row.find(self.itemsSelector).each(function(){
 			var item = $(this);
 			if(item.data('gs-clone')) return;
@@ -97,10 +98,12 @@
 			item.after(clone);
 			item.css('opacity',0);
 		});
+		row.data('gs-temp-item',true);
 		row.sortable('refresh');
 	};
 	Gridstrap.prototype._updateTempItems = function(row){
 		var self = this;
+		if(!row.data('gs-temp-item')) return;
 		row.find(self.itemsSelector).each(function(){
 			var item = $(this);
 			var clone = item.data('gs-clone');
@@ -116,6 +119,7 @@
 	};
 	Gridstrap.prototype._cleanTempItems = function(row){
 		var self = this;
+		if(!row.data('gs-temp-item')) return;
 		row.find(self.itemsSelector).each(function(){
 			var item = $(this);
 			var clone = item.data('gs-clone');
@@ -125,6 +129,7 @@
 			}
 			item.css('opacity',1);
 		});
+		row.data('gs-temp-item',false);
 	};
 	
 	Gridstrap.prototype._disableTargets = function(row,ui){
