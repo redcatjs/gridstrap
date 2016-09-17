@@ -212,6 +212,10 @@
 			self._updateTempItems(row);
 		})
 	};
+	
+	Gridstrap.prototype._isOverAxis = function( x, reference, size ) {
+		return ( x >= reference ) && ( x < ( reference + size ) );
+	};
 	Gridstrap.prototype._hanldeSortable = function(rows){
 		var self = this;
 		rows.each(function(){
@@ -264,6 +268,18 @@
 				},
 				over: function(e, ui){
 					if(self.opts.debugEvents) console.log('over',this);
+					
+					var sortable = row.data('ui-sortable');
+					var lastItem;
+					row.find(self.itemsSelector).each(function(){
+						var item = $(this);
+						var offset = item.offset();
+						var isOverElementHeight = self._isOverAxis( sortable.positionAbs.top + sortable.offset.click.top, offset.top, item.height() );						
+						if(isOverElementHeight){
+							lastItem = item;
+						}
+					});
+					ui.placeholder.insertAfter(lastItem);
 					
 					ui.item.parents('.gs-col').addClass('gs-moving-parent');
 					
