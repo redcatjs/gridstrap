@@ -184,6 +184,7 @@
 		});
 		item.width( w );
 	};
+
 	/*
 	Gridstrap.prototype._autoAdjustHeightInit = function(row,ui){		
 		var self = this;
@@ -204,6 +205,7 @@
 		ui.placeholder.height(h);
 	};
 	*/
+
 	Gridstrap.prototype._updateTempItemsAll = function(rows){
 		var self = this;
 		$.each(self.currentActiveSortables,function(i,row){
@@ -241,7 +243,7 @@
 					//self._autoAdjustHeightInit(row,ui);
 					
 					ui.placeholder.css({
-						height: item.height(),
+						height: item.data('gs-integrated')?item.height():'auto',
 						width: Math.floor(item.width()),
 						'margin-left': ( self.left(item) * 100 / self.opts.width ) + '%',
 						'margin-right': ( self.right(item) * 100 / self.opts.width ) + '%',
