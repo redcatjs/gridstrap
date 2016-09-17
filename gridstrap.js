@@ -220,14 +220,6 @@
 				return;
 			}
 			
-			var cleanSortUsing = function(){
-				if(self.sortusing){
-					self._cleanTempItems(self.sortusing);
-					self.sortusing.removeClass('gs-moving-parent').parents('.gs-col').removeClass('gs-moving-parent');
-					self.sortusing = false;
-				}
-			};
-			
 			var sortableOptions = {
 				items: self.itemsSelector,
 				connectWith: self.opts.connectWith,
@@ -260,8 +252,6 @@
 					
 					self._disableTargets(row, ui);
 					
-					//self._makeTempItems(row);
-					
 					if(!item.data('gs-integrated')){
 						ui.helper.addClass('gs-sortable-helper');
 					}
@@ -275,22 +265,12 @@
 					
 					//self._autoAdjustHeight(row,ui);
 					
-					//self._updateTempItems(row);
-					
-					//self._makeTempItems(row);
-					//cleanSortUsing();
-					//self.sortusing = row;
-					
 					$(this).addClass('gs-moving-parent').parents('.gs-col').addClass('gs-moving-parent');
 					
 					self._updateTempItemsAll();
 				},
 				change: function(e, ui){
 					if(self.opts.debugEvents) console.log('change',this);
-
-					//self._makeTempItems(row);
-					//cleanSortUsing();
-					//self.sortusing = row;
 					
 					self._updateTempItemsAll();
 					
@@ -298,12 +278,9 @@
 				},
 				out: function(e, ui){
 					if(self.opts.debugEvents) console.log('out',this);
-					//self._cleanTempItems(row);
 					$(this).removeClass('gs-moving-parent').parents('.gs-col').removeClass('gs-moving-parent');
 					
 					self._updateTempItemsAll();
-					
-					//cleanSortUsing();
 				},
 				stop: function(e, ui){
 					if(self.opts.debugEvents) console.log('stop',this);
