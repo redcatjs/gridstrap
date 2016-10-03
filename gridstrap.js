@@ -37,7 +37,7 @@
 			},
 			boxPadding: 15, //$box-padding .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
 			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
-			debugEvents: false,
+			debugEvents: true,
 		}, opts || {} );
 		this.itemsSelector = '> .gs-col:not(.gs-clone, .gs-moving)';
 		
@@ -270,6 +270,9 @@
 							ui.helper.height(ui.placeholder.height());
 						}
 						self._updateTempItemsAll();
+						
+						self.container.find('.gs-state-over').removeClass('gs-state-over');
+						row.addClass('gs-state-over');
 					},
 					change: function(e, ui){
 						if(self.opts.debugEvents) console.log('change',this);
@@ -278,14 +281,20 @@
 							ui.helper.height(ui.placeholder.height());
 						}
 						self._updateTempItemsAll();
+						
+						//self.container.find('.gs-state-over').removeClass('.gs-state-over');
+						//ui.placeholder.closest('.gs-row').addClass('gs-state-over');
 					},
 					out: function(e, ui){
 						if(self.opts.debugEvents) console.log('out',this);
 						$(this).removeClass('gs-moving-parent').parents('.gs-col').removeClass('gs-moving-parent');
 						
+						
 						row.find('.gs-placeholder').hide();
 						
 						self._updateTempItemsAll();
+						
+						row.removeClass('gs-state-over');
 					},
 					stop: function(e, ui){
 						if(self.opts.debugEvents) console.log('stop',this);
@@ -336,6 +345,7 @@
 					deactivate: function(e, ui){
 						if(self.opts.debugEvents) console.log('deactivate',this);
 						$(this).removeClass('gs-state-highlight');
+						row.removeClass('.gs-state-over');
 						row.find('.gs-moving').removeClass('gs-moving');
 						
 						self._cleanTempItems(row);

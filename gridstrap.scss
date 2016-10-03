@@ -142,7 +142,11 @@ $gs-percent: (100% / $gridstrap-columns);
 /*
 		border: 1px solid rgba(23, 161, 0, 0.5);
 */
-		background-color: rgba(208, 233, 147, 0.5); 
+		background-color: #E7F4C9;
+		
+		&.gs-state-over{
+			background-color: #D0E993
+		}
 	}
 }
 
