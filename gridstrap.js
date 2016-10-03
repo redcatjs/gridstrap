@@ -289,8 +289,7 @@
 						if(self.opts.debugEvents) console.log('out',this);
 						$(this).removeClass('gs-moving-parent').parents('.gs-col').removeClass('gs-moving-parent');
 						
-						
-						row.find('.gs-placeholder').hide();
+						//row.find('.gs-placeholder').hide();
 						
 						self._updateTempItemsAll();
 						
