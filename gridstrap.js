@@ -181,6 +181,8 @@
 				'margin-left': ( self.left(item) * 100 / self.opts.width ) + '%',
 				'margin-right': ( self.right(item) * 100 / self.opts.width ) + '%',
 			});
+			
+			w = self._rowWidth(row,self.width(item),true);
 			item.width( w );
 		},
 
