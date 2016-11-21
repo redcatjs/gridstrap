@@ -37,7 +37,7 @@
 			},
 			boxPadding: 15, //$box-padding .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
 			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
-			debugEvents: true,
+			debugEvents: false,
 		}, opts || {} );
 		this.itemsSelector = '> .gs-col:not(.gs-clone, .gs-moving)';
 		
@@ -440,6 +440,7 @@
 				container.append(el);
 			}
 			this._hanldeSortable(container);
+			self.container.trigger('gs:adding');
 		},
 		handleAdd: function(el){
 			var self = this;
@@ -458,6 +459,7 @@
 			this._hanldeSortable(rows);
 			
 			el.resizable(this.opts.resizable);
+			self.container.trigger('gs:added');
 		},
 		add: function(el,width,container){
 			this.prepareAdd(el,width,container);
@@ -569,12 +571,14 @@
 		
 		remove: function(col){
 			var defer = $.Deferred();
+			var self = this;
 			col.animate({
 				opacity: 'hide',
 				width: 'hide',
 				height: 'hide'
 			}, 400, function() {
 				col.remove();
+				self.container.trigger('gs:remove',col);
 				defer.resolve();
 			});
 			return defer;
