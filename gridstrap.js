@@ -38,6 +38,7 @@
 			boxPadding: 15, //$box-padding .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
 			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
 			debugEvents: false,
+			cloneCallback: null,
 		}, opts || {} );
 		this.itemsSelector = '> .gs-col:not(.gs-clone, .gs-moving)';
 		
@@ -89,6 +90,9 @@
 				if(item.data('gs-clone')) return;
 				var position = item.position();
 				var clone = item.clone();
+				if(self.opts.cloneCallback){
+					self.opts.cloneCallback(clone);
+				}
 				item.data('gs-clone',clone);
 				clone.addClass('gs-clone');
 				clone.css({
