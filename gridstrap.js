@@ -17,7 +17,7 @@
 			width: 12,
 			cellHeight: 80,
 			defaultWidth: 3,
-			connectWith: '.gridstrap:visible .gs-col:not(.gs-clone) .gs-row',
+			connectWith: '.gridstrap:visible .gs-col:not(.gs-clone) .gs-row, .gridstrap:visible > .gs-row',
 			scroll: true,
 			scrollParent: false,
 			scrollCallback: false,
@@ -56,6 +56,7 @@
 			e.stopNamespacePropagation = true;
 			$(this).removeClass('gs-mouseover');
 		});
+		
 		
 		var rootRow = container.find('>.gs-row');
 		if(!rootRow.length){
@@ -209,7 +210,6 @@
 					row.sortable('refresh');
 					return;
 				}
-				
 				var sortableOptions = {
 					items: self.itemsSelector,
 					connectWith: self.opts.connectWith,
@@ -329,7 +329,7 @@
 					update: function(e, ui){
 						if(self.opts.debugEvents) console.log('update',this);
 					},
-					activate: function(e, ui){
+					activate: function(e, ui){						
 						if(self.opts.debugEvents) console.log('activate',this);
 						$(this).addClass('gs-state-highlight');
 						
