@@ -127,8 +127,14 @@ $gs-percent: (100% / $gridstrap-columns);
 		display: flex;
 		flex-wrap: wrap;
 		min-height:150px;
-		padding-bottom: 50px;
+/*
+		padding-bottom: 20px;
 		padding-top: 20px;
+*/
+		padding-bottom: 0;
+		padding-top: 0;
+		
+		margin-bottom: 2px;
 	}
 
 	.empty-get-started {
@@ -142,7 +148,9 @@ $gs-percent: (100% / $gridstrap-columns);
 	.gs-state-highlight{
 /*
 		border: 1px solid rgba(23, 161, 0, 0.5);
+		border-bottom: 1px dashed $m-gray;
 */
+		
 		background-color: #E7F4C9;
 		
 		&.gs-state-over{
