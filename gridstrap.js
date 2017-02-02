@@ -37,8 +37,10 @@
 			},
 			boxPadding: 15, //$box-padding .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
 			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
-			debugEvents: false,
+			//debugEvents: false,
+			debugEvents: true,
 			cloneCallback: null,
+			smooth: true,
 		}, opts || {} );
 		this.itemsSelector = '> .gs-col:not(.gs-clone, .gs-moving)';
 		
@@ -84,6 +86,9 @@
 		
 		_makeTempItems: function(row){
 			var self = this;
+			if(!self.opts.smooth){
+				return;
+			}
 			if(row.data('gs-temp-item')) return;
 			row.data('gs-temp-item',true);
 			row.find(self.itemsSelector).each(function(){
@@ -217,7 +222,7 @@
 					scroll: self.opts.scroll,
 					scrollSensitivity: 20, //default 20
 					scrollSpeed: 20, //default 20
-					tolerance: 'pointer',
+					tolerance: 'intersect', //intersect || pointer
 					placeholder: 'gs-placeholder',
 					appendTo: document.body,
 					start: function(e, ui){
@@ -248,7 +253,7 @@
 						}
 					},
 					over: function(e, ui){
-						if(self.opts.debugEvents) console.log('over',this);
+						if(self.opts.debugEvents) console.log('over',this,row);
 						
 						if(!ui.item.data('gs-integrated')){
 							var sortable = row.data('ui-sortable');
@@ -281,9 +286,9 @@
 					change: function(e, ui){
 						if(self.opts.debugEvents) console.log('change',this);
 						
-						if(!ui.item.data('gs-integrated')){
+						//if(!ui.item.data('gs-integrated')){
 							ui.helper.height(ui.placeholder.height());
-						}
+						//}
 						self._updateTempItemsAll();
 						
 						//self.container.find('.gs-state-over').removeClass('.gs-state-over');
