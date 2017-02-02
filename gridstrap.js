@@ -37,8 +37,8 @@
 			},
 			boxPadding: 15, //$box-padding .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
 			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
-			//debugEvents: false,
-			debugEvents: true,
+			debugEvents: false,
+			//debugEvents: true,
 			cloneCallback: null,
 			smooth: true,
 		}, opts || {} );
