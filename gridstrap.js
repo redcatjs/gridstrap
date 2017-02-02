@@ -65,7 +65,7 @@
 			rootRow = $('<div class="gs-row" />').appendTo(container);
 		}
 		
-		this._hanldeSortable(rootRow);
+		this.sortable(rootRow);
 	};
 	Gridstrap.prototype = {		
 		_resizeCallback: function(el,ui,e){
@@ -206,7 +206,38 @@
 		_isOverAxis: function( x, reference, size ) {
 			return ( x >= reference ) && ( x < ( reference + size ) );
 		},
-		_hanldeSortable: function(rows){
+		
+		_getCurrentOrderedCols: function(row,ui){
+			var sCols = [];
+			var cols = row.find('> .gs-placeholder, > .gs-col:not(.gs-moving, .gs-clone)');
+			cols.each(function(){
+				if(this===ui.placeholder[0]){
+					sCols.push( ui.item );
+				}
+				else{
+					sCols.push( $(this) );
+				}
+			});
+			return $(sCols);
+		},
+		
+		_attribDataRow: function(row,ui){
+			var self = this;
+			var cols = self._getCurrentOrderedCols(row,ui);
+			var currentRow = 1;
+			var ttWidth = 0;
+			cols.each(function(){
+				var $this = $(this);
+				ttWidth += self.width( $this );
+				if(ttWidth>self.opts.width){
+					ttWidth = 0;
+					currentRow++;
+				}
+				$this.attr('data-gs-row',currentRow);
+			});
+		},
+		
+		sortable: function(rows){
 			var self = this;
 			rows.each(function(){
 				var row = $(this);
@@ -404,36 +435,6 @@
 			});
 		},
 		
-		_getCurrentOrderedCols: function(row,ui){
-			var sCols = [];
-			var cols = row.find('> .gs-placeholder, > .gs-col:not(.gs-moving, .gs-clone)');
-			cols.each(function(){
-				if(this===ui.placeholder[0]){
-					sCols.push( ui.item );
-				}
-				else{
-					sCols.push( $(this) );
-				}
-			});
-			return $(sCols);
-		},
-		
-		_attribDataRow: function(row,ui){
-			var self = this;
-			var cols = self._getCurrentOrderedCols(row,ui);
-			var currentRow = 1;
-			var ttWidth = 0;
-			cols.each(function(){
-				var $this = $(this);
-				ttWidth += self.width( $this );
-				if(ttWidth>self.opts.width){
-					ttWidth = 0;
-					currentRow++;
-				}
-				$this.attr('data-gs-row',currentRow);
-			});
-		},
-		
 		prepareAdd: function(el,width,container){
 			var self = this;
 			if(!width){
@@ -448,7 +449,7 @@
 			if(el.parent().get(0)!==container.get(0)){
 				container.append(el);
 			}
-			this._hanldeSortable(container);
+			this.sortable(container);
 			self.container.trigger('gs:adding');
 		},
 		handleAdd: function(el){
@@ -465,7 +466,7 @@
 				self._setMargin(el);
 			});
 			
-			this._hanldeSortable(rows);
+			this.sortable(rows);
 			
 			el.resizable(this.opts.resizable);
 			self.container.trigger('gs:added');
