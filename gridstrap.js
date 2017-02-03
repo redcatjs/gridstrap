@@ -315,7 +315,8 @@
 						
 						self._autoAdjustWidth(row, ui);
 						
-						this.classList.add('gs-moving-parent').parents('.gs-col').addClass('gs-moving-parent');
+						this.classList.add('gs-moving-parent');
+						$(this).parents('.gs-col').addClass('gs-moving-parent');
 						
 						self._sizePlaceholderToHelper(ui);
 						
@@ -336,7 +337,8 @@
 					},
 					out: function(e, ui){
 						if(self.opts.debugEvents) console.log('out',this);
-						this.classList.remove('gs-moving-parent').parents('.gs-col').removeClass('gs-moving-parent');
+						this.classList.remove('gs-moving-parent');
+						$(this).parents('.gs-col').removeClass('gs-moving-parent');
 						
 						//row.find('.gs-placeholder').hide();
 						
