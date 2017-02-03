@@ -186,10 +186,11 @@
 			var item = ui.item;
 			var placeholder = ui.placeholder;
 			var w = self._rowWidth(row,self.width(item));
+			var p = 100 / self.opts.width;
 			placeholder.css({
 				width: Math.floor(w),
-				'margin-left': ( self.left(item) * 100 / self.opts.width ) + '%',
-				'margin-right': ( self.right(item) * 100 / self.opts.width ) + '%',
+				'margin-left': ( self.left(item) * p ) + '%',
+				'margin-right': ( self.right(item) * p ) + '%',
 			});
 			
 			w = self._rowWidth(row,self.width(item),true);
@@ -237,6 +238,15 @@
 			});
 		},
 		
+		_sizePlaceholderToHelper: function(ui){
+			if(!ui.item.hasClass('gs-integrated')){
+				ui.helper.css({
+					height:(ui.placeholder.height())+'px',
+					width:(ui.placeholder.width())+'px',
+				});
+			}
+		},
+		
 		sortable: function(rows){
 			var self = this;
 			rows.each(function(){
@@ -264,7 +274,7 @@
 						item.data('gs-startrow',row.get(0));
 						item.data('gs-startindex',item.index());
 						
-						var external = !item.data('gs-integrated');
+						var external = !item.hasClass('gs-integrated');
 						ui.placeholder.css({
 							height: external?'auto':item.height(),
 							width: Math.floor(item.width()),
@@ -280,14 +290,14 @@
 						
 						self._disableTargets(row, ui);
 						
-						if(!item.data('gs-integrated')){
+						if(!item.hasClass('gs-integrated')){
 							ui.helper.addClass('gs-sortable-helper');
 						}
 					},
 					over: function(e, ui){
 						if(self.opts.debugEvents) console.log('over',this,row);
 						
-						if(!ui.item.data('gs-integrated')){
+						if(!ui.item.hasClass('gs-integrated')){
 							var sortable = row.data('ui-sortable');
 							var lastItem;
 							row.find(self.itemsSelector).each(function(){
@@ -307,9 +317,8 @@
 						
 						$(this).addClass('gs-moving-parent').parents('.gs-col').addClass('gs-moving-parent');
 						
-						if(!ui.item.data('gs-integrated')){
-							ui.helper.height(ui.placeholder.height());
-						}
+						self._sizePlaceholderToHelper(ui);
+						
 						self._updateTempItemsAll();
 						
 						self.container.find('.gs-state-over').removeClass('gs-state-over');
@@ -317,10 +326,9 @@
 					},
 					change: function(e, ui){
 						if(self.opts.debugEvents) console.log('change',this);
+
+						self._sizePlaceholderToHelper(ui);
 						
-						//if(!ui.item.data('gs-integrated')){
-							ui.helper.height(ui.placeholder.height());
-						//}
 						self._updateTempItemsAll();
 						
 						//self.container.find('.gs-state-over').removeClass('.gs-state-over');
@@ -349,14 +357,14 @@
 							row.trigger('gs-row-changed',[ui]);
 						}
 						
-						if(!item.data('gs-integrated')){
+						if(!item.hasClass('gs-integrated')){
 							item.css('height','');
 							item.css('min-height','');
 							item.css('left','');
 							item.css('top','');
 							item.css('width','');
 							row.trigger('gs-received',[ui]);
-							item.data('gs-integrated',true);
+							item.addClass('gs-integrated');
 							item.removeClass('gs-sortable-helper');
 						}
 						
@@ -443,7 +451,7 @@
 			}
 			el.attr('data-gs-col',width);
 			el.addClass('gs-col');
-			el.data('gs-integrated', true);
+			el.addClass('gs-integrated');
 			if(!container){
 				container = this.container;
 			}
