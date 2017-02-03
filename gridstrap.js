@@ -256,6 +256,7 @@
 					tolerance: 'intersect', //intersect || pointer
 					placeholder: 'gs-placeholder',
 					appendTo: document.body,
+					cursor: 'move',
 					start: function(e, ui){
 						var item = ui.item;
 						if(self.opts.debugEvents) console.log('start',this);
