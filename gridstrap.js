@@ -37,8 +37,8 @@
 			},
 			boxPadding: 15, //$box-padding .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
 			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
-			debugEvents: false,
-			//debugEvents: true,
+			//debugEvents: false,
+			debugEvents: true,
 			cloneCallback: null,
 			smooth: true,
 		}, opts || {} );
@@ -112,6 +112,12 @@
 				item.css('opacity',0);
 			});
 			row.sortable('refresh');
+		},
+		_updateTempItemsAll: function(){
+			var self = this;
+			$.each(self.currentActiveSortables,function(i,row){
+				self._updateTempItems(row);
+			})
 		},
 		_updateTempItems: function(row){
 			if(!row.data('gs-temp-item')) return;
@@ -197,12 +203,6 @@
 			item.width( w );
 		},
 
-		_updateTempItemsAll: function(rows){
-			var self = this;
-			$.each(self.currentActiveSortables,function(i,row){
-				self._updateTempItems(row);
-			})
-		},
 		
 		_isOverAxis: function( x, reference, size ) {
 			return ( x >= reference ) && ( x < ( reference + size ) );
