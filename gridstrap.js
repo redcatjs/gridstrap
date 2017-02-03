@@ -52,11 +52,11 @@
 		container.on('mouseover.gs', '.gs-col', function(e){
 			if(e.stopNamespacePropagation) return;
 			e.stopNamespacePropagation = true;
-			$(this).addClass('gs-mouseover');
+			this.classList.add('gs-mouseover');
 		}).on('mouseout.gs', '.gs-col', function(e){
 			if(e.stopNamespacePropagation) return;
 			e.stopNamespacePropagation = true;
-			$(this).removeClass('gs-mouseover');
+			this.classList.remove('gs-mouseover');
 		});
 		
 		
@@ -315,7 +315,7 @@
 						
 						self._autoAdjustWidth(row, ui);
 						
-						$(this).addClass('gs-moving-parent').parents('.gs-col').addClass('gs-moving-parent');
+						this.classList.add('gs-moving-parent').parents('.gs-col').addClass('gs-moving-parent');
 						
 						self._sizePlaceholderToHelper(ui);
 						
@@ -336,7 +336,7 @@
 					},
 					out: function(e, ui){
 						if(self.opts.debugEvents) console.log('out',this);
-						$(this).removeClass('gs-moving-parent').parents('.gs-col').removeClass('gs-moving-parent');
+						this.classList.remove('gs-moving-parent').parents('.gs-col').removeClass('gs-moving-parent');
 						
 						//row.find('.gs-placeholder').hide();
 						
@@ -376,7 +376,7 @@
 					},
 					activate: function(e, ui){						
 						if(self.opts.debugEvents) console.log('activate',this);
-						$(this).addClass('gs-state-highlight');
+						this.classList.add('gs-state-highlight');
 						
 						var parentCol = $(this).closest('.gs-col');
 						if(parentCol.length){
@@ -392,7 +392,7 @@
 					},
 					deactivate: function(e, ui){
 						if(self.opts.debugEvents) console.log('deactivate',this);
-						$(this).removeClass('gs-state-highlight');
+						this.classList.remove('gs-state-highlight');
 						row.removeClass('.gs-state-over');
 						row.find('.gs-moving').removeClass('gs-moving');
 						
