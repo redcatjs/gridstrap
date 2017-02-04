@@ -24,7 +24,7 @@ $gs-percent: (100% / $gridstrap-columns);
 		margin-bottom: 5px;
 		padding-left: $box-padding;
 		padding-right: $box-padding;
-		z-index:99999;
+		z-index:20;
 		background: transparent;
 		visibility: visible !important;
 		.gs-content{
@@ -50,7 +50,7 @@ $gs-percent: (100% / $gridstrap-columns);
 			z-index: 10;
 		}
 		&.gs-moving{
-			z-index: 20;
+			z-index: 30;
 		}
 		&.gs-moving-parent{
 			z-index: 15;
