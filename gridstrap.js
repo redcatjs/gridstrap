@@ -323,14 +323,17 @@
 						
 						self._sizePlaceholderToHelper(ui);
 						
-						self._updateTempItemsAll();
+						//self._updateTempItemsAll();
 						
 						self.container.find('.gs-state-over').removeClass('gs-state-over');
 						row.addClass('gs-state-over');
 						
+						self._updateTempItemsAll();
+						
 					},
 					out: function(e, ui){
 						if(self.opts.debugEvents) console.log('out',this);
+						
 						
 						self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
 						//this.classList.remove('gs-moving-parent');
@@ -338,19 +341,26 @@
 						
 						//row.find('.gs-placeholder').hide();
 						
-						self._updateTempItemsAll();
+						//self._updateTempItemsAll();
 						
 						row.removeClass('gs-state-over');
+						
+						self._updateTempItemsAll();
+						
 					},
 					change: function(e, ui){
 						if(self.opts.debugEvents) console.log('change',this);
-
+						
+						
 						self._sizePlaceholderToHelper(ui);
 						
-						self._updateTempItemsAll();
+						//self._updateTempItemsAll();
 						
 						//self.container.find('.gs-state-over').removeClass('.gs-state-over');
 						//ui.placeholder.closest('.gs-row').addClass('gs-state-over');
+						
+						self._updateTempItemsAll();
+						
 					},
 					stop: function(e, ui){
 						if(self.opts.debugEvents) console.log('stop',this);
