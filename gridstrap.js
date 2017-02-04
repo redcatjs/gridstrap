@@ -37,8 +37,8 @@
 			},
 			boxPadding: 15, //$box-padding .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
 			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
-			//debugEvents: false,
-			debugEvents: true,
+			debugEvents: false,
+			//debugEvents: true,
 			cloneCallback: null,
 			smooth: true,
 		}, opts || {} );
@@ -110,6 +110,7 @@
 				});	
 				item.after(clone);
 				item.css('opacity',0);
+				
 			});
 			row.sortable('refresh');
 		},
@@ -291,7 +292,7 @@
 						self._disableTargets(row, ui);
 						
 						if(!item.hasClass('gs-integrated')){
-							ui.helper.addClass('gs-sortable-helper');
+							//ui.helper.addClass('gs-sortable-helper');
 						}
 					},
 					over: function(e, ui){
@@ -311,12 +312,14 @@
 							ui.placeholder.insertAfter(lastItem);
 						}
 						
-						ui.item.parents('.gs-col').addClass('gs-moving-parent');
 						
 						self._autoAdjustWidth(row, ui);
 						
-						this.classList.add('gs-moving-parent');
+						self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
+						//ui.item.parents('.gs-col').addClass('gs-moving-parent');
+						//this.classList.add('gs-moving-parent');
 						$(this).parents('.gs-col').addClass('gs-moving-parent');
+					
 						
 						self._sizePlaceholderToHelper(ui);
 						
@@ -324,6 +327,20 @@
 						
 						self.container.find('.gs-state-over').removeClass('gs-state-over');
 						row.addClass('gs-state-over');
+						
+					},
+					out: function(e, ui){
+						if(self.opts.debugEvents) console.log('out',this);
+						
+						self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
+						//this.classList.remove('gs-moving-parent');
+						//$(this).parents('.gs-col').removeClass('gs-moving-parent');
+						
+						//row.find('.gs-placeholder').hide();
+						
+						self._updateTempItemsAll();
+						
+						row.removeClass('gs-state-over');
 					},
 					change: function(e, ui){
 						if(self.opts.debugEvents) console.log('change',this);
@@ -334,17 +351,6 @@
 						
 						//self.container.find('.gs-state-over').removeClass('.gs-state-over');
 						//ui.placeholder.closest('.gs-row').addClass('gs-state-over');
-					},
-					out: function(e, ui){
-						if(self.opts.debugEvents) console.log('out',this);
-						this.classList.remove('gs-moving-parent');
-						$(this).parents('.gs-col').removeClass('gs-moving-parent');
-						
-						//row.find('.gs-placeholder').hide();
-						
-						self._updateTempItemsAll();
-						
-						row.removeClass('gs-state-over');
 					},
 					stop: function(e, ui){
 						if(self.opts.debugEvents) console.log('stop',this);
