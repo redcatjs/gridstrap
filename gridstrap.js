@@ -84,18 +84,24 @@
 			return row.width() * n/this.opts.width - (padding ? this.opts.boxPadding*2 : 0);
 		},
 		
-		_makeTempItems: function(row){
+		_makeTempItems: function(row,dragging){
 			var self = this;
 			if(!self.opts.smooth){
 				return;
 			}
+			dragging.addClass('gs-col-dragging');
 			if(row.data('gs-temp-item')) return;
 			row.data('gs-temp-item',true);
 			row.find(self.itemsSelector).each(function(){
 				var item = $(this);
 				if(item.data('gs-clone')) return;
 				var position = item.position();
+				
+				
 				var clone = item.clone();
+				
+				clone.find('.gs-col-dragging, .gs-placeholder').remove();
+				
 				if(self.opts.cloneCallback){
 					self.opts.cloneCallback(clone);
 				}
@@ -404,7 +410,7 @@
 							}
 						}
 						
-						self._makeTempItems(row);
+						self._makeTempItems(row,ui.item);
 						
 						self.currentActiveSortables.push(row);
 					},
