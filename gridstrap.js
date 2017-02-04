@@ -292,7 +292,7 @@
 						self._disableTargets(row, ui);
 						
 						if(!item.hasClass('gs-integrated')){
-							//ui.helper.addClass('gs-sortable-helper');
+							ui.helper.addClass('gs-sortable-helper');
 						}
 					},
 					over: function(e, ui){
