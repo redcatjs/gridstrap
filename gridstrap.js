@@ -270,7 +270,8 @@
 					scroll: self.opts.scroll,
 					scrollSensitivity: 20, //default 20
 					scrollSpeed: 20, //default 20
-					tolerance: 'intersect', //intersect || pointer
+					//tolerance: 'intersect', //intersect || pointer
+					tolerance: 'pointer', //intersect || pointer
 					placeholder: 'gs-placeholder',
 					appendTo: document.body,
 					cursor: 'grabbing',
@@ -303,6 +304,8 @@
 					},
 					over: function(e, ui){
 						if(self.opts.debugEvents) console.log('over',this,row);
+						
+						self._makeTempItems(row,ui.item);
 						
 						if(!ui.item.hasClass('gs-integrated')){
 							var sortable = row.data('ui-sortable');
@@ -351,8 +354,8 @@
 						
 						row.removeClass('gs-state-over');
 						
-						self._updateTempItemsAll();
-						
+						//self._updateTempItemsAll();
+						self._cleanTempItems(row);
 					},
 					change: function(e, ui){
 						if(self.opts.debugEvents) console.log('change',this);
@@ -410,7 +413,7 @@
 							}
 						}
 						
-						self._makeTempItems(row,ui.item);
+						//self._makeTempItems(row,ui.item);
 						
 						self.currentActiveSortables.push(row);
 					},
@@ -420,7 +423,7 @@
 						row.removeClass('.gs-state-over');
 						row.find('.gs-moving').removeClass('gs-moving');
 						
-						self._cleanTempItems(row);
+						//self._cleanTempItems(row);
 						
 						var index = self.currentActiveSortables.indexOf(row);
 						if (index > -1) {
