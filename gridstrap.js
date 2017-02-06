@@ -120,23 +120,6 @@
 			row.sortable('refresh');
 		},
 		_updateTempItemsTimeout: null,
-		_updateTempItemsRun: function(ui){
-			var self = this;
-			$.each(this.currentActiveSortables,function(i,row){				
-				row.find(self.itemsSelector).each(function(){
-					var item = $(this);
-					var clone = item.data('gs-clone');
-					if(clone){
-						var position = item.position();
-						clone.css({
-							top: position.top,
-							left: position.left,
-							height: item.outerHeight(),
-						});
-					}
-				});
-			});
-		},
 		_updateTempItems: function(ui){
 			var self = this;
 			if(this._updateTempItemsTimeout){
@@ -159,7 +142,21 @@
 				
 				content.removeClass('gs-hidden');
 				ui.item.hide();				
-				self._updateTempItemsRun(ui);
+				
+				$.each(this.currentActiveSortables,function(i,row){				
+					row.find(self.itemsSelector).each(function(){
+						var item = $(this);
+						var clone = item.data('gs-clone');
+						if(clone){
+							var position = item.position();
+							clone.css({
+								top: position.top,
+								left: position.left,
+								height: item.outerHeight(),
+							});
+						}
+					});
+				});
 				
 			},4000);
 			
@@ -169,14 +166,6 @@
 			if(this._updateTempItemsTimeout){
 				clearTimeout(this._updateTempItemsTimeout);
 			}
-			this._updateTempItemsRun(ui);
-			this._updateTempItemsTimeout = setTimeout(function(){
-				
-				self._cleanTempItemsRun();
-			
-			},this.opts.gsColTransitionWidth);
-		},
-		_cleanTempItemsRun: function(){
 			this.container.find('.gs-clone').each(function(){
 				var clone = $(this);
 				var item = clone.data('gs-origin');
