@@ -434,6 +434,7 @@
 						
 						//view/smooth z-index
 						self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
+						self.container.find('.gs-state-highlight').removeClass('gs-state-highlight');
 						
 						
 						//store
