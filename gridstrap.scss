@@ -26,11 +26,31 @@ $gs-percent: (100% / $gridstrap-columns);
 		padding-right: $box-padding;
 		z-index:20;
 		background: transparent;
+		margin-left:0;
+		margin-right:0;
 		visibility: visible !important;
 		.gs-content{
 			border: 1px dashed #333;
-			height:100%;
+			transition: width $gs-col-transition-width ease-out;
 			width:100%;
+			height:100%;
+			&.gs-hidden{
+				width:0;
+				border:0;
+				.gs-separator{
+					display:block;
+				}
+			}
+			.gs-separator{
+				display:none;
+				position:absolute;
+				height:100%;
+				width:2px;
+				border-radius:2px;
+				margin-left:-3px;
+				background:#545454;
+				box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			}
 		}
 	}
 	&.gs-editing{
@@ -44,11 +64,11 @@ $gs-percent: (100% / $gridstrap-columns);
 		padding-right: $box-padding;
 		transition: width $gs-col-transition-width ease-out, margin $gs-col-transition-width ease-out;
 		min-height: 100px;
-		z-index: 5;
+		z-index: 10;
 		
 		&.gs-clone{
 			transition: left $gs-col-transition-width ease-out, top $gs-col-transition-width ease-out;
-			z-index: 10;
+			z-index: 5;
 		}
 		&.gs-moving{
 			z-index: 30;
@@ -125,7 +145,6 @@ $gs-percent: (100% / $gridstrap-columns);
 		float: left;
 		width: 100%;
 		
-		
 		height: auto;
 		min-height:150px;
 		
@@ -136,6 +155,8 @@ $gs-percent: (100% / $gridstrap-columns);
 		
 		display: flex;
 		flex-wrap: wrap;
+		
+		transition: height $gs-col-transition-width ease-out;
 	}
 
 	.empty-get-started {

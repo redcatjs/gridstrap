@@ -37,10 +37,10 @@
 			},
 			boxPadding: 15, //$box-padding .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
 			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
-			//debugEvents: false,
-			debugEvents: true,
+			debugEvents: false,
+			//debugEvents: true,
 			cloneCallback: null,
-			smooth: 0,
+			smooth: true,
 		}, opts || {} );
 		this.itemsSelector = '> .gs-col:not(.gs-clone, .gs-moving)';
 		
@@ -86,15 +86,19 @@
 		
 		_makeTempItems: function(row){
 			var self = this;
-			if(!self.opts.smooth){
+			if(!this.opts.smooth){
 				return;
 			}
-			row.find(self.itemsSelector).each(function(){
+			row.find(this.itemsSelector).each(function(){
 				var item = $(this);
-				if(item.hasClass('gs-moving')) return;
+				
 				if(item.data('gs-clone')) return;
+				
 				var position = item.position();
 				var clone = item.clone();
+				
+				//clone.find('.gs-moving').remove();
+				
 				if(self.opts.cloneCallback){
 					self.opts.cloneCallback(clone);
 				}
@@ -116,35 +120,64 @@
 			row.sortable('refresh');
 		},
 		_updateTempItemsTimeout: null,
+		_updateTempItemsRun: function(ui){
+			var self = this;
+			$.each(this.currentActiveSortables,function(i,row){				
+				row.find(self.itemsSelector).each(function(){
+					var item = $(this);
+					var clone = item.data('gs-clone');
+					if(clone){
+						var position = item.position();
+						clone.css({
+							top: position.top,
+							left: position.left,
+							height: item.outerHeight(),
+						});
+					}
+				});
+			});
+		},
 		_updateTempItems: function(ui){
 			var self = this;
-			if(self._updateTempItemsTimeout){
-				clearTimeout(self._updateTempItemsTimeout);
+			if(this._updateTempItemsTimeout){
+				clearTimeout(this._updateTempItemsTimeout);
 			}
-			//self._updateTempItemsTimeout = setTimeout(function(){
-				$.each(self.currentActiveSortables,function(i,row){
-					
-					row.find(self.itemsSelector).each(function(){
-						var item = $(this);
-						var clone = item.data('gs-clone');
-						if(clone){
-							var position = item.position();
-							clone.css({
-								top: position.top,
-								left: position.left,
-								height: item.outerHeight(),
-							});
-						}
-					});
-					
-				});
+			var placeholder = ui.placeholder;
+			var content = placeholder.find('.gs-content');
 			
-			//},500);
+			content.addClass('gs-hidden');
+			placeholder.css('width','0');
+			placeholder.css('padding-left','0');
+			placeholder.css('padding-right','0');
+			//self._updateTempItemsRun(ui);
+			
+			this._updateTempItemsTimeout = setTimeout(function(){
+				
+				placeholder.css('width','');
+				placeholder.css('padding-left','');
+				placeholder.css('padding-right','');
+				
+				content.removeClass('gs-hidden');
+				ui.item.hide();				
+				self._updateTempItemsRun(ui);
+				
+			},4000);
 			
 		},
-		_cleanTempItems: function(){
+		_cleanTempItems: function(ui){
 			var self = this;
-			self.container.find('.gs-clone').each(function(){
+			if(this._updateTempItemsTimeout){
+				clearTimeout(this._updateTempItemsTimeout);
+			}
+			this._updateTempItemsRun(ui);
+			this._updateTempItemsTimeout = setTimeout(function(){
+				
+				self._cleanTempItemsRun();
+			
+			},this.opts.gsColTransitionWidth);
+		},
+		_cleanTempItemsRun: function(){
+			this.container.find('.gs-clone').each(function(){
 				var clone = $(this);
 				var item = clone.data('gs-origin');
 				clone.remove();
@@ -195,6 +228,45 @@
 		_aloneInTheRow: function(el){
 			return el.siblings('.gs-col:not(.gs-placeholder, .gs-moving, .gs-clone)').length<1;
 		},
+		_aloneInTheLine: function(el){
+			var self = this;
+			var line = 0;
+			var element = el.get(0);
+			var matched;
+			el.parent().find('>.gs-col, .gs-placeholder').not('.gs-moving, .gs-clone').each(function(){
+				var col = $(this);
+				var w = self.width(col);
+				var lw = line + w;
+				//console.log(line, '+', w, '=',lw);
+				if(matched){
+					if(lw >= 12){
+						line = 0;
+					}
+					return false;
+				}
+				else if(this===element){
+					if(lw >= 12){
+						line = 0;
+					}
+					matched = true;
+				}
+				else{
+					if(lw > 12){
+						line = w;
+					}
+					else if(lw==12){
+						line = 0;
+					}
+					else{
+						line = lw;
+					}	
+				}
+				//console.log(line);
+			});
+			//console.log(line);
+			return line==0;
+		},
+		/*
 		_colInTheLine: function(el){
 			var self = this;
 			var line = 0;
@@ -204,7 +276,7 @@
 				var col = $(this);
 				var w = self.width(col);
 				var lw = line + w;
-				console.log(line, '+', w, '=',lw);
+				//console.log(line, '+', w, '=',lw);
 				if(match){
 					if(lw >= 12){
 						line = 0;
@@ -225,26 +297,28 @@
 					}
 					else{
 						line = lw;
-					}					
+					}	
 				}
 			});
-			console.log(line);
+			//console.log(line);
 			return line;
 		},
+		*/
 		_getWidthFor:function(item){
 			return Math.floor(this._rowWidth(item.parent(),this.width(item)));
 		},
 		_autoAdjustPlaceholder: function(ui){
 			var ph = ui.placeholder;
 			var item = ui.item[0];
-			if(ph.prev().get(0)===item||ph.next().get(0)===item){
-				ph.hide();
-			}
-			else{
-				ph.show();
-			}
 			
-			if(!this._aloneInTheRow(ph)&&this._colInTheLine(ph)==0){ //emptyHeight
+			//if(ph.prev().get(0)===item||ph.next().get(0)===item){
+				//ph.hide();
+			//}
+			//else{
+				//ph.show();
+			//}
+			
+			if(!this._aloneInTheRow(ph)&&this._aloneInTheLine(ph)){ //emptyHeight
 				ph.height(ui.item.height());
 			}
 			else{
@@ -308,14 +382,21 @@
 					cursor: 'grabbing',
 					helper:'clone',
 					start: function(e, ui){
-						var item = ui.item;
 						if(self.opts.debugEvents) console.log('start',this);
+						
+						var item = ui.item;
+						var placeholder = ui.placeholder;
 						
 						//view
 						ui.helper.hide();
 						item.addClass('gs-moving').show();
-						ui.placeholder.html('<div class="gs-content"/>');
-						ui.placeholder.attr({
+						placeholder.css('width','0');
+						placeholder.css('padding-left','0');
+						placeholder.css('padding-right','0');
+						
+						
+						placeholder.html('<div class="gs-content gs-hidden"> <div class="gs-separator"></div> </div>');
+						placeholder.attr({
 							'data-gs-col':item.attr('data-gs-col'),
 							'data-gs-left':item.attr('data-gs-left'),
 							'data-gs-right':item.attr('data-gs-right'),
@@ -363,7 +444,7 @@
 						row.addClass('gs-state-over');
 						
 						//smooth effect
-						self._updateTempItems();
+						self._updateTempItems(ui);
 						
 						//from 3rd draggable
 						if(!ui.item.hasClass('gs-integrated')){
@@ -391,7 +472,7 @@
 						self._autoAdjustPlaceholder(ui);
 						
 						//smooth effect
-						self._updateTempItems();
+						self._updateTempItems(ui);
 					},
 					deactivate: function(e, ui){
 						if(self.opts.debugEvents) console.log('deactivate',this);
@@ -453,7 +534,8 @@
 						self._reenableTargets(row, ui);
 						
 						//smooth effect
-						self._cleanTempItems();
+						self._cleanTempItems(ui);
+						item.show();
 					},
 					
 					/*
