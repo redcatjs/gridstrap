@@ -120,7 +120,7 @@
 			row.sortable('refresh');
 		},
 		_updateTempItemsTimeout: null,
-		_updateTempItems: function(ui){
+		_updateTempItems: function(ui,delay){
 			var self = this;
 			if(this._updateTempItemsTimeout){
 				clearTimeout(this._updateTempItemsTimeout);
@@ -128,21 +128,8 @@
 			var placeholder = ui.placeholder;
 			var content = placeholder.find('.gs-content');
 			
-			content.addClass('gs-hidden');
-			placeholder.css('width','0');
-			placeholder.css('padding-left','0');
-			placeholder.css('padding-right','0');
-			//self._updateTempItemsRun(ui);
 			
-			this._updateTempItemsTimeout = setTimeout(function(){
-				
-				placeholder.css('width','');
-				placeholder.css('padding-left','');
-				placeholder.css('padding-right','');
-				
-				content.removeClass('gs-hidden');
-				ui.item.hide();				
-				
+			var run = function(){
 				$.each(this.currentActiveSortables,function(i,row){				
 					row.find(self.itemsSelector).each(function(){
 						var item = $(this);
@@ -158,10 +145,36 @@
 					});
 				});
 				
-			},4000);
+			};
+			
+			run();
+			
+			//if(delay){
+				
+				//content.addClass('gs-hidden');
+				//placeholder.css('width','0');
+				//placeholder.css('padding-left','0');
+				//placeholder.css('padding-right','0');
+				
+				//this._updateTempItemsTimeout = setTimeout(function(){
+					
+					//placeholder.css('width','');
+					//placeholder.css('padding-left','');
+					//placeholder.css('padding-right','');
+					
+					//content.removeClass('gs-hidden');
+					//ui.item.hide();
+
+					//run();
+					
+				//},self.gsColTransitionWidth);
+			//}
+			//else{
+				//run();
+			//}
 			
 		},
-		_cleanTempItems: function(ui){
+		_cleanTempItems: function(){
 			var self = this;
 			if(this._updateTempItemsTimeout){
 				clearTimeout(this._updateTempItemsTimeout);
@@ -298,16 +311,9 @@
 		},
 		_autoAdjustPlaceholder: function(ui){
 			var ph = ui.placeholder;
-			var item = ui.item[0];
-			
-			//if(ph.prev().get(0)===item||ph.next().get(0)===item){
-				//ph.hide();
-			//}
-			//else{
-				//ph.show();
-			//}
-			
-			if(!this._aloneInTheRow(ph)&&this._aloneInTheLine(ph)){ //emptyHeight
+			var item = ui.item[0];			
+			//if(!this._aloneInTheRow(ph)&&this._aloneInTheLine(ph)){ //emptyHeight
+			if(this._aloneInTheLine(ph)){ //emptyHeight
 				ph.height(ui.item.height());
 			}
 			else{
@@ -434,6 +440,7 @@
 						
 						//smooth effect
 						self._updateTempItems(ui);
+						//self._makeTempItems(row);
 						
 						//from 3rd draggable
 						if(!ui.item.hasClass('gs-integrated')){
@@ -461,7 +468,7 @@
 						self._autoAdjustPlaceholder(ui);
 						
 						//smooth effect
-						self._updateTempItems(ui);
+						self._updateTempItems(ui,true);
 					},
 					deactivate: function(e, ui){
 						if(self.opts.debugEvents) console.log('deactivate',this);
@@ -483,6 +490,7 @@
 						
 						//smooth effect
 						self._updateTempItems(ui);
+						//self._cleanTempItems();
 					},
 					stop: function(e, ui){
 						if(self.opts.debugEvents) console.log('stop',this);
@@ -523,7 +531,7 @@
 						self._reenableTargets(row, ui);
 						
 						//smooth effect
-						self._cleanTempItems(ui);
+						self._cleanTempItems();
 						item.show();
 					},
 					
