@@ -40,7 +40,7 @@
 			//debugEvents: false,
 			debugEvents: true,
 			cloneCallback: null,
-			smooth: true,
+			smooth: 0,
 		}, opts || {} );
 		this.itemsSelector = '> .gs-col:not(.gs-clone, .gs-moving)';
 		
@@ -116,7 +116,7 @@
 			row.sortable('refresh');
 		},
 		_updateTempItemsTimeout: null,
-		_updateTempItems: function(ui,callback){
+		_updateTempItems: function(ui){
 			var self = this;
 			if(self._updateTempItemsTimeout){
 				clearTimeout(self._updateTempItemsTimeout);
@@ -138,18 +138,7 @@
 					});
 					
 				});
-				
-				
-				
-				//setTimeout(function(){
-					
-					//if(callback){
-						//callback();
-					//}
-					
-				//},self.opts.gsColTransitionWidth);
 			
-				
 			//},500);
 			
 		},
@@ -446,6 +435,9 @@
 							item.addClass('gs-integrated');
 							item.removeClass('gs-sortable-helper');
 						}
+						
+						//highlight area
+						self.container.find('.gs-state-highlight').removeClass('gs-state-highlight');
 						
 						//store
 						if(item.data('gs-startrow')!==item.closest('.gs-row').get(0)){
