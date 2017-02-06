@@ -486,11 +486,9 @@
 					},
 					*/
 					sort: function(event, ui){
-						/*
 						if(scrollCallback){
 							scrollCallback(event, ui);
 						}
-						*/
 					},
 				};
 				
