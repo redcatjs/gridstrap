@@ -206,41 +206,43 @@
 		_aloneInTheRow: function(el){
 			return el.siblings('.gs-col:not(.gs-placeholder, .gs-moving, .gs-clone)').length<1;
 		},
-		_colInTheLine: function(el){
+		_aloneInTheLine: function(el){
 			var self = this;
 			var line = 0;
 			var element = el.get(0);
-			el.parent().find('.gs-col, .gs-placeholder').not('.gs-moving, .gs-clone').each(function(){
-				var match = this===element;
+			var matched;
+			el.parent().find('>.gs-col, .gs-placeholder').not('.gs-moving, .gs-clone').each(function(){
 				var col = $(this);
 				var w = self.width(col);
 				var lw = line + w;
-				console.log(line, '+', w, '=',lw);
-				if(match){
+				//console.log(line, '+', w, '=',lw);
+				if(matched){
 					if(lw >= 12){
 						line = 0;
 					}
 					return false;
 				}
+				else if(this===element){
+					if(lw >= 12){
+						line = 0;
+					}
+					matched = true;
+				}
 				else{
 					if(lw > 12){
-						if(match){
-							line = 0;
-						}
-						else{
-							line = w;
-						}
+						line = w;
 					}
 					else if(lw==12){
 						line = 0;
 					}
 					else{
 						line = lw;
-					}					
+					}	
 				}
+				//console.log(line);
 			});
-			console.log(line);
-			return line;
+			//console.log(line);
+			return line==0;
 		},
 		_getWidthFor:function(item){
 			return Math.floor(this._rowWidth(item.parent(),this.width(item)));
@@ -255,7 +257,7 @@
 				ph.show();
 			}
 			
-			if(!this._aloneInTheRow(ph)&&this._colInTheLine(ph)==0){ //emptyHeight
+			if(!this._aloneInTheRow(ph)&&this._aloneInTheLine(ph)){ //emptyHeight
 				ph.height(ui.item.height());
 			}
 			else{
