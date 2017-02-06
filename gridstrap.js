@@ -37,8 +37,8 @@
 			},
 			boxPadding: 15, //$box-padding .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
 			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
-			debugEvents: false,
-			//debugEvents: true,
+			//debugEvents: false,
+			debugEvents: true,
 			cloneCallback: null,
 			smooth: true,
 		}, opts || {} );
@@ -60,12 +60,12 @@
 		});
 		
 		
-		var rootRow = container.find('>.gs-row');
-		if(!rootRow.length){
-			rootRow = $('<div class="gs-row" />').appendTo(container);
+		this.rootRow = container.find('>.gs-row');
+		if(!this.rootRow.length){
+			this.rootRow = $('<div class="gs-row" />').appendTo(container);
 		}
 		
-		this.sortable(rootRow);
+		this.sortable(this.rootRow);
 	};
 	Gridstrap.prototype = {		
 		_resizeCallback: function(el,ui,e){
@@ -84,28 +84,23 @@
 			return row.width() * n/this.opts.width - (padding ? this.opts.boxPadding*2 : 0);
 		},
 		
-		_makeTempItems: function(row,dragging){
+		_makeTempItems: function(row){
 			var self = this;
 			if(!self.opts.smooth){
 				return;
 			}
-			dragging.addClass('gs-col-dragging');
-			if(row.data('gs-temp-item')) return;
-			row.data('gs-temp-item',true);
 			row.find(self.itemsSelector).each(function(){
 				var item = $(this);
+				if(item.hasClass('gs-moving')) return;
 				if(item.data('gs-clone')) return;
 				var position = item.position();
-				
-				
 				var clone = item.clone();
-				
-				clone.find('.gs-col-dragging, .gs-placeholder').remove();
-				
 				if(self.opts.cloneCallback){
 					self.opts.cloneCallback(clone);
 				}
 				item.data('gs-clone',clone);
+				clone.data('gs-origin',item);
+				clone.find('.gs-placeholder').remove();
 				clone.addClass('gs-clone');
 				clone.css({
 					position: 'absolute',
@@ -120,40 +115,54 @@
 			});
 			row.sortable('refresh');
 		},
-		_updateTempItemsAll: function(){
+		_updateTempItemsTimeout: null,
+		_updateTempItems: function(ui,callback){
 			var self = this;
-			$.each(self.currentActiveSortables,function(i,row){
-				self._updateTempItems(row);
-			})
-		},
-		_updateTempItems: function(row){
-			if(!row.data('gs-temp-item')) return;
-			var self = this;		
-			row.find(self.itemsSelector).each(function(){
-				var item = $(this);
-				var clone = item.data('gs-clone');
-				if(clone){
-					var position = item.position();
-					clone.css({
-						top: position.top,
-						left: position.left,
-						height: item.outerHeight(),
+			if(self._updateTempItemsTimeout){
+				clearTimeout(self._updateTempItemsTimeout);
+			}
+			//self._updateTempItemsTimeout = setTimeout(function(){
+				$.each(self.currentActiveSortables,function(i,row){
+					
+					row.find(self.itemsSelector).each(function(){
+						var item = $(this);
+						var clone = item.data('gs-clone');
+						if(clone){
+							var position = item.position();
+							clone.css({
+								top: position.top,
+								left: position.left,
+								height: item.outerHeight(),
+							});
+						}
 					});
-				}
-			});
+					
+				});
+				
+				
+				
+				//setTimeout(function(){
+					
+					//if(callback){
+						//callback();
+					//}
+					
+				//},self.opts.gsColTransitionWidth);
+			
+				
+			//},500);
+			
 		},
-		_cleanTempItems: function(row){
-			if(!row.data('gs-temp-item')) return;
-			row.data('gs-temp-item',false);
+		_cleanTempItems: function(){
 			var self = this;
-			row.find(self.itemsSelector).each(function(){
-				var item = $(this);
-				var clone = item.data('gs-clone');
-				if(clone){
-					clone.remove();
+			self.container.find('.gs-clone').each(function(){
+				var clone = $(this);
+				var item = clone.data('gs-origin');
+				clone.remove();
+				if(item){
 					item.data('gs-clone',false);
+					item.css('opacity',1);
 				}
-				item.css('opacity',1);
 			});
 		},
 		_disableTargets: function(row,ui){
@@ -194,22 +203,65 @@
 				row.sortable('refresh');
 			});
 		},
-		_autoAdjustWidth: function(row,ui){
-			var self = this;
-			var item = ui.item;
-			var placeholder = ui.placeholder;
-			var w = self._rowWidth(row,self.width(item));
-			var p = 100 / self.opts.width;
-			placeholder.css({
-				width: Math.floor(w),
-				'margin-left': ( self.left(item) * p ) + '%',
-				'margin-right': ( self.right(item) * p ) + '%',
-			});
-			
-			w = self._rowWidth(row,self.width(item),true);
-			item.width( w );
+		_aloneInTheRow: function(el){
+			return el.siblings('.gs-col:not(.gs-placeholder, .gs-moving, .gs-clone)').length<1;
 		},
-
+		_colInTheLine: function(el){
+			var self = this;
+			var line = 0;
+			var element = el.get(0);
+			el.parent().find('.gs-col, .gs-placeholder').not('.gs-moving, .gs-clone').each(function(){
+				var match = this===element;
+				var col = $(this);
+				var w = self.width(col);
+				var lw = line + w;
+				console.log(line, '+', w, '=',lw);
+				if(match){
+					if(lw >= 12){
+						line = 0;
+					}
+					return false;
+				}
+				else{
+					if(lw > 12){
+						if(match){
+							line = 0;
+						}
+						else{
+							line = w;
+						}
+					}
+					else if(lw==12){
+						line = 0;
+					}
+					else{
+						line = lw;
+					}					
+				}
+			});
+			console.log(line);
+			return line;
+		},
+		_getWidthFor:function(item){
+			return Math.floor(this._rowWidth(item.parent(),this.width(item)));
+		},
+		_autoAdjustPlaceholder: function(ui){
+			var ph = ui.placeholder;
+			var item = ui.item[0];
+			if(ph.prev().get(0)===item||ph.next().get(0)===item){
+				ph.hide();
+			}
+			else{
+				ph.show();
+			}
+			
+			if(!this._aloneInTheRow(ph)&&this._colInTheLine(ph)==0){ //emptyHeight
+				ph.height(ui.item.height());
+			}
+			else{
+				ph.css('height','auto');
+			}
+		},
 		
 		_isOverAxis: function( x, reference, size ) {
 			return ( x >= reference ) && ( x < ( reference + size ) );
@@ -243,17 +295,7 @@
 				}
 				$this.attr('data-gs-row',currentRow);
 			});
-		},
-		
-		_sizePlaceholderToHelper: function(ui){
-			if(!ui.item.hasClass('gs-integrated')){
-				ui.helper.css({
-					height:(ui.placeholder.height())+'px',
-					width:(ui.placeholder.width())+'px',
-				});
-			}
-		},
-		
+		},		
 		sortable: function(rows){
 			var self = this;
 			rows.each(function(){
@@ -275,38 +317,66 @@
 					placeholder: 'gs-placeholder',
 					appendTo: document.body,
 					cursor: 'grabbing',
+					helper:'clone',
 					start: function(e, ui){
 						var item = ui.item;
 						if(self.opts.debugEvents) console.log('start',this);
 						
+						//view
+						ui.helper.hide();
+						item.addClass('gs-moving').show();
+						ui.placeholder.html('<div class="gs-content"/>');
+						ui.placeholder.attr({
+							'data-gs-col':item.attr('data-gs-col'),
+							'data-gs-left':item.attr('data-gs-left'),
+							'data-gs-right':item.attr('data-gs-right'),
+						});
+						self._autoAdjustPlaceholder(ui);
+						
+						
+						//store
 						item.data('gs-startrow',row.get(0));
 						item.data('gs-startindex',item.index());
 						
-						var external = !item.hasClass('gs-integrated');
-						ui.placeholder.css({
-							height: external?'auto':item.height(),
-							width: Math.floor(item.width()),
-							'margin-left': ( self.left(item) * 100 / self.opts.width ) + '%',
-							'margin-right': ( self.right(item) * 100 / self.opts.width ) + '%',
-						});
-						if(external){
-							ui.placeholder.css('min-height',90);
-						}
-						
-						ui.placeholder.html('<div class="gs-content"></div>');
-						item.addClass('gs-moving');
-						
+						//allowed drop area
 						self._disableTargets(row, ui);
 						
+						//from 3rd draggable
 						if(!item.hasClass('gs-integrated')){
 							ui.helper.addClass('gs-sortable-helper');
 						}
 					},
+					activate: function(e, ui){						
+						if(self.opts.debugEvents) console.log('activate',this);
+						
+						//highlight area
+						this.classList.add('gs-state-highlight');
+						var parentCol = $(this).closest('.gs-col');
+						if(parentCol.length){
+							var parentClone = parentCol.data('gs-clone');
+							if(parentClone){
+								parentClone.find('>.gs-content>.gs-row').addClass('gs-state-highlight');
+							}
+						}
+						
+						//smooth effect
+						self.currentActiveSortables.push(row);
+						self._makeTempItems(row);
+					},
 					over: function(e, ui){
 						if(self.opts.debugEvents) console.log('over',this,row);
 						
-						self._makeTempItems(row,ui.item);
+						//view
+						self._autoAdjustPlaceholder(ui);
+
+						//highlight area
+						self.container.find('.gs-state-over').removeClass('gs-state-over');
+						row.addClass('gs-state-over');
 						
+						//smooth effect
+						self._updateTempItems();
+						
+						//from 3rd draggable
 						if(!ui.item.hasClass('gs-integrated')){
 							var sortable = row.data('ui-sortable');
 							var lastItem;
@@ -321,69 +391,51 @@
 							ui.placeholder.insertAfter(lastItem);
 						}
 						
-						
-						self._autoAdjustWidth(row, ui);
-						
+						//view/smooth z-index
 						self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
-						//ui.item.parents('.gs-col').addClass('gs-moving-parent');
-						//this.classList.add('gs-moving-parent');
-						$(this).parents('.gs-col').addClass('gs-moving-parent');
-					
+						row.parents('.gs-col').addBack().addClass('gs-moving-parent');
 						
-						self._sizePlaceholderToHelper(ui);
-						
-						//self._updateTempItemsAll();
-						
-						self.container.find('.gs-state-over').removeClass('gs-state-over');
-						row.addClass('gs-state-over');
-						
-						self._updateTempItemsAll();
-						
-					},
-					out: function(e, ui){
-						if(self.opts.debugEvents) console.log('out',this);
-						
-						
-						self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
-						//this.classList.remove('gs-moving-parent');
-						//$(this).parents('.gs-col').removeClass('gs-moving-parent');
-						
-						//row.find('.gs-placeholder').hide();
-						
-						//self._updateTempItemsAll();
-						
-						row.removeClass('gs-state-over');
-						
-						//self._updateTempItemsAll();
-						self._cleanTempItems(row);
 					},
 					change: function(e, ui){
 						if(self.opts.debugEvents) console.log('change',this);
 						
+						self._autoAdjustPlaceholder(ui);
 						
-						self._sizePlaceholderToHelper(ui);
+						//smooth effect
+						self._updateTempItems();
+					},
+					deactivate: function(e, ui){
+						if(self.opts.debugEvents) console.log('deactivate',this);
 						
-						//self._updateTempItemsAll();
+						//smooth effect
+						var index = self.currentActiveSortables.indexOf(row);
+						if (index > -1) {
+							self.currentActiveSortables.splice(index, 1);
+						}
+					},
+					out: function(e, ui){
+						if(self.opts.debugEvents) console.log('out',this);
 						
-						//self.container.find('.gs-state-over').removeClass('.gs-state-over');
-						//ui.placeholder.closest('.gs-row').addClass('gs-state-over');
+						//highlight area
+						row.removeClass('gs-state-over');
 						
-						self._updateTempItemsAll();
+						//view/smooth z-index
+						self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
 						
+						//smooth effect
+						self._updateTempItems(ui);
 					},
 					stop: function(e, ui){
 						if(self.opts.debugEvents) console.log('stop',this);
-						
 						var item = ui.item;
-						if(item.data('gs-startrow')!==item.closest('.gs-row').get(0)){
-							if(self.opts.debugEvents) console.log('gs-col-changed',this);
-							row.trigger('gs-col-changed',[ui]);
-						}
-						if(item.data('gs-startindex')!==item.index()){
-							if(self.opts.debugEvents) console.log('gs-row-changed',this);
-							row.trigger('gs-row-changed',[ui]);
-						}
 						
+						//view
+						item.removeClass('gs-moving');
+						
+						//view/smooth z-index
+						self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
+						
+						//from 3r draggable
 						if(!item.hasClass('gs-integrated')){
 							item.css('height','');
 							item.css('min-height','');
@@ -395,43 +447,29 @@
 							item.removeClass('gs-sortable-helper');
 						}
 						
+						//store
+						if(item.data('gs-startrow')!==item.closest('.gs-row').get(0)){
+							if(self.opts.debugEvents) console.log('gs-col-changed',this);
+							row.trigger('gs-col-changed',[ui]);
+						}
+						if(item.data('gs-startindex')!==item.index()){
+							if(self.opts.debugEvents) console.log('gs-row-changed',this);
+							row.trigger('gs-row-changed',[ui]);
+						}
+						
+						//allowed drop area
 						self._reenableTargets(row, ui);
-						self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
+						
+						//smooth effect
+						self._cleanTempItems();
+					},
+					
+					/*
+					beforeStop: function(e, ui){
+						if(self.opts.debugEvents) console.log('beforeStop',this);
 					},
 					update: function(e, ui){
 						if(self.opts.debugEvents) console.log('update',this);
-					},
-					activate: function(e, ui){						
-						if(self.opts.debugEvents) console.log('activate',this);
-						this.classList.add('gs-state-highlight');
-						
-						var parentCol = $(this).closest('.gs-col');
-						if(parentCol.length){
-							var parentClone = parentCol.data('gs-clone');
-							if(parentClone){
-								parentClone.find('>.gs-content>.gs-row').addClass('gs-state-highlight');
-							}
-						}
-						
-						//self._makeTempItems(row,ui.item);
-						
-						self.currentActiveSortables.push(row);
-					},
-					deactivate: function(e, ui){
-						if(self.opts.debugEvents) console.log('deactivate',this);
-						this.classList.remove('gs-state-highlight');
-						row.removeClass('.gs-state-over');
-						row.find('.gs-moving').removeClass('gs-moving');
-						
-						//self._cleanTempItems(row);
-						
-						var index = self.currentActiveSortables.indexOf(row);
-						if (index > -1) {
-							self.currentActiveSortables.splice(index, 1);
-						}
-					},
-					beforeStop: function(e, ui){
-						if(self.opts.debugEvents) console.log('beforeStop',this);
 					},
 					create: function(e, ui){
 						if(self.opts.debugEvents) console.log('create',this);
@@ -442,10 +480,13 @@
 					remove: function(e, ui){
 						if(self.opts.debugEvents) console.log('remove',this);
 					},
+					*/
 					sort: function(event, ui){
+						/*
 						if(scrollCallback){
 							scrollCallback(event, ui);
 						}
+						*/
 					},
 				};
 				
