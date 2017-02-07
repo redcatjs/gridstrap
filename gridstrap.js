@@ -491,33 +491,41 @@
 						var self = this;
 						var tolerance = 0;
 						
-						//var cursorTop =  ui.offset.top;
-						//var cursorLeft =  ui.offset.left;
-						var cursorTop =  sortable.positionAbs.top + sortable.offset.click.top;
-						var cursorLeft =  sortable.positionAbs.left + sortable.offset.click.left;
+						var cursorY =  sortable.positionAbs.top + sortable.offset.click.top;
+						var cursorX =  sortable.positionAbs.left + sortable.offset.click.left;
 						
 						var item = ui.item;
 						var lineTop = item.offset().top;
 						var lineBottom = lineTop+item.height();
-						if(cursorTop>lineBottom+tolerance){
-							var beforeItem;
+						var beforeItem;
+						if(cursorY>lineBottom+tolerance){
 							item.nextAll('.gs-col').each(function(){
 								var offset = $(this).offset();
-								if(offset.left>cursorLeft || offset.top>cursorTop){
+								if(offset.left>cursorX || offset.top>cursorY){
 									return false;
 								}
 								beforeItem = this;
 							});
-							//item.insertAfter(beforeItem);
-							if(beforeItem){
-								//console.log('move',cursorTop,'>',lineBottom,beforeItem);
-								ui.placeholder.insertAfter(beforeItem).show();
-							}
+							//console.log('movedown',cursorY,'>',lineBottom+tolerance,beforeItem);
+						}
+						else if(cursorY<lineTop-tolerance){
+							item.prevAll('.gs-col').each(function(){
+								beforeItem = this;
+								var $this = $(this);
+								var offset = $this.offset();
+								if((offset.left<cursorX && offset.top<cursorY) || offset.top+$this.height()<cursorY){
+									return false;
+								}
+							});
+							//console.log('moveup',cursorY,'<',lineBottom-tolerance,beforeItem);
+						}
+						if(beforeItem){
+							ui.placeholder.insertAfter(beforeItem).show();
 						}
 						
 							
 						if(scrollCallback){
-							scrollCallback(e, ui);
+							//scrollCallback(e, ui);
 						}
 					},
 				};
