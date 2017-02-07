@@ -37,10 +37,10 @@
 			},
 			boxPadding: 15, //$box-padding .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
 			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
-			//debugEvents: false,
-			debugEvents: true,
+			debugEvents: false,
+			//debugEvents: true,
 			cloneCallback: null,
-			smooth: true,
+			smooth: 0,
 		}, opts || {} );
 		this.itemsSelector = '> .gs-col:not(.gs-clone, .gs-moving)';
 		
@@ -303,6 +303,7 @@
 			rows.each(function(){
 				var row = $(this);
 				var autoHeightTimeout;
+				var sortable;
 				if(row.hasClass('ui-sortable')){
 					row.sortable('refresh');
 					return;
@@ -314,8 +315,8 @@
 					scroll: self.opts.scroll,
 					scrollSensitivity: 20, //default 20
 					scrollSpeed: 20, //default 20
-					//tolerance: 'intersect', //intersect || pointer
-					tolerance: 'pointer', //intersect || pointer
+					tolerance: 'intersect', //intersect || pointer
+					//tolerance: 'pointer', //intersect || pointer
 					placeholder: 'gs-placeholder',
 					appendTo: document.body,
 					cursor: 'grabbing',
@@ -380,7 +381,6 @@
 						
 						//from 3rd draggable
 						if(!ui.item.hasClass('gs-integrated')){
-							var sortable = row.data('ui-sortable');
 							var lastItem;
 							row.find(self.itemsSelector).each(function(){
 								var item = $(this);
@@ -485,9 +485,39 @@
 						if(self.opts.debugEvents) console.log('remove',this);
 					},
 					*/
-					sort: function(event, ui){
+					sort: function(e, ui){
+						//console.log(ui);
+						
+						var self = this;
+						var tolerance = 0;
+						
+						//var cursorTop =  ui.offset.top;
+						//var cursorLeft =  ui.offset.left;
+						var cursorTop =  sortable.positionAbs.top + sortable.offset.click.top;
+						var cursorLeft =  sortable.positionAbs.left + sortable.offset.click.left;
+						
+						var item = ui.item;
+						var lineTop = item.offset().top;
+						var lineBottom = lineTop+item.height();
+						if(cursorTop>lineBottom+tolerance){
+							var beforeItem;
+							item.nextAll('.gs-col').each(function(){
+								var offset = $(this).offset();
+								if(offset.left>cursorLeft || offset.top>cursorTop){
+									return false;
+								}
+								beforeItem = this;
+							});
+							//item.insertAfter(beforeItem);
+							if(beforeItem){
+								//console.log('move',cursorTop,'>',lineBottom,beforeItem);
+								ui.placeholder.insertAfter(beforeItem).show();
+							}
+						}
+						
+							
 						if(scrollCallback){
-							scrollCallback(event, ui);
+							scrollCallback(e, ui);
 						}
 					},
 				};
@@ -511,6 +541,7 @@
 				}
 				
 				row.sortable(sortableOptions);
+				sortable = row.data('ui-sortable');
 			});
 		},
 		
