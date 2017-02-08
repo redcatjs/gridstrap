@@ -315,8 +315,6 @@
 			lineOffset.left = offset.left;
 			lineOffset.right = lineOffset.left+item.outerWidth();
 			
-			console.log('lineBottom',lineOffset.top,'+',item.outerHeight(),'=',lineOffset.bottom);
-			
 		},
 		lineOffset : {},
 		sortable: function(rows){
@@ -444,9 +442,8 @@
 						
 					},
 					change: function(e, ui, manual){
-						if(self.opts.debugEvents) console.log('change',this);
-						if(manual!==true){
-							console.log('change');
+						if(self.opts.debugEvents){
+							console.log(manual!==true?'change':'change manual from sort',this);
 						}
 						
 						
