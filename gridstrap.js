@@ -250,6 +250,7 @@
 		_autoAdjustPlaceholder: function(ui){
 			var ph = ui.placeholder;
 			var item = ui.item[0];
+			
 			if(ph.prev().get(0)===item||ph.next().get(0)===item){
 				ph.hide();
 			}
@@ -298,6 +299,7 @@
 				$this.attr('data-gs-row',currentRow);
 			});
 		},		
+		gsFrom : null,
 		sortable: function(rows){
 			var self = this;
 			rows.each(function(){
@@ -318,23 +320,32 @@
 					tolerance: 'intersect', //intersect || pointer
 					//tolerance: 'pointer', //intersect || pointer
 					placeholder: 'gs-placeholder',
-					appendTo: document.body,
+					//appendTo: document.body,
+					//appendTo: 'parent',
 					cursor: 'grabbing',
 					helper:'clone',
 					start: function(e, ui){
 						var item = ui.item;
+						var ph = ui.placeholder;
 						if(self.opts.debugEvents) console.log('start',this);
 						
 						//view
-						ui.helper.hide();
 						item.addClass('gs-moving').show();
-						ui.placeholder.html('<div class="gs-content"/>');
-						ui.placeholder.attr({
-							'data-gs-col':item.attr('data-gs-col'),
-							'data-gs-left':item.attr('data-gs-left'),
-							'data-gs-right':item.attr('data-gs-right'),
-						});
-						self._autoAdjustPlaceholder(ui);
+						ph
+							.html('<div class="gs-content"/>')
+							.attr({
+								'data-gs-col':item.attr('data-gs-col'),
+								'data-gs-left':item.attr('data-gs-left'),
+								'data-gs-right':item.attr('data-gs-right'),
+							})
+						;
+						
+						self.gsFrom = ph.clone().attr('class','gs-from');
+						item.hide();
+						ph.hide();
+						item.after(self.gsFrom);
+						
+						//self._autoAdjustPlaceholder(ui);
 						
 						
 						//store
@@ -346,7 +357,7 @@
 						
 						//from 3rd draggable
 						if(!item.hasClass('gs-integrated')){
-							ui.helper.addClass('gs-sortable-helper');
+							//ui.helper.addClass('gs-sortable-helper');
 						}
 					},
 					activate: function(e, ui){						
@@ -399,7 +410,11 @@
 						
 					},
 					change: function(e, ui){
-						if(self.opts.debugEvents) console.log('change',this);
+						//if(self.opts.debugEvents) console.log('change',this);
+						//console.log('change',this,ui.item);
+						
+						//self.gsFrom.hide();
+						
 						
 						self._autoAdjustPlaceholder(ui);
 						
@@ -432,6 +447,7 @@
 						var item = ui.item;
 						
 						//view
+						self.gsFrom.remove();
 						item.removeClass('gs-moving');
 						
 						//view/smooth z-index
@@ -458,7 +474,7 @@
 							item.css('width','');
 							row.trigger('gs-received',[ui]);
 							item.addClass('gs-integrated');
-							item.removeClass('gs-sortable-helper');
+							//item.removeClass('gs-sortable-helper');
 						}
 						
 						//allowed drop area
@@ -488,16 +504,27 @@
 					sort: function(e, ui){
 						//console.log(ui);
 						
-						var self = this;
 						var tolerance = 0;
 						
-						var cursorY =  sortable.positionAbs.top + sortable.offset.click.top;
-						var cursorX =  sortable.positionAbs.left + sortable.offset.click.left;
+						//var cursorY =  sortable.positionAbs.top + sortable.offset.click.top;
+						//var cursorX =  sortable.positionAbs.left + sortable.offset.click.left;
+						
+						var cursorY =  e.pageY;
+						var cursorX =  e.pageX;
+						
 						
 						var item = ui.item;
+						var hidden = item.css('display')=='none';
+						if(hidden){
+							item.show(); //so we can get the offset
+						}
 						var lineTop = item.offset().top;
+						if(hidden){
+							item.hide();
+						}
 						var lineBottom = lineTop+item.height();
 						var beforeItem;
+
 						if(cursorY>lineBottom+tolerance){
 							item.nextAll('.gs-col').each(function(){
 								var offset = $(this).offset();
@@ -521,6 +548,10 @@
 						}
 						if(beforeItem){
 							ui.placeholder.insertAfter(beforeItem).show();
+							//self.gsFrom.insertAfter(beforeItem);
+							item.insertAfter(beforeItem);
+							row.trigger('sortchange');
+							sortableOptions.change(e, ui);
 						}
 						
 							
