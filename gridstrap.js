@@ -186,15 +186,17 @@
 			var self = this;
 			$('.gs-row.ui-sortable',self.container).each(function(){
 				var $this = $(this);
-				if($this.closest('.gs-clone').length) return;
-				if($this.sortable('instance')){
-					$this.sortable('enable');
-					row.sortable('refresh');
-				}
+				//smooth
+				//if($this.closest('.gs-clone').length) return;
+				//if($this.sortable('instance')){
+					//$this.sortable('enable');
+					//row.sortable('refresh');
+				//}
 			});
 		},
 		_aloneInTheRow: function(el){
-			return el.siblings('.gs-col:not(.gs-placeholder, .gs-moving, .gs-clone)').length<1;
+			return el.siblings('.gs-real:not(.gs-placeholder, .gs-moving, .gs-clone)').length<1;
+			//return el.siblings('.gs-real:not(.gs-moving)').length<1;
 		},
 		_aloneInTheLine: function(el){
 			var self = this;
@@ -332,6 +334,7 @@
 					cursor: 'grabbing',
 					
 					helper:function(e,item){
+						console.log(item);
 						return item.clone()
 							.addClass('gs-helper')
 							.removeClass('gs-real')
@@ -381,9 +384,9 @@
 						self._disableTargets(row, ui);
 						
 						//from 3rd draggable
-						//if(!item.hasClass('gs-integrated')){
-							//ui.helper.addClass('gs-sortable-helper');
-						//}
+						if(!item.hasClass('gs-integrated')){
+							ui.helper.addClass('gs-sortable-helper');
+						}
 					},
 					activate: function(e, ui){						
 						if(self.opts.debugEvents) console.log('activate',this);
@@ -427,18 +430,18 @@
 						//row.parents('.gs-col').addBack().addClass('gs-moving-parent');
 						
 						//from 3rd draggable
-						//if(!ui.item.hasClass('gs-integrated')){
-							//var lastItem;
-							//row.find(self.itemsSelector).each(function(){
-								//var item = $(this);
-								//var offset = item.offset();
-								//var isOverElementHeight = self._isOverAxis( sortable.positionAbs.top + sortable.offset.click.top, offset.top, item.height() );						
-								//if(isOverElementHeight){
-									//lastItem = item;
-								//}
-							//});
-							//ui.placeholder.insertAfter(lastItem);
-						//}
+						if(!ui.item.hasClass('gs-integrated')){
+							var lastItem;
+							row.find(self.itemsSelector).each(function(){
+								var item = $(this);
+								var offset = item.offset();
+								var isOverElementHeight = self._isOverAxis( sortable.positionAbs.top + sortable.offset.click.top, offset.top, item.height() );						
+								if(isOverElementHeight){
+									lastItem = item;
+								}
+							});
+							ui.placeholder.insertAfter(lastItem);
+						}
 						
 					},
 					change: function(e, ui, manual){
@@ -460,6 +463,8 @@
 					},
 					deactivate: function(e, ui){
 						if(self.opts.debugEvents) console.log('deactivate',this);
+						
+						sortable.cancelHelperRemoval = false; //hack to solve this issue https://bugs.jqueryui.com/ticket/13024
 						
 						this.classList.remove('gs-state-highlight');
 						
@@ -506,7 +511,7 @@
 							item.css('width','');
 							row.trigger('gs-received',[ui]);
 							item.addClass('gs-integrated');
-							//item.removeClass('gs-sortable-helper');
+							item.removeClass('gs-sortable-helper');
 						}
 						
 						//allowed drop area
@@ -650,7 +655,6 @@
 				width = el.attr('data-gs-col') || this.defaultWidth;
 			}
 			el.attr('data-gs-col',width);
-			el.addClass('gs-real');
 			el.addClass('gs-col');
 			el.addClass('gs-integrated');
 			if(!container){
@@ -664,6 +668,8 @@
 		},
 		handleAdd: function(el){
 			var self = this;
+			
+			el.addClass('gs-real');
 			
 			if(this.opts.debugColor){
 				el.css('background-color',jstack.randomColor());
