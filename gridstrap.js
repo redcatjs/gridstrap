@@ -38,6 +38,7 @@
 			boxPadding: 15, //$box-padding .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
 			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
 			debugEvents: false,
+			debugColor: true,
 			//debugEvents: true,
 			cloneCallback: null,
 			smooth: 0,
@@ -620,6 +621,10 @@
 		},
 		handleAdd: function(el){
 			var self = this;
+			
+			if(this.opts.debugColor){
+				el.css('background-color',jstack.randomColor());
+			}
 			
 			var rows = el.find('.gs-row');
 			if(rows.length){
