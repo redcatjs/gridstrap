@@ -71,10 +71,12 @@ $gs-percent: (100% / $gridstrap-columns);
 				box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.2);
 			}
 		}
+/*
 		&.gs-moving-parent{
 			z-index: 15;
 			opacity: 1 !important;
 		}
+*/
 		&.gs-moving,
 		&.ui-resizable-resizing{
 			.gs-content {

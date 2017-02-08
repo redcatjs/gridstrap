@@ -42,7 +42,7 @@
 			debugEvents: true,
 			debugColor: 0,
 			cloneCallback: null,
-			smooth: 0,
+			//smooth: 0,
 		}, opts || {} );
 		//this.itemsSelector = '> .gs-col:not(.gs-clone, .gs-moving)';
 		this.itemsSelector = '> .gs-real:not(.gs-moving)';
@@ -475,10 +475,8 @@
 						//highlight area
 						row.removeClass('gs-state-over');
 						
-						//view/smooth z-index
-						self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
-						
 						//smooth effect
+						//self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
 						//self._updateTempItems(ui);
 					},
 					stop: function(e, ui){
@@ -488,10 +486,6 @@
 						//view
 						self.gsFrom.remove();
 						item.removeClass('gs-moving');
-						
-						//view/smooth z-index
-						self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
-						
 						
 						//store
 						if(item.data('gs-startrow')!==item.closest('.gs-row').get(0)){
@@ -519,6 +513,7 @@
 						self._reenableTargets(row, ui);
 						
 						//smooth effect
+						//self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
 						//self._cleanTempItems();
 					},
 					
