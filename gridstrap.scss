@@ -190,6 +190,10 @@ $gs-percent: (100% / $gridstrap-columns);
 	}
 }
 
+.gs-helper{
+	z-index: 40;
+}
+
 
 @-webkit-keyframes neon3 {
   from {

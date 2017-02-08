@@ -409,6 +409,13 @@
 					over: function(e, ui){
 						if(self.opts.debugEvents) console.log('over',this,row);
 						
+						if(!ui.helper.hasClass('gs-integrated')){
+							ui.helper.appendTo(document.body).css({
+								width:'',
+								height:'',
+							}).show();
+						}
+						
 						self.activeRow = row;
 						var ph = ui.placeholder;
 						
