@@ -68,6 +68,7 @@ $gs-percent: (100% / $gridstrap-columns);
 			transition-width: none;
 			transition-margin: none;
 			.gs-content{
+				height: 100%;
 				box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.2);
 			}
 		}
