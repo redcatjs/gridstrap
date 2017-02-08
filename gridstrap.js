@@ -847,7 +847,7 @@
 					helper: 'clone',
 					appendTo: document.body,
 					zIndex: 99999,
-				},options);
+				},options));
 		});
 	};
 	
