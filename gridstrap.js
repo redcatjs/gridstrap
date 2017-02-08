@@ -1,11 +1,344 @@
 (function($){
 	
+	
 	var _rearrange = $.ui.sortable.prototype._rearrange;
 	$.widget('ui.sortable',$.extend($.ui.sortable.prototype,{
-		_rearrange: function( event, i, a, hardRefresh ) {
-			if(!( !a&&!i.item[ 0 ].parentNode ))
-				return _rearrange.apply(this,arguments);
+		
+		_mouseDrag: function( event ) {
+			
+			var i, item, itemElement, intersection,
+				o = this.options,
+				scrolled = false;
+
+			//Compute the helpers position
+			this.position = this._generatePosition( event );
+			this.positionAbs = this._convertPositionTo( "absolute" );
+
+			if ( !this.lastPositionAbs ) {
+				this.lastPositionAbs = this.positionAbs;
+			}
+
+			//Do scrolling
+			if ( this.options.scroll ) {
+				if ( this.scrollParent[ 0 ] !== this.document[ 0 ] &&
+						this.scrollParent[ 0 ].tagName !== "HTML" ) {
+
+					if ( ( this.overflowOffset.top + this.scrollParent[ 0 ].offsetHeight ) -
+							event.pageY < o.scrollSensitivity ) {
+						this.scrollParent[ 0 ].scrollTop =
+							scrolled = this.scrollParent[ 0 ].scrollTop + o.scrollSpeed;
+					} else if ( event.pageY - this.overflowOffset.top < o.scrollSensitivity ) {
+						this.scrollParent[ 0 ].scrollTop =
+							scrolled = this.scrollParent[ 0 ].scrollTop - o.scrollSpeed;
+					}
+
+					if ( ( this.overflowOffset.left + this.scrollParent[ 0 ].offsetWidth ) -
+							event.pageX < o.scrollSensitivity ) {
+						this.scrollParent[ 0 ].scrollLeft = scrolled =
+							this.scrollParent[ 0 ].scrollLeft + o.scrollSpeed;
+					} else if ( event.pageX - this.overflowOffset.left < o.scrollSensitivity ) {
+						this.scrollParent[ 0 ].scrollLeft = scrolled =
+							this.scrollParent[ 0 ].scrollLeft - o.scrollSpeed;
+					}
+
+				} else {
+
+					if ( event.pageY - this.document.scrollTop() < o.scrollSensitivity ) {
+						scrolled = this.document.scrollTop( this.document.scrollTop() - o.scrollSpeed );
+					} else if ( this.window.height() - ( event.pageY - this.document.scrollTop() ) <
+							o.scrollSensitivity ) {
+						scrolled = this.document.scrollTop( this.document.scrollTop() + o.scrollSpeed );
+					}
+
+					if ( event.pageX - this.document.scrollLeft() < o.scrollSensitivity ) {
+						scrolled = this.document.scrollLeft(
+							this.document.scrollLeft() - o.scrollSpeed
+						);
+					} else if ( this.window.width() - ( event.pageX - this.document.scrollLeft() ) <
+							o.scrollSensitivity ) {
+						scrolled = this.document.scrollLeft(
+							this.document.scrollLeft() + o.scrollSpeed
+						);
+					}
+
+				}
+
+				if ( scrolled !== false && $.ui.ddmanager && !o.dropBehaviour ) {
+					$.ui.ddmanager.prepareOffsets( this, event );
+				}
+			}
+
+			//Regenerate the absolute position used for position checks
+			this.positionAbs = this._convertPositionTo( "absolute" );
+
+			//Set the helper position
+			if ( !this.options.axis || this.options.axis !== "y" ) {
+				this.helper[ 0 ].style.left = this.position.left + "px";
+			}
+			if ( !this.options.axis || this.options.axis !== "x" ) {
+				this.helper[ 0 ].style.top = this.position.top + "px";
+			}
+
+			//Rearrange
+			/*
+			for ( i = this.items.length - 1; i >= 0; i-- ) {
+
+				//Cache variables and intersection, continue if no intersection
+				item = this.items[ i ];
+				itemElement = item.item[ 0 ];
+				intersection = this._intersectsWithPointer( item );
+				if ( !intersection ) {
+					continue;
+				}
+
+				// Only put the placeholder inside the current Container, skip all
+				// items from other containers. This works because when moving
+				// an item from one container to another the
+				// currentContainer is switched before the placeholder is moved.
+				//
+				// Without this, moving items in "sub-sortables" can cause
+				// the placeholder to jitter between the outer and inner container.
+				if ( item.instance !== this.currentContainer ) {
+					continue;
+				}
+
+				// Cannot intersect with itself
+				// no useless actions that have been done before
+				// no action if the item moved is the parent of the item checked
+				if ( itemElement !== this.currentItem[ 0 ] &&
+					this.placeholder[ intersection === 1 ? "next" : "prev" ]()[ 0 ] !== itemElement &&
+					!$.contains( this.placeholder[ 0 ], itemElement ) &&
+					( this.options.type === "semi-dynamic" ?
+						!$.contains( this.element[ 0 ], itemElement ) :
+						true
+					)
+				) {
+
+					this.direction = intersection === 1 ? "down" : "up";
+
+					if ( this.options.tolerance === "pointer" || this._intersectsWithSides( item ) ) {
+						this._rearrange( event, item );
+					} else {
+						break;
+					}
+
+					this._trigger( "change", event, this._uiHash() );
+					break;
+				}
+			}
+			*/
+			
+			/*
+			var self = this.__gridstrap;
+			var ui = {placeholder:this.placeholder,item:this.currentItem};
+	
+			var tolerance = 0;
+			
+			var cursorY =  event.pageY;
+			var cursorX =  event.pageX;
+			
+			
+			var item = ui.item;
+			var ph = ui.placeholder;
+			var lineOffset = self.lineOffset;
+			var lineTop = lineOffset.top-tolerance;
+			var lineBottom = lineOffset.bottom+tolerance;
+			var lineLeft = lineOffset.left-tolerance;
+			var lineRight = lineOffset.right+tolerance;
+			var beforeItem;
+			
+			var moveNext = function(){
+				ph.nextAll('.gs-real:not(.gs-moving)').each(function(){
+					var offset = $(this).offset();
+					if(offset.left>cursorX || offset.top>cursorY){
+						return false;
+					}
+					beforeItem = this;
+				});
+			};
+			var movePrev = function(){
+				ph.prevAll('.gs-real:not(.gs-moving)').each(function(){
+					beforeItem = this;
+					var $this = $(this);
+					var offset = $this.offset();
+					if((offset.left<cursorX && offset.top<cursorY) || offset.top+$this.height()<cursorY){
+						return false;
+					}
+				});
+			};
+			if(cursorY>lineBottom){
+				moveNext();
+				console.log('movedown',cursorY,'>',lineBottom,beforeItem);
+			}
+			else if(cursorY<lineTop){
+				movePrev();
+				console.log('moveup',cursorY,'<',lineTop,beforeItem);
+			}
+			else if(cursorX>lineRight){
+				moveNext();
+				console.log('moveright',cursorX,'>',lineRight,beforeItem);
+			}
+			else if(cursorX<lineLeft){
+				movePrev();
+				console.log('moveleft',cursorX,'<',lineLeft,beforeItem);
+			}
+			
+			if(beforeItem){
+				ph.insertAfter(beforeItem).show();
+				//row.trigger('sortchange');
+				//sortableOptions.change(e, ui, true);
+				this._trigger( "change", event, this._uiHash() );
+			}
+			*/
+
+			//Post events to containers
+			this._contactContainers( event );
+
+			//Interconnect with droppables
+			if ( $.ui.ddmanager ) {
+				$.ui.ddmanager.drag( this, event );
+			}
+
+			//Call callbacks
+			this._trigger( "sort", event, this._uiHash() );
+
+			this.lastPositionAbs = this.positionAbs;
+			return false;
+
 		},
+		_contactContainers: function( event ) {
+			var i, j, dist, itemWithLeastDistance, posProperty, sizeProperty, cur, nearBottom,
+				floating, axis,
+				innermostContainer = null,
+				innermostIndex = null;
+
+			// Get innermost container that intersects with item
+			for ( i = this.containers.length - 1; i >= 0; i-- ) {
+
+				// Never consider a container that's located within the item itself
+				if ( $.contains( this.currentItem[ 0 ], this.containers[ i ].element[ 0 ] ) ) {
+					continue;
+				}
+
+				if ( this._intersectsWith( this.containers[ i ].containerCache ) ) {
+
+					// If we've already found a container and it's more "inner" than this, then continue
+					if ( innermostContainer &&
+							$.contains(
+								this.containers[ i ].element[ 0 ],
+								innermostContainer.element[ 0 ] ) ) {
+						continue;
+					}
+
+					innermostContainer = this.containers[ i ];
+					innermostIndex = i;
+
+				} else {
+
+					// container doesn't intersect. trigger "out" event if necessary
+					if ( this.containers[ i ].containerCache.over ) {
+						this.containers[ i ]._trigger( "out", event, this._uiHash( this ) );
+						this.containers[ i ].containerCache.over = 0;
+					}
+				}
+
+			}
+
+			// If no intersecting containers found, return
+			if ( !innermostContainer ) {
+				return;
+			}
+
+			// Move the item into the container if it's not there already
+			if ( this.containers.length === 1 ) {
+				if ( !this.containers[ innermostIndex ].containerCache.over ) {
+					this.containers[ innermostIndex ]._trigger( "over", event, this._uiHash( this ) );
+					this.containers[ innermostIndex ].containerCache.over = 1;
+				}
+			} else {
+
+				// When entering a new container, we will find the item with the least distance and
+				// append our item near it
+				dist = 10000;
+				itemWithLeastDistance = null;
+				floating = innermostContainer.floating || this._isFloating( this.currentItem );
+				posProperty = floating ? "left" : "top";
+				sizeProperty = floating ? "width" : "height";
+				axis = floating ? "pageX" : "pageY";
+
+				for ( j = this.items.length - 1; j >= 0; j-- ) {
+					if ( !$.contains(
+							this.containers[ innermostIndex ].element[ 0 ], this.items[ j ].item[ 0 ] )
+					) {
+						continue;
+					}
+					if ( this.items[ j ].item[ 0 ] === this.currentItem[ 0 ] ) {
+						continue;
+					}
+
+					cur = this.items[ j ].item.offset()[ posProperty ];
+					nearBottom = false;
+					if ( event[ axis ] - cur > this.items[ j ][ sizeProperty ] / 2 ) {
+						nearBottom = true;
+					}
+
+					if ( Math.abs( event[ axis ] - cur ) < dist ) {
+						dist = Math.abs( event[ axis ] - cur );
+						itemWithLeastDistance = this.items[ j ];
+						this.direction = nearBottom ? "up" : "down";
+					}
+				}
+
+				//Check if dropOnEmpty is enabled
+				if ( !itemWithLeastDistance && !this.options.dropOnEmpty ) {
+					return;
+				}
+				
+				if ( this.currentContainer === this.containers[ innermostIndex ] ) {
+					if ( !this.currentContainer.containerCache.over ) {
+						this.containers[ innermostIndex ]._trigger( "over", event, this._uiHash() );
+						this.currentContainer.containerCache.over = 1;
+					}
+					return;
+				}
+				console.log('itemWithLeastDistance',itemWithLeastDistance);
+				itemWithLeastDistance ?
+					this._rearrange( event, itemWithLeastDistance, null, true ) :
+					this._rearrange( event, null, this.containers[ innermostIndex ].element, true );
+				this._trigger( "change", event, this._uiHash() );
+				this.containers[ innermostIndex ]._trigger( "change", event, this._uiHash( this ) );
+				this.currentContainer = this.containers[ innermostIndex ];
+
+				//Update the placeholder
+				this.options.placeholder.update( this.currentContainer, this.placeholder );
+
+				this.containers[ innermostIndex ]._trigger( "over", event, this._uiHash( this ) );
+				this.containers[ innermostIndex ].containerCache.over = 1;
+			}
+
+		},
+		_rearrange: function( e, i, a, hardRefresh ) {
+			//if(!a&&!i.item[ 0 ].parentNode ) return;
+			
+			return _rearrange.apply(this,arguments);
+			/*
+			a ? a[ 0 ].appendChild( this.placeholder[ 0 ] ) :
+			i.item[ 0 ].parentNode.insertBefore( this.placeholder[ 0 ],
+				( this.direction === "down" ? i.item[ 0 ] : i.item[ 0 ].nextSibling ) );
+
+			this.counter = this.counter ? ++this.counter : 1;
+			var counter = this.counter;
+
+			this._delay( function() {
+				if ( counter === this.counter ) {
+
+					//Precompute after each DOM insertion, NOT on mousemove
+					this.refreshPositions( !hardRefresh );
+				}
+			} );
+			*/
+		},
+		
 	}));
 	
 	var Gridstrap = function(el, opts) {
@@ -302,7 +635,17 @@
 			});
 		},		
 		
+		activeRow : null,
+		sortTimeout : null,
 		gsFrom : null,
+		updateLineOffset : function(item){
+			var offset = item.offset();
+			var lineOffset = this.lineOffset;
+			lineOffset.top = offset.top;
+			lineOffset.bottom = lineOffset.top+item.outerHeight();
+			lineOffset.left = offset.left;
+			lineOffset.right = lineOffset.left+item.outerWidth();
+		},
 		lineOffset : {},
 		sortable: function(rows){
 			var self = this;
@@ -352,8 +695,7 @@
 						
 						self._autoAdjustPlaceholder(ui);
 						
-						self.lineOffset.top = item.offset().top;
-						self.lineOffset.bottom = self.lineOffset.top+item.height();
+						self.updateLineOffset(item);
 						
 						item.hide();
 						
@@ -390,6 +732,7 @@
 					over: function(e, ui){
 						if(self.opts.debugEvents) console.log('over',this,row);
 						
+						self.activeRow = row[0];
 						var ph = ui.placeholder;
 						
 						//view
@@ -398,10 +741,8 @@
 						if($.contains(row,ui.item)){
 							self.gsFrom.hide();
 						}
-						
-						self.lineOffset.top = ph.offset().top;
-						self.lineOffset.bottom = self.lineOffset.top+ph.height();
-						
+							
+						self.updateLineOffset(ph);
 						
 						//highlight area
 						self.container.find('.gs-state-over').removeClass('gs-state-over');
@@ -439,8 +780,7 @@
 						
 						self._autoAdjustPlaceholder(ui);
 						
-						self.lineOffset.top = ph.offset().top;
-						self.lineOffset.bottom = self.lineOffset.top+ph.height();
+						self.updateLineOffset(ph);
 						
 						//smooth effect
 						self._updateTempItems();
@@ -526,11 +866,15 @@
 					},
 					*/
 					sort: function(e, ui){
-						console.log('sort');
+						return;
+						//console.log('sort');
+						
 						
 						if(self.sortTimeout){
 							clearTimeout(self.sortTimeout);
 						}
+						
+						//if(self.activeRow!==row[0]) return;
 						
 						self.sortTimeout = setTimeout(function(){
 							var tolerance = 0;
@@ -541,12 +885,14 @@
 							
 							var item = ui.item;
 							var ph = ui.placeholder;
-							var lineTop = self.lineOffset.top;
-							var lineBottom = self.lineOffset.bottom;
+							var lineOffset = self.lineOffset;
+							var lineTop = lineOffset.top-tolerance;
+							var lineBottom = lineOffset.bottom+tolerance;
+							var lineLeft = lineOffset.left-tolerance;
+							var lineRight = lineOffset.right+tolerance;
 							var beforeItem;
 							
-							//console.log('4movedown',cursorY,'>',lineBottom+tolerance,self.lineOffset.top,item.height());
-							if(cursorY>lineBottom+tolerance){
+							var moveNext = function(){
 								ph.nextAll('.gs-real:not(.gs-moving)').each(function(){
 									var offset = $(this).offset();
 									if(offset.left>cursorX || offset.top>cursorY){
@@ -554,9 +900,8 @@
 									}
 									beforeItem = this;
 								});
-								console.log('movedown',cursorY,'>',lineBottom+tolerance,beforeItem);
-							}
-							else if(cursorY<lineTop-tolerance){
+							};
+							var movePrev = function(){
 								ph.prevAll('.gs-real:not(.gs-moving)').each(function(){
 									beforeItem = this;
 									var $this = $(this);
@@ -565,8 +910,25 @@
 										return false;
 									}
 								});
-								console.log('moveup',cursorY,'<',lineBottom-tolerance,beforeItem);
+							};
+							//console.log('4movedown',cursorY,'>',lineBottom,self.lineOffset.top,item.height());
+							if(cursorY>lineBottom){
+								moveNext();
+								console.log('movedown',cursorY,'>',lineBottom,beforeItem);
 							}
+							else if(cursorY<lineTop){
+								movePrev();
+								console.log('moveup',cursorY,'<',lineTop,beforeItem);
+							}
+							else if(cursorX>lineRight){
+								moveNext();
+								console.log('moveright',cursorX,'>',lineRight,beforeItem);
+							}
+							else if(cursorX<lineLeft){
+								movePrev();
+								console.log('moveleft',cursorX,'<',lineLeft,beforeItem);
+							}
+							
 							if(beforeItem){
 								ph.insertAfter(beforeItem).show();
 								//self.gsFrom.insertAfter(beforeItem);
@@ -575,7 +937,7 @@
 								sortableOptions.change(e, ui, true);
 							}
 						
-						},50);
+						},10);
 							
 						if(scrollCallback){
 							//scrollCallback(e, ui);
@@ -603,6 +965,7 @@
 				
 				row.sortable(sortableOptions);
 				sortable = row.data('ui-sortable');
+				sortable.__gridstrap = self;
 			});
 		},
 		
