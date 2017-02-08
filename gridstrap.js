@@ -251,18 +251,19 @@
 			var ph = ui.placeholder;
 			var item = ui.item[0];
 			
-			if(ph.prev().get(0)===item||ph.next().get(0)===item){
-				ph.hide();
-			}
-			else{
-				ph.show();
-			}
+			ph.show();
+			//if(ph.prev().get(0)===item||ph.next().get(0)===item){
+				//ph.hide();
+			//}
+			//else{
+				//ph.show();
+			//}
 			
 			if(!this._aloneInTheRow(ph)&&this._aloneInTheLine(ph)){ //emptyHeight
-				ph.height(ui.item.height());
+				ph.height(ui.helper.height());
 			}
 			else{
-				ph.css('height','auto');
+				ph.css('height','');
 			}
 		},
 		
@@ -299,7 +300,23 @@
 				$this.attr('data-gs-row',currentRow);
 			});
 		},		
+		
 		gsFrom : null,
+		movingOffset : null,
+		updateMovingOffset : function(el){
+			var hidden = el.css('display')=='none';
+			if(hidden){
+				el.show();
+			}
+			var offset = el.offset();
+			if(hidden){
+				el.hide();
+			}
+			this.movingOffset = {
+				top:offset.top,
+				left:offset.left
+			};
+		},
 		sortable: function(rows){
 			var self = this;
 			rows.each(function(){
@@ -340,12 +357,15 @@
 							})
 						;
 						
+
 						self.gsFrom = ph.clone().attr('class','gs-from');
-						item.hide();
-						ph.hide();
+						self.gsFrom.hide();
 						item.after(self.gsFrom);
 						
-						//self._autoAdjustPlaceholder(ui);
+						self._autoAdjustPlaceholder(ui);
+						self.updateMovingOffset(item);
+						
+						item.hide();
 						
 						
 						//store
@@ -381,8 +401,13 @@
 						if(self.opts.debugEvents) console.log('over',this,row);
 						
 						//view
+						self.updateMovingOffset(ui.placeholder);
 						self._autoAdjustPlaceholder(ui);
-
+						if($.contains(row,ui.item)){
+							self.gsFrom.hide();
+						}
+						
+						
 						//highlight area
 						self.container.find('.gs-state-over').removeClass('gs-state-over');
 						row.addClass('gs-state-over');
@@ -413,10 +438,10 @@
 						//if(self.opts.debugEvents) console.log('change',this);
 						//console.log('change',this,ui.item);
 						
-						//self.gsFrom.hide();
-						
+						self.gsFrom.hide();
 						
 						self._autoAdjustPlaceholder(ui);
+						self.updateMovingOffset(ui.placeholder);
 						
 						//smooth effect
 						self._updateTempItems();
@@ -512,16 +537,8 @@
 						var cursorY =  e.pageY;
 						var cursorX =  e.pageX;
 						
-						
 						var item = ui.item;
-						var hidden = item.css('display')=='none';
-						if(hidden){
-							item.show(); //so we can get the offset
-						}
-						var lineTop = item.offset().top;
-						if(hidden){
-							item.hide();
-						}
+						var lineTop = self.movingOffset.top;
 						var lineBottom = lineTop+item.height();
 						var beforeItem;
 
@@ -549,7 +566,7 @@
 						if(beforeItem){
 							ui.placeholder.insertAfter(beforeItem).show();
 							//self.gsFrom.insertAfter(beforeItem);
-							item.insertAfter(beforeItem);
+							//item.insertAfter(beforeItem);
 							row.trigger('sortchange');
 							sortableOptions.change(e, ui);
 						}
