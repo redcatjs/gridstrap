@@ -120,7 +120,7 @@ $gs-percent: (100% / $gridstrap-columns);
 			overflow: visible;
 			&:hover{
 				border:1px dashed rgba(93, 93, 93, 0.50);
-				transition: border 500ms ease-in;
+				transition: border 200ms ease-in;
 				cursor: grab;
 			}
 		}
@@ -156,7 +156,7 @@ $gs-percent: (100% / $gridstrap-columns);
 		padding-bottom: 0;
 		padding-top: 0;
 		
-		margin-bottom: 2px;
+		margin-bottom: 1px;
 	}
 
 	.empty-get-started {
