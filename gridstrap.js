@@ -42,7 +42,7 @@
 			//debugEvents: true,
 			debugColor: 0,
 			cloneCallback: null,
-			smooth: 1,
+			smooth: 0,
 		}, opts || {} );
 		//this.itemsSelector = '> .gs-col:not(.gs-clone, .gs-moving)';
 		this.itemsSelector = '> .gs-real:not(.gs-moving)';
@@ -337,7 +337,8 @@
 					//tolerance: 'intersect', //intersect || pointer
 					tolerance: 'pointer', //intersect || pointer
 					placeholder: 'gs-placeholder',
-					appendTo: 'parent',
+					//appendTo: 'parent',
+					appendTo: self.container, //fix z-index issues
 					cursor: 'grabbing',
 					cursorAt: { left: 5, top: 5 },
 					helper:'clone',
