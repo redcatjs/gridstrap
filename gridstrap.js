@@ -38,8 +38,8 @@
 			},
 			boxPadding: 15, //$box-padding .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
 			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
-			//debugEvents: false,
-			debugEvents: true,
+			debugEvents: false,
+			//debugEvents: true,
 			debugColor: 0,
 			cloneCallback: null,
 			//smooth: 0,
@@ -194,7 +194,6 @@
 				}
 			});
 		},
-		/*
 		_aloneInTheRow: function(el){
 			return el.siblings('.gs-real:not(.gs-placeholder, .gs-moving, .gs-clone)').length<1;
 			//return el.siblings('.gs-real:not(.gs-moving)').length<1;
@@ -203,41 +202,38 @@
 			var self = this;
 			var line = 0;
 			var element = el.get(0);
-			var matched;
+			var found = false;
+			var result = false;
 			el.parent().find('>.gs-real, .gs-placeholder').not('.gs-moving').each(function(){
 				var col = $(this);
 				var w = self.width(col);
 				var lw = line + w;
-				//console.log(line, '+', w, '=',lw,this);
-				if(matched){
-					if(lw >= 12){
-						line = 0;
+				if(lw > 12){
+					line = w;
+					if(found){
+						result = true;
+						return false;
 					}
-					return false;
-				}
-				else if(this===element){
-					if(lw >= 12){
-						line = 0;
-					}
-					matched = true;
 				}
 				else{
-					if(lw > 12){
-						line = w;
+					if(found){
+						result = false;
+						return false;
 					}
-					else if(lw==12){
+					if(lw==12){
 						line = 0;
 					}
 					else{
 						line = lw;
-					}	
+					}
 				}
-				//console.log(line);
+				if(this===element){
+					found = true;
+				}
 			});
-			//console.log(line);
-			return line==0;
+			console.log(result);
+			return result;
 		},
-		*/
 		_getWidthFor:function(item){
 			return Math.floor(this._rowWidth(item.parent(),this.width(item)));
 		},
@@ -253,7 +249,7 @@
 				//ph.show();
 			//}
 			
-			if(ph.innerHeight()<=2){
+			if(!this._aloneInTheRow(ph)&&this._aloneInTheLine(ph)){
 				ph.height(ui.helper.height());
 			}
 			else{
@@ -298,6 +294,9 @@
 		activeRow : null,
 		gsFrom : null,
 		gsRowOrigin : null,
+		_isInRowOrigin : function(el){
+			return this.gsRowOrigin===el.closest('.gs-row')[0];
+		},
 		updateLineOffset : function(item){
 			var offset = item.offset();
 			var lineOffset = this.lineOffset;
@@ -427,7 +426,7 @@
 						if(!self.gsRowOrigin){
 							self.gsRowOrigin = row[0];
 						}
-						if(self.gsRowOrigin===row[0]){
+						if(self._isInRowOrigin(ui.placeholder)){
 							self.gsFrom.hide();
 						}
 						else{
@@ -469,7 +468,7 @@
 						}
 						
 						//prevent strobe
-						if(self.gsRowOrigin===row[0]){
+						if(self._isInRowOrigin(ui.placeholder)){
 							self.gsFrom.hide().insertAfter(ui.placeholder);
 						}
 						
@@ -502,7 +501,8 @@
 						row.removeClass('gs-state-over');
 						
 						//prevent strobe
-						if(self.gsRowOrigin===row[0]){
+						console.log('sender',ui.sender);
+						if(self._isInRowOrigin(ui.sender)){
 							self.gsFrom.show();
 						}
 						
@@ -586,7 +586,7 @@
 						
 						//from row to self.activeRow
 						var isMissing = row[0]!==self.activeRow[0] && !$.contains(self.activeRow,ph);
-						console.log('isMissing',isMissing,self.activeRow);
+						//console.log('isMissing',isMissing,self.activeRow);
 						var selector = '.gs-real:not(.gs-moving)';
 						var moveNext = function(){
 							var collection;
