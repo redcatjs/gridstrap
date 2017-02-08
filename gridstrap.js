@@ -303,21 +303,7 @@
 		},		
 		
 		gsFrom : null,
-		movingOffset : null,
-		updateMovingOffset : function(el){
-			var hidden = el.css('display')=='none';
-			if(hidden){
-				el.show();
-			}
-			var offset = el.offset();
-			if(hidden){
-				el.hide();
-			}
-			this.movingOffset = {
-				top:offset.top,
-				left:offset.left
-			};
-		},
+		lineOffset : {},
 		sortable: function(rows){
 			var self = this;
 			rows.each(function(){
@@ -335,8 +321,8 @@
 					scroll: self.opts.scroll,
 					scrollSensitivity: 20, //default 20
 					scrollSpeed: 20, //default 20
-					tolerance: 'intersect', //intersect || pointer
-					//tolerance: 'pointer', //intersect || pointer
+					//tolerance: 'intersect', //intersect || pointer
+					tolerance: 'pointer', //intersect || pointer
 					placeholder: 'gs-placeholder',
 					//appendTo: document.body,
 					//appendTo: 'parent',
@@ -348,6 +334,7 @@
 						if(self.opts.debugEvents) console.log('start',this);
 						
 						//view
+						ui.helper.addClass('gs-helper').removeClass('gs-real');
 						item.addClass('gs-moving').show();
 						ph
 							.html('<div class="gs-content"/>')
@@ -364,7 +351,9 @@
 						item.after(self.gsFrom);
 						
 						self._autoAdjustPlaceholder(ui);
-						self.updateMovingOffset(item);
+						
+						self.lineOffset.top = item.offset().top;
+						self.lineOffset.bottom = self.lineOffset.top+item.height();
 						
 						item.hide();
 						
@@ -401,12 +390,17 @@
 					over: function(e, ui){
 						if(self.opts.debugEvents) console.log('over',this,row);
 						
+						var ph = ui.placeholder;
+						
 						//view
-						self.updateMovingOffset(ui.placeholder);
+						
 						self._autoAdjustPlaceholder(ui);
 						if($.contains(row,ui.item)){
 							self.gsFrom.hide();
 						}
+						
+						self.lineOffset.top = ph.offset().top;
+						self.lineOffset.bottom = self.lineOffset.top+ph.height();
 						
 						
 						//highlight area
@@ -435,14 +429,18 @@
 						row.parents('.gs-col').addBack().addClass('gs-moving-parent');
 						
 					},
-					change: function(e, ui){
-						//if(self.opts.debugEvents) console.log('change',this);
-						//console.log('change',this,ui.item);
+					change: function(e, ui, manual){
+						if(self.opts.debugEvents) console.log('change',this);
+						if(manual!==true) console.log('change');
 						
 						self.gsFrom.hide();
 						
+						var ph = ui.placeholder;
+						
 						self._autoAdjustPlaceholder(ui);
-						self.updateMovingOffset(ui.placeholder);
+						
+						self.lineOffset.top = ph.offset().top;
+						self.lineOffset.bottom = self.lineOffset.top+ph.height();
 						
 						//smooth effect
 						self._updateTempItems();
@@ -528,50 +526,56 @@
 					},
 					*/
 					sort: function(e, ui){
-						//console.log(ui);
+						console.log('sort');
 						
-						var tolerance = 0;
-						
-						//var cursorY =  sortable.positionAbs.top + sortable.offset.click.top;
-						//var cursorX =  sortable.positionAbs.left + sortable.offset.click.left;
-						
-						var cursorY =  e.pageY;
-						var cursorX =  e.pageX;
-						
-						var item = ui.item;
-						var lineTop = self.movingOffset.top;
-						var lineBottom = lineTop+item.height();
-						var beforeItem;
-
-						if(cursorY>lineBottom+tolerance){
-							item.nextAll('.gs-col').each(function(){
-								var offset = $(this).offset();
-								if(offset.left>cursorX || offset.top>cursorY){
-									return false;
-								}
-								beforeItem = this;
-							});
-							//console.log('movedown',cursorY,'>',lineBottom+tolerance,beforeItem);
-						}
-						else if(cursorY<lineTop-tolerance){
-							item.prevAll('.gs-col').each(function(){
-								beforeItem = this;
-								var $this = $(this);
-								var offset = $this.offset();
-								if((offset.left<cursorX && offset.top<cursorY) || offset.top+$this.height()<cursorY){
-									return false;
-								}
-							});
-							//console.log('moveup',cursorY,'<',lineBottom-tolerance,beforeItem);
-						}
-						if(beforeItem){
-							ui.placeholder.insertAfter(beforeItem).show();
-							//self.gsFrom.insertAfter(beforeItem);
-							//item.insertAfter(beforeItem);
-							row.trigger('sortchange');
-							sortableOptions.change(e, ui);
+						if(self.sortTimeout){
+							clearTimeout(self.sortTimeout);
 						}
 						
+						self.sortTimeout = setTimeout(function(){
+							var tolerance = 0;
+							
+							var cursorY =  e.pageY;
+							var cursorX =  e.pageX;
+							
+							
+							var item = ui.item;
+							var ph = ui.placeholder;
+							var lineTop = self.lineOffset.top;
+							var lineBottom = self.lineOffset.bottom;
+							var beforeItem;
+							
+							//console.log('4movedown',cursorY,'>',lineBottom+tolerance,self.lineOffset.top,item.height());
+							if(cursorY>lineBottom+tolerance){
+								ph.nextAll('.gs-real:not(.gs-moving)').each(function(){
+									var offset = $(this).offset();
+									if(offset.left>cursorX || offset.top>cursorY){
+										return false;
+									}
+									beforeItem = this;
+								});
+								console.log('movedown',cursorY,'>',lineBottom+tolerance,beforeItem);
+							}
+							else if(cursorY<lineTop-tolerance){
+								ph.prevAll('.gs-real:not(.gs-moving)').each(function(){
+									beforeItem = this;
+									var $this = $(this);
+									var offset = $this.offset();
+									if((offset.left<cursorX && offset.top<cursorY) || offset.top+$this.height()<cursorY){
+										return false;
+									}
+								});
+								console.log('moveup',cursorY,'<',lineBottom-tolerance,beforeItem);
+							}
+							if(beforeItem){
+								ph.insertAfter(beforeItem).show();
+								//self.gsFrom.insertAfter(beforeItem);
+								//item.insertAfter(beforeItem);
+								row.trigger('sortchange');
+								sortableOptions.change(e, ui, true);
+							}
+						
+						},50);
 							
 						if(scrollCallback){
 							//scrollCallback(e, ui);
@@ -608,6 +612,7 @@
 				width = el.attr('data-gs-col') || this.defaultWidth;
 			}
 			el.attr('data-gs-col',width);
+			el.addClass('gs-real');
 			el.addClass('gs-col');
 			el.addClass('gs-integrated');
 			if(!container){
