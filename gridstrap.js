@@ -1,5 +1,14 @@
 (function($){
 	
+	//var _rearrange = $.ui.sortable.prototype._rearrange;
+	//$.widget('ui.sortable',$.extend($.ui.sortable.prototype,{
+		//_rearrange: function( e, i, a, hardRefresh ) {
+			//if(!a&&!i.item[ 0 ].parentNode ) return;
+			//return _rearrange.apply(this,arguments);
+		//},
+		
+	//}));
+	
 	var Gridstrap = function(el, opts) {
 		this.container = $(el);
 		var self = this;
@@ -296,7 +305,6 @@
 		},		
 		
 		activeRow : null,
-		sortTimeout : null,
 		gsFrom : null,
 		updateLineOffset : function(item){
 			var offset = item.offset();
@@ -305,6 +313,9 @@
 			lineOffset.bottom = lineOffset.top+item.outerHeight();
 			lineOffset.left = offset.left;
 			lineOffset.right = lineOffset.left+item.outerWidth();
+			
+			console.log('lineBottom',lineOffset.top,'+',item.outerHeight(),'=',lineOffset.bottom);
+			
 		},
 		lineOffset : {},
 		sortable: function(rows){
@@ -433,7 +444,10 @@
 					},
 					change: function(e, ui, manual){
 						if(self.opts.debugEvents) console.log('change',this);
-						if(manual!==true) console.log('change');
+						if(manual!==true){
+							console.log('change');
+						}
+						
 						
 						self.gsFrom.hide();
 						
@@ -527,75 +541,64 @@
 					},
 					*/
 					sort: function(e, ui){
-						//return;
-						//console.log('sort');
+						
+						var tolerance = 0;
+						
+						var cursorY =  e.pageY;
+						var cursorX =  e.pageX;
 						
 						
-						if(self.sortTimeout){
-							clearTimeout(self.sortTimeout);
+						var item = ui.item;
+						var ph = ui.placeholder;
+						var lineOffset = self.lineOffset;
+						var lineTop = lineOffset.top-tolerance;
+						var lineBottom = lineOffset.bottom+tolerance;
+						var lineLeft = lineOffset.left-tolerance;
+						var lineRight = lineOffset.right+tolerance;
+						var beforeItem;
+						
+						var moveNext = function(){
+							ph.nextAll('.gs-real:not(.gs-moving)').each(function(){
+								var offset = $(this).offset();
+								if(offset.left>cursorX || offset.top>cursorY){
+									return false;
+								}
+								beforeItem = this;
+							});
+						};
+						var movePrev = function(){
+							ph.prevAll('.gs-real:not(.gs-moving)').each(function(){
+								beforeItem = this;
+								var $this = $(this);
+								var offset = $this.offset();
+								if((offset.left<cursorX && offset.top<cursorY) || offset.top+$this.height()<cursorY){
+									return false;
+								}
+							});
+						};
+						if(cursorY>lineBottom){
+							moveNext();
+							//console.log('movedown',cursorY,'>',lineBottom,beforeItem);
 						}
+						else if(cursorY<lineTop){
+							movePrev();
+							//console.log('moveup',cursorY,'<',lineTop,beforeItem);
+						}
+						//else if(cursorX>lineRight){
+							//moveNext();
+							//console.log('moveright',cursorX,'>',lineRight,beforeItem);
+						//}
+						//else if(cursorX<lineLeft){
+							//movePrev();
+							//console.log('moveleft',cursorX,'<',lineLeft,beforeItem);
+						//}
 						
-						//if(self.activeRow!==row[0]) return;
-						
-						self.sortTimeout = setTimeout(function(){
-							var tolerance = 0;
-							
-							var cursorY =  e.pageY;
-							var cursorX =  e.pageX;
-							
-							
-							var item = ui.item;
-							var ph = ui.placeholder;
-							var lineOffset = self.lineOffset;
-							var lineTop = lineOffset.top-tolerance;
-							var lineBottom = lineOffset.bottom+tolerance;
-							var lineLeft = lineOffset.left-tolerance;
-							var lineRight = lineOffset.right+tolerance;
-							var beforeItem;
-							
-							var moveNext = function(){
-								ph.nextAll('.gs-real:not(.gs-moving)').each(function(){
-									var offset = $(this).offset();
-									if(offset.left>cursorX || offset.top>cursorY){
-										return false;
-									}
-									beforeItem = this;
-								});
-							};
-							var movePrev = function(){
-								ph.prevAll('.gs-real:not(.gs-moving)').each(function(){
-									beforeItem = this;
-									var $this = $(this);
-									var offset = $this.offset();
-									if((offset.left<cursorX && offset.top<cursorY) || offset.top+$this.height()<cursorY){
-										return false;
-									}
-								});
-							};
-							if(cursorY>lineBottom){
-								moveNext();
-								console.log('movedown',cursorY,'>',lineBottom,beforeItem);
-							}
-							else if(cursorY<lineTop){
-								movePrev();
-								console.log('moveup',cursorY,'<',lineTop,beforeItem);
-							}
-							//else if(cursorX>lineRight){
-								//moveNext();
-								//console.log('moveright',cursorX,'>',lineRight,beforeItem);
-							//}
-							//else if(cursorX<lineLeft){
-								//movePrev();
-								//console.log('moveleft',cursorX,'<',lineLeft,beforeItem);
-							//}
-							
-							if(beforeItem){
-								ph.insertAfter(beforeItem).show();
-								row.trigger('sortchange');
-								sortableOptions.change(e, ui, true);
-							}
-						
-						},10);
+						if(beforeItem){
+							ph.insertAfter(beforeItem).show();
+							row.trigger('sortchange');
+							sortableOptions.change(e, ui, true);
+						}
+					
 							
 						if(scrollCallback){
 							//scrollCallback(e, ui);
