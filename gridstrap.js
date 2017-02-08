@@ -42,7 +42,7 @@
 			debugColor: true,
 			//debugEvents: true,
 			cloneCallback: null,
-			smooth: 0,
+			smooth: 1,
 		}, opts || {} );
 		//this.itemsSelector = '> .gs-col:not(.gs-clone, .gs-moving)';
 		this.itemsSelector = '> .gs-real:not(.gs-moving)';
@@ -98,6 +98,7 @@
 				if(item.data('gs-clone')) return;
 				var position = item.position();
 				var clone = item.clone();
+				clone.removeClass('gs-real');
 				if(self.opts.cloneCallback){
 					self.opts.cloneCallback(clone);
 				}
@@ -276,7 +277,7 @@
 		
 		_getCurrentOrderedCols: function(row,ui){
 			var sCols = [];
-			var cols = row.find('> .gs-placeholder, > .gs-col:not(.gs-moving, .gs-clone)');
+			var cols = row.find('> .gs-placeholder, > .gs-real:not(.gs-moving)');
 			cols.each(function(){
 				if(this===ui.placeholder[0]){
 					sCols.push( ui.item );
