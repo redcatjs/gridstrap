@@ -114,7 +114,10 @@ $gs-percent: (100% / $gridstrap-columns);
             border:1px dashed rgba(93, 93, 93, 0.50);
 			overflow: visible;
 			&:hover{
+/*
 				border:1px dashed rgba(93, 93, 93, 0.50);
+*/
+				border:1px solid rgba(93, 93, 93, 0.50);
 				transition: border 500ms ease-in;
 				cursor: grab;
 			}
