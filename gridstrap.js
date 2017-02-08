@@ -336,7 +336,6 @@
 					cursor: 'grabbing',
 					
 					helper:function(e,item){
-						console.log(item);
 						return item.clone()
 							.addClass('gs-helper')
 							.removeClass('gs-real')
@@ -569,12 +568,11 @@
 						
 						//from row to self.activeRow
 						var isMissing = row[0]!==self.activeRow[0] && !$.contains(self.activeRow,ph);
-						console.log(isMissing,self.activeRow);
 						var selector = '.gs-real:not(.gs-moving)';
 						var moveNext = function(){
 							var collection;
 							if(isMissing){
-								collection = self.activeRow.find(selector);
+								collection = self.activeRow.children(selector);
 							}
 							else{
 								collection = ph.nextAll(selector);
@@ -590,7 +588,7 @@
 						var movePrev = function(){
 							var collection;
 							if(isMissing){
-								collection = self.activeRow.find(selector).reverse();
+								collection = self.activeRow.children(selector).reverse();
 							}
 							else{
 								collection = ph.prevAll(selector);
@@ -622,6 +620,7 @@
 							//console.log('moveleft',cursorX,'<',lineLeft,beforeItem);
 						//}
 						
+						console.log(beforeItem);
 						if(beforeItem){
 							ph.insertAfter(beforeItem).show();
 							row.trigger('sortchange');
