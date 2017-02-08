@@ -572,7 +572,6 @@
 									}
 								});
 							};
-							//console.log('4movedown',cursorY,'>',lineBottom,self.lineOffset.top,item.height());
 							if(cursorY>lineBottom){
 								moveNext();
 								console.log('movedown',cursorY,'>',lineBottom,beforeItem);
@@ -581,19 +580,17 @@
 								movePrev();
 								console.log('moveup',cursorY,'<',lineTop,beforeItem);
 							}
-							else if(cursorX>lineRight){
-								moveNext();
-								console.log('moveright',cursorX,'>',lineRight,beforeItem);
-							}
-							else if(cursorX<lineLeft){
-								movePrev();
-								console.log('moveleft',cursorX,'<',lineLeft,beforeItem);
-							}
+							//else if(cursorX>lineRight){
+								//moveNext();
+								//console.log('moveright',cursorX,'>',lineRight,beforeItem);
+							//}
+							//else if(cursorX<lineLeft){
+								//movePrev();
+								//console.log('moveleft',cursorX,'<',lineLeft,beforeItem);
+							//}
 							
 							if(beforeItem){
 								ph.insertAfter(beforeItem).show();
-								//self.gsFrom.insertAfter(beforeItem);
-								//item.insertAfter(beforeItem);
 								row.trigger('sortchange');
 								sortableOptions.change(e, ui, true);
 							}
