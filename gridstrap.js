@@ -337,9 +337,7 @@
 					//tolerance: 'intersect', //intersect || pointer
 					tolerance: 'pointer', //intersect || pointer
 					placeholder: 'gs-placeholder',
-					//appendTo: document.body,
-					//appendTo: 'parent',
-					appendTo: self.container,
+					appendTo: 'parent',
 					cursor: 'grabbing',
 					helper:'clone',
 					start: function(e, ui){

@@ -63,6 +63,9 @@ $gs-percent: (100% / $gridstrap-columns);
 		&.gs-moving{
 			z-index: 30;
 		}
+		&.gs-helper{
+			z-index: 40;
+		}
 		&.gs-moving-parent{
 			z-index: 15;
 			opacity: 1 !important;
