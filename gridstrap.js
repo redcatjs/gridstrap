@@ -39,8 +39,8 @@
 			boxPadding: 15, //$box-padding .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
 			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
 			debugEvents: false,
-			debugColor: false,
 			//debugEvents: true,
+			debugColor: 0,
 			cloneCallback: null,
 			smooth: 1,
 		}, opts || {} );
@@ -403,7 +403,7 @@
 					over: function(e, ui){
 						if(self.opts.debugEvents) console.log('over',this,row);
 						
-						self.activeRow = row[0];
+						self.activeRow = row;
 						var ph = ui.placeholder;
 						
 						//view
@@ -540,6 +540,8 @@
 					*/
 					sort: function(e, ui){
 						
+						//return;
+						
 						var tolerance = 0;
 						
 						var cursorY =  e.pageY;
@@ -555,8 +557,18 @@
 						var lineRight = lineOffset.right+tolerance;
 						var beforeItem;
 						
+						//from row to self.activeRow
+						var isMissing = row[0]!==self.activeRow[0] && !$.contains(self.activeRow,ph);
+						var selector = '.gs-real:not(.gs-moving)';
 						var moveNext = function(){
-							ph.nextAll('.gs-real:not(.gs-moving)').each(function(){
+							var collection;
+							if(isMissing){
+								collection = self.activeRow.find(selector);
+							}
+							else{
+								collection = ph.nextAll(selector);
+							}
+							collection.each(function(){
 								var offset = $(this).offset();
 								if(offset.left>cursorX || offset.top>cursorY){
 									return false;
@@ -565,7 +577,14 @@
 							});
 						};
 						var movePrev = function(){
-							ph.prevAll('.gs-real:not(.gs-moving)').each(function(){
+							var collection;
+							if(isMissing){
+								collection = self.activeRow.find(selector).reverse();
+							}
+							else{
+								collection = ph.prevAll(selector);
+							}
+							collection.each(function(){
 								beforeItem = this;
 								var $this = $(this);
 								var offset = $this.offset();
@@ -574,6 +593,7 @@
 								}
 							});
 						};
+						//console.log('4movedown',cursorY,'>',lineBottom,beforeItem);
 						if(cursorY>lineBottom){
 							moveNext();
 							//console.log('movedown',cursorY,'>',lineBottom,beforeItem);
