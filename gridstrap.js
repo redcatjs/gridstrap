@@ -339,6 +339,7 @@
 					placeholder: 'gs-placeholder',
 					appendTo: 'parent',
 					cursor: 'grabbing',
+					cursorAt: { left: 5, top: 5 },
 					helper:'clone',
 					start: function(e, ui){
 						var item = ui.item;
