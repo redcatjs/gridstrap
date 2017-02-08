@@ -39,7 +39,7 @@
 			boxPadding: 15, //$box-padding .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
 			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
 			debugEvents: false,
-			debugColor: true,
+			debugColor: false,
 			//debugEvents: true,
 			cloneCallback: null,
 			smooth: 1,
