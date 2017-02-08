@@ -38,8 +38,8 @@
 			},
 			boxPadding: 15, //$box-padding .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
 			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
-			debugEvents: false,
-			//debugEvents: true,
+			//debugEvents: false,
+			debugEvents: true,
 			debugColor: 0,
 			cloneCallback: null,
 			//smooth: 0,
@@ -297,6 +297,7 @@
 		
 		activeRow : null,
 		gsFrom : null,
+		gsRowOrigin : null,
 		updateLineOffset : function(item){
 			var offset = item.offset();
 			var lineOffset = this.lineOffset;
@@ -366,6 +367,8 @@
 						;
 						
 
+						//prevent strobe
+						self.gsRowOrigin = null;
 						self.gsFrom = ph.clone().attr('class','gs-from');
 						self.gsFrom.hide();
 						item.after(self.gsFrom);
@@ -388,6 +391,7 @@
 						if(!item.hasClass('gs-integrated')){
 							ui.helper.addClass('gs-sortable-helper');
 						}
+						
 					},
 					activate: function(e, ui){						
 						if(self.opts.debugEvents) console.log('activate',this);
@@ -418,15 +422,22 @@
 						}
 						
 						self.activeRow = row;
-						var ph = ui.placeholder;
+						
+						//prevent strobe
+						if(!self.gsRowOrigin){
+							self.gsRowOrigin = row[0];
+						}
+						if(self.gsRowOrigin===row[0]){
+							self.gsFrom.hide();
+						}
+						else{
+							self.gsFrom.show();
+						}
 						
 						//view						
 						self._autoAdjustPlaceholder(ui);
-						if($.contains(row,ui.item)){
-							self.gsFrom.hide();
-						}
 							
-						self.updateLineOffset(ph);
+						self.updateLineOffset(ui.placeholder);
 						
 						//highlight area
 						self.container.find('.gs-state-over').removeClass('gs-state-over');
@@ -457,8 +468,10 @@
 							console.log(manual!==true?'change':'change manual from sort',this);
 						}
 						
-						
-						self.gsFrom.hide();
+						//prevent strobe
+						if(self.gsRowOrigin===row[0]){
+							self.gsFrom.hide().insertAfter(ui.placeholder);
+						}
 						
 						var ph = ui.placeholder;
 						
@@ -487,6 +500,11 @@
 						
 						//highlight area
 						row.removeClass('gs-state-over');
+						
+						//prevent strobe
+						if(self.gsRowOrigin===row[0]){
+							self.gsFrom.show();
+						}
 						
 						//smooth effect
 						//self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
@@ -551,7 +569,7 @@
 						
 						//return;
 						
-						var tolerance = 0;
+						var tolerance = -5;
 						
 						var cursorY =  e.pageY;
 						var cursorX =  e.pageX;
@@ -568,6 +586,7 @@
 						
 						//from row to self.activeRow
 						var isMissing = row[0]!==self.activeRow[0] && !$.contains(self.activeRow,ph);
+						console.log('isMissing',isMissing,self.activeRow);
 						var selector = '.gs-real:not(.gs-moving)';
 						var moveNext = function(){
 							var collection;
@@ -620,7 +639,7 @@
 							//console.log('moveleft',cursorX,'<',lineLeft,beforeItem);
 						//}
 						
-						console.log(beforeItem);
+						console.log('beforeItem',beforeItem);
 						if(beforeItem){
 							ph.insertAfter(beforeItem).show();
 							row.trigger('sortchange');
