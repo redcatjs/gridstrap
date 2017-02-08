@@ -38,8 +38,8 @@
 			},
 			boxPadding: 15, //$box-padding .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
 			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
-			//debugEvents: false,
-			debugEvents: true,
+			debugEvents: false,
+			//debugEvents: true,
 			debugColor: 0,
 			cloneCallback: null,
 			//smooth: 0,
@@ -188,10 +188,10 @@
 				var $this = $(this);
 				//smooth
 				//if($this.closest('.gs-clone').length) return;
-				//if($this.sortable('instance')){
-					//$this.sortable('enable');
-					//row.sortable('refresh');
-				//}
+				if($this.sortable('instance')){
+					$this.sortable('enable');
+					row.sortable('refresh');
+				}
 			});
 		},
 		/*
@@ -569,6 +569,7 @@
 						
 						//from row to self.activeRow
 						var isMissing = row[0]!==self.activeRow[0] && !$.contains(self.activeRow,ph);
+						console.log(isMissing,self.activeRow);
 						var selector = '.gs-real:not(.gs-moving)';
 						var moveNext = function(){
 							var collection;
