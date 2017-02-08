@@ -328,27 +328,43 @@
 					return;
 				}
 				var sortableOptions = {
+					
 					items: self.itemsSelector,
 					connectWith: self.opts.connectWith,
+					
 					revert: false,
+					
 					scroll: self.opts.scroll,
 					scrollSensitivity: 20, //default 20
 					scrollSpeed: 20, //default 20
+					
 					//tolerance: 'intersect', //intersect || pointer
 					tolerance: 'pointer', //intersect || pointer
 					placeholder: 'gs-placeholder',
-					//appendTo: 'parent',
-					appendTo: self.container, //fix z-index issues
+					
+					
 					cursor: 'grabbing',
+					
+					helper:function(e,item){
+						return item.clone()
+							.addClass('gs-helper')
+							.removeClass('gs-real')
+							.css({
+								height: (item.outerHeight())+'px',
+								width: (item.outerWidth())+'px',								
+							})
+						;
+					},
 					cursorAt: { left: 5, top: 5 },
-					helper:'clone',
+					appendTo: self.container, //fix z-index issues
+					
 					start: function(e, ui){
-						var item = ui.item;
-						var ph = ui.placeholder;
 						if(self.opts.debugEvents) console.log('start',this);
 						
+						var item = ui.item;
+						var ph = ui.placeholder;
+						
 						//view
-						ui.helper.addClass('gs-helper').removeClass('gs-real');
 						item.addClass('gs-moving').show();
 						ph
 							.html('<div class="gs-content"/>')
@@ -406,8 +422,7 @@
 						self.activeRow = row;
 						var ph = ui.placeholder;
 						
-						//view
-						
+						//view						
 						self._autoAdjustPlaceholder(ui);
 						if($.contains(row,ui.item)){
 							self.gsFrom.hide();

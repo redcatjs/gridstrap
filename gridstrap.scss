@@ -53,9 +53,9 @@ $gs-percent: (100% / $gridstrap-columns);
 		padding-bottom: 5px;
 		padding-left: $box-padding;
 		padding-right: $box-padding;
-		transition: width $gs-col-transition-width ease-out, margin $gs-col-transition-width ease-out;
 		min-height: 100px;
 		z-index: 10;
+		transition: width $gs-col-transition-width ease-out, margin $gs-col-transition-width ease-out;
 		&.gs-clone{
 			transition: left $gs-col-transition-width ease-out, top $gs-col-transition-width ease-out;
 			z-index: 5;
@@ -65,6 +65,8 @@ $gs-percent: (100% / $gridstrap-columns);
 		}
 		&.gs-helper{
 			z-index: 40;
+			transition-width: none;
+			transition-margin: none;
 			.gs-content{
 				box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.2);
 			}
