@@ -830,5 +830,25 @@
 			}
 		});
 	};
-
+	
+	$.fn.gridstrapDraggable = function(options){
+		if(arguments.length>1){
+			return this.draggable.apply(this,arguments);
+		}
+		return this.each(function(){
+			var $this = $(this);
+			var connectToSortable = $this.attr('data-gs-accepted-container') || '.gs-row';
+			$this
+				.draggable($.extend(true,{
+					cursor:'grabbing',
+					scroll: true,
+					revert: 'invalid',
+					connectToSortable: connectToSortable,
+					helper: 'clone',
+					appendTo: document.body,
+					zIndex: 99999,
+				},options);
+		});
+	};
+	
 })(jQuery);
