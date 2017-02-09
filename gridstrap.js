@@ -234,6 +234,7 @@
 					}
 				}
 				if(this===element){
+					result = true;
 					found = true;
 				}
 			});
@@ -419,6 +420,9 @@
 						
 						var ph = ui.placeholder;
 						
+						//view						
+						self._autoAdjust(ph,ui.helper);
+						
 						//prevent strobe
 						if(!self.gsRowOrigin){
 							//console.log(ph.clone().insertAfter(ph),row[0]);
@@ -439,8 +443,6 @@
 							self._autoAdjust(self.gsFrom,ui.helper,self.gsRowOrigin);
 						}
 						
-						//view						
-						self._autoAdjust(ph,ui.helper);
 							
 						self.updateLineOffset(ph);
 						
