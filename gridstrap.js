@@ -507,10 +507,9 @@
 						row.removeClass('gs-state-over');
 						
 						//prevent strobe
-						//console.log('sender',ui.sender);
-						//if(self._isInRowOrigin(ui.sender)){
-							//self._autoAdjust(self.gsFrom);
-						//}
+						if(ui.helper&&self._isInRowOrigin(ui.placeholder)){
+							self._autoAdjust(self.gsFrom,ui.helper);
+						}
 						
 						//smooth effect
 						//self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
