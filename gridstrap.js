@@ -198,28 +198,28 @@
 			return el.siblings('.gs-real:not(.gs-placeholder, .gs-moving, .gs-clone)').length<1;
 			//return el.siblings('.gs-real:not(.gs-moving)').length<1;
 		},
-		_aloneInTheLine: function(el){
+		_aloneInTheLine: function(el, row){
 			var self = this;
 			var line = 0;
 			var element = el.get(0);
 			var found = false;
 			var result = false;
-			el.parent().find('>.gs-real, .gs-placeholder').not('.gs-moving').each(function(){
+			if(!row){
+				row = el.parent();
+			}
+			$(row).children().not('.gs-moving').each(function(){
 				var col = $(this);
 				var w = self.width(col);
 				var lw = line + w;
+				//console.log(lw,' = ',line,' + ',w,' found: ',found);
+				if(found){
+					result = lw > 12;
+					return false;
+				}
 				if(lw > 12){
 					line = w;
-					if(found){
-						result = true;
-						return false;
-					}
 				}
 				else{
-					if(found){
-						result = false;
-						return false;
-					}
 					if(lw==12){
 						line = 0;
 					}
@@ -231,30 +231,20 @@
 					found = true;
 				}
 			});
-			console.log(result);
+			//console.log(result);
 			return result;
 		},
 		_getWidthFor:function(item){
 			return Math.floor(this._rowWidth(item.parent(),this.width(item)));
 		},
-		_autoAdjustPlaceholder: function(ui){
-			var ph = ui.placeholder;
-			var item = ui.item[0];
-			
-			ph.show();
-			//if(ph.prev().get(0)===item||ph.next().get(0)===item){
-				//ph.hide();
-			//}
-			//else{
-				//ph.show();
-			//}
-			
-			if(!this._aloneInTheRow(ph)&&this._aloneInTheLine(ph)){
-				ph.height(ui.helper.height());
+		_autoAdjust: function(el,helper,row){
+			if(!this._aloneInTheRow(el)&&this._aloneInTheLine(el,row)){
+				el.height(helper.height());
 			}
 			else{
-				ph.css('height','');
+				el.css('height','');
 			}
+			el.show();
 		},
 		
 		_isOverAxis: function( x, reference, size ) {
@@ -372,7 +362,7 @@
 						self.gsFrom.hide();
 						item.after(self.gsFrom);
 						
-						self._autoAdjustPlaceholder(ui);
+						self._autoAdjust(ui.placeholder,ui.helper);
 						
 						self.updateLineOffset(item);
 						
@@ -430,11 +420,12 @@
 							self.gsFrom.hide();
 						}
 						else{
-							self.gsFrom.show();
+							console.log('_autoAdjust');
+							self._autoAdjust(self.gsFrom,ui.helper,self.gsRowOrigin);
 						}
 						
 						//view						
-						self._autoAdjustPlaceholder(ui);
+						self._autoAdjust(ui.placeholder,ui.helper);
 							
 						self.updateLineOffset(ui.placeholder);
 						
@@ -474,7 +465,7 @@
 						
 						var ph = ui.placeholder;
 						
-						self._autoAdjustPlaceholder(ui);
+						self._autoAdjust(ui.placeholder,ui.helper);
 						
 						self.updateLineOffset(ph);
 						
@@ -501,10 +492,10 @@
 						row.removeClass('gs-state-over');
 						
 						//prevent strobe
-						console.log('sender',ui.sender);
-						if(self._isInRowOrigin(ui.sender)){
-							self.gsFrom.show();
-						}
+						//console.log('sender',ui.sender);
+						//if(self._isInRowOrigin(ui.sender)){
+							//self._autoAdjust(self.gsFrom);
+						//}
 						
 						//smooth effect
 						//self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
