@@ -410,6 +410,7 @@
 							}).show();
 						}
 						
+						//self.activeRow = ui.placeholder.closest('.gs-row');
 						self.activeRow = row;
 						
 						//prevent strobe
@@ -420,7 +421,6 @@
 							self.gsFrom.hide();
 						}
 						else{
-							console.log('_autoAdjust');
 							self._autoAdjust(self.gsFrom,ui.helper,self.gsRowOrigin);
 						}
 						
@@ -574,15 +574,16 @@
 						var lineLeft = lineOffset.left-tolerance;
 						var lineRight = lineOffset.right+tolerance;
 						var beforeItem;
+						var activeRow = self.activeRow;
 						
 						//from row to self.activeRow
-						var isMissing = row[0]!==self.activeRow[0] && !$.contains(self.activeRow,ph);
-						//console.log('isMissing',isMissing,self.activeRow);
+						//var isMissing = !$.contains(self.activeRow,ph);
+						var isMissing = false;
 						var selector = '.gs-real:not(.gs-moving)';
 						var moveNext = function(){
 							var collection;
 							if(isMissing){
-								collection = self.activeRow.children(selector);
+								collection = activeRow.children(selector);
 							}
 							else{
 								collection = ph.nextAll(selector);
@@ -598,7 +599,7 @@
 						var movePrev = function(){
 							var collection;
 							if(isMissing){
-								collection = self.activeRow.children(selector).reverse();
+								collection = activeRow.children(selector).reverse();
 							}
 							else{
 								collection = ph.prevAll(selector);
@@ -614,10 +615,12 @@
 						};
 						//console.log('4movedown',cursorY,'>',lineBottom,beforeItem);
 						if(cursorY>lineBottom){
+							//console.log('isMissing',isMissing,self.activeRow);
 							moveNext();
 							//console.log('movedown',cursorY,'>',lineBottom,beforeItem);
 						}
 						else if(cursorY<lineTop){
+							//console.log('isMissing',isMissing,self.activeRow);
 							movePrev();
 							//console.log('moveup',cursorY,'<',lineTop,beforeItem);
 						}
