@@ -18,7 +18,8 @@
 			width: 12,
 			cellHeight: 80,
 			defaultWidth: 3,
-			connectWith: '.gridstrap:visible .gs-col:not(.gs-clone) .gs-row, .gridstrap:visible > .gs-row',
+			//connectWith: '.gridstrap:visible .gs-col:not(.gs-clone) .gs-row, .gridstrap:visible > .gs-row', //smooth
+			connectWith: '.gridstrap:visible .gs-row',
 			scroll: true,
 			scrollParent: false,
 			scrollCallback: false,
