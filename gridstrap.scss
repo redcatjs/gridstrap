@@ -2,17 +2,20 @@ $gridstrap-columns: 12 !default;
 $gs-col-transition-width: 400ms;
 
 /*
-$box-padding: 15px;
+$box-space: 15px;
 */
-$box-padding: 15px;
+$box-space: 1.04166666%;
 
 $gs-percent: (100% / $gridstrap-columns);
 @for $i from 1 through $gridstrap-columns {
 	[data-gs-col='#{$i}']{
 /*
-		width: ($gs-percent * $i);
+		width: ($gs-percent * $i); //with padding space instead of margin
 */
-		width: calc( #{($gs-percent * $i)} - #{$box-padding*2} );
+/*
+		width: calc( #{($gs-percent * $i)} - #{$box-space*2} ); //with margin space and absolute px box-space
+*/
+		width: #{( $gs-percent * $i - $box-space * 2 )}; //with margin space and absolute % box-space
 	}
 	[data-gs-left='#{($i - 1)}']{
 		margin-left: ($gs-percent * ($i - 1) );
@@ -33,8 +36,8 @@ $gs-percent: (100% / $gridstrap-columns);
 		margin-top: 5px;
 		margin-bottom: 5px;
 		
-		margin-left: $box-padding;
-		margin-right: $box-padding;
+		margin-left: $box-space;
+		margin-right: $box-space;
 		
 		z-index:20;
 		background: transparent;
@@ -62,11 +65,11 @@ $gs-percent: (100% / $gridstrap-columns);
 		padding-bottom: 5px;
 
 /*
-		padding-left: $box-padding;
-		padding-right: $box-padding;
+		padding-left: $box-space;
+		padding-right: $box-space;
 */
-		margin-left: $box-padding;
-		margin-right: $box-padding;
+		margin-left: $box-space;
+		margin-right: $box-space;
 		
 		min-height: 100px;
 		z-index: 10;
