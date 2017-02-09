@@ -346,7 +346,6 @@
 					
 					start: function(e, ui){
 						if(self.opts.debugEvents) console.log('start',this);
-						console.log('start',this);
 						
 						var item = ui.item;
 						var ph = ui.placeholder;
@@ -473,6 +472,7 @@
 						if(self.opts.debugEvents){
 							console.log(manual!==true?'change':'change manual from sort',this);
 						}
+						console.log(manual!==true?'change':'change manual from sort',this);
 						
 						//prevent strobe
 						if(self._isInRowOrigin(ui.placeholder)){
@@ -591,13 +591,14 @@
 						var selector = '.gs-real:not(.gs-moving)';
 						if(cursorY>lineBottom){
 							self.activeRow.children(selector).each(function(){
-								var offset = $(this).offset();
-								if(offset.left>cursorX || offset.top>cursorY){
+								var $this = $(this);
+								var offset = $this.offset();
+								if((offset.top+$this.height()>cursorY && offset.left>cursorX) || offset.top>cursorY){
 									return false;
 								}
 								beforeItem = this;
 							});
-							//console.log('movedown',cursorY,'>',lineBottom,beforeItem);
+							console.log('movedown',cursorY,'>',lineBottom,beforeItem);
 						}
 						else if(cursorY<lineTop){
 							self.activeRow.children(selector).reverse().each(function(){
@@ -608,7 +609,7 @@
 									return false;
 								}
 							});
-							//console.log('moveup',cursorY,'<',lineTop,beforeItem);
+							console.log('moveup',cursorY,'<',lineTop,beforeItem);
 						}
 						
 						if(beforeItem){
