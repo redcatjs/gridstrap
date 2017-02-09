@@ -5,7 +5,10 @@ $box-padding: 15px;
 $gs-percent: (100% / $gridstrap-columns);
 @for $i from 1 through $gridstrap-columns {
 	[data-gs-col='#{$i}']{
+/*
 		width: ($gs-percent * $i);		
+*/
+		width: calc( #{($gs-percent * $i)} - #{$box-padding*2} );
 	}
 	[data-gs-left='#{($i - 1)}']{
 		margin-left: ($gs-percent * ($i - 1) );
@@ -51,8 +54,14 @@ $gs-percent: (100% / $gridstrap-columns);
 		float:left;
 		padding-top: 5px;
 		padding-bottom: 5px;
+
+/*
 		padding-left: $box-padding;
 		padding-right: $box-padding;
+*/
+		margin-left: $box-padding;
+		margin-right: $box-padding;
+		
 		min-height: 100px;
 		z-index: 10;
 		transition: width $gs-col-transition-width ease-out, margin $gs-col-transition-width ease-out;
