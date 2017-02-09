@@ -558,8 +558,6 @@
 					*/
 					sort: function(e, ui){
 						
-						//return;
-						
 						var tolerance = -5;
 						
 						var cursorY =  e.pageY;
@@ -574,37 +572,20 @@
 						var lineLeft = lineOffset.left-tolerance;
 						var lineRight = lineOffset.right+tolerance;
 						var beforeItem;
-						var activeRow = self.activeRow;
 						
-						//from row to self.activeRow
-						//var isMissing = !$.contains(self.activeRow,ph);
-						var isMissing = false;
 						var selector = '.gs-real:not(.gs-moving)';
-						var moveNext = function(){
-							var collection;
-							if(isMissing){
-								collection = activeRow.children(selector);
-							}
-							else{
-								collection = ph.nextAll(selector);
-							}
-							collection.each(function(){
+						if(cursorY>lineBottom){
+							self.activeRow.children(selector).each(function(){
 								var offset = $(this).offset();
 								if(offset.left>cursorX || offset.top>cursorY){
 									return false;
 								}
 								beforeItem = this;
 							});
-						};
-						var movePrev = function(){
-							var collection;
-							if(isMissing){
-								collection = activeRow.children(selector).reverse();
-							}
-							else{
-								collection = ph.prevAll(selector);
-							}
-							collection.each(function(){
+							//console.log('movedown',cursorY,'>',lineBottom,beforeItem);
+						}
+						else if(cursorY<lineTop){
+							self.activeRow.children(selector).reverse().each(function(){
 								beforeItem = this;
 								var $this = $(this);
 								var offset = $this.offset();
@@ -612,28 +593,9 @@
 									return false;
 								}
 							});
-						};
-						//console.log('4movedown',cursorY,'>',lineBottom,beforeItem);
-						if(cursorY>lineBottom){
-							//console.log('isMissing',isMissing,self.activeRow);
-							moveNext();
-							//console.log('movedown',cursorY,'>',lineBottom,beforeItem);
-						}
-						else if(cursorY<lineTop){
-							//console.log('isMissing',isMissing,self.activeRow);
-							movePrev();
 							//console.log('moveup',cursorY,'<',lineTop,beforeItem);
 						}
-						//else if(cursorX>lineRight){
-							//moveNext();
-							//console.log('moveright',cursorX,'>',lineRight,beforeItem);
-						//}
-						//else if(cursorX<lineLeft){
-							//movePrev();
-							//console.log('moveleft',cursorX,'<',lineLeft,beforeItem);
-						//}
 						
-						console.log('beforeItem',beforeItem);
 						if(beforeItem){
 							ph.insertAfter(beforeItem).show();
 							row.trigger('sortchange');
