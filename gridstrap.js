@@ -209,6 +209,11 @@
 			}
 			$(row).children().not('.gs-moving').each(function(){
 				var col = $(this);
+				
+				if(!col.hasClass('gs-real')&&this!==element){
+					return;
+				}
+				
 				var w = self.width(col);
 				var lw = line + w;
 				//console.log(lw,' = ',line,' + ',w,' found: ',found);
@@ -340,6 +345,7 @@
 					
 					start: function(e, ui){
 						if(self.opts.debugEvents) console.log('start',this);
+						console.log('start',this);
 						
 						var item = ui.item;
 						var ph = ui.placeholder;
@@ -355,12 +361,6 @@
 							})
 						;
 						
-
-						//prevent strobe
-						self.gsRowOrigin = null;
-						self.gsFrom = ph.clone().attr('class','gs-from');
-						self.gsFrom.hide();
-						item.after(self.gsFrom);
 						
 						self._autoAdjust(ui.placeholder,ui.helper);
 						
@@ -385,6 +385,9 @@
 					activate: function(e, ui){						
 						if(self.opts.debugEvents) console.log('activate',this);
 						
+						//prevent strobe
+						self.gsRowOrigin = null;
+						
 						//highlight area
 						this.classList.add('gs-state-highlight');
 						
@@ -403,7 +406,8 @@
 					over: function(e, ui){
 						if(self.opts.debugEvents) console.log('over',this,row);
 						
-						if(!ui.helper.hasClass('gs-integrated')){
+						var integrated = ui.helper.hasClass('gs-integrated');
+						if(!integrated){
 							ui.helper.appendTo(document.body).css({
 								width:'',
 								height:'',
@@ -413,11 +417,22 @@
 						//self.activeRow = ui.placeholder.closest('.gs-row');
 						self.activeRow = row;
 						
+						var ph = ui.placeholder;
+						
 						//prevent strobe
 						if(!self.gsRowOrigin){
-							self.gsRowOrigin = row[0];
+							//console.log(ph.clone().insertAfter(ph),row[0]);
+							if(integrated){
+								self.gsRowOrigin = row[0];
+							}
+							else{
+								self.gsRowOrigin = ph.closest('.gs-row')[0];
+							}
+							self.gsFrom = ph.clone().attr('class','gs-from');
+							self.gsFrom.hide();
+							self.gsFrom.insertAfter(ph);
 						}
-						if(self._isInRowOrigin(ui.placeholder)){
+						if(self._isInRowOrigin(ph)){
 							self.gsFrom.hide();
 						}
 						else{
@@ -425,9 +440,9 @@
 						}
 						
 						//view						
-						self._autoAdjust(ui.placeholder,ui.helper);
+						self._autoAdjust(ph,ui.helper);
 							
-						self.updateLineOffset(ui.placeholder);
+						self.updateLineOffset(ph);
 						
 						//highlight area
 						self.container.find('.gs-state-over').removeClass('gs-state-over');
@@ -449,7 +464,7 @@
 									lastItem = item;
 								}
 							});
-							ui.placeholder.insertAfter(lastItem);
+							ph.insertAfter(lastItem);
 						}
 						
 					},
