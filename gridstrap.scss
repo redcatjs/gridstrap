@@ -1,12 +1,16 @@
 $gridstrap-columns: 12 !default;
 $gs-col-transition-width: 400ms;
+
+/*
+$box-padding: 15px;
+*/
 $box-padding: 15px;
 
 $gs-percent: (100% / $gridstrap-columns);
 @for $i from 1 through $gridstrap-columns {
 	[data-gs-col='#{$i}']{
 /*
-		width: ($gs-percent * $i);		
+		width: ($gs-percent * $i);
 */
 		width: calc( #{($gs-percent * $i)} - #{$box-padding*2} );
 	}
@@ -28,8 +32,10 @@ $gs-percent: (100% / $gridstrap-columns);
 		position: relative;
 		margin-top: 5px;
 		margin-bottom: 5px;
-		padding-left: $box-padding;
-		padding-right: $box-padding;
+		
+		margin-left: $box-padding;
+		margin-right: $box-padding;
+		
 		z-index:20;
 		background: transparent;
 		visibility: visible !important;
