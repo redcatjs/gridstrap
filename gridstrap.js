@@ -558,7 +558,7 @@
 					*/
 					sort: function(e, ui){
 						
-						var tolerance = -5;
+						var tolerance = +5;
 						
 						var cursorY =  e.pageY;
 						var cursorX =  e.pageX;
