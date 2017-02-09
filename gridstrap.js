@@ -1,13 +1,11 @@
 (function($){
 	
-	//var _rearrange = $.ui.sortable.prototype._rearrange;
-	//$.widget('ui.sortable',$.extend($.ui.sortable.prototype,{
-		//_rearrange: function( e, i, a, hardRefresh ) {
-			//if(!a&&!i.item[ 0 ].parentNode ) return;
-			//return _rearrange.apply(this,arguments);
-		//},
-		
-	//}));
+	var sensitivityTolerance = 15;
+	$.widget('ui.sortable',$.extend($.ui.sortable.prototype,{
+		_isOverAxis: function( x, reference, size ) {
+			return ( x >= reference + sensitivityTolerance ) && ( x < ( reference + size - sensitivityTolerance ) );
+		},
+	}));
 	
 	var Gridstrap = function(el, opts) {
 		this.container = $(el);
@@ -20,6 +18,7 @@
 			defaultWidth: 3,
 			//connectWith: '.gridstrap:visible .gs-col:not(.gs-clone) .gs-row, .gridstrap:visible > .gs-row', //smooth
 			connectWith: '.gridstrap:visible .gs-row',
+			//scroll: true,
 			scroll: true,
 			scrollParent: false,
 			scrollCallback: false,
@@ -406,6 +405,7 @@
 					},
 					over: function(e, ui){
 						if(self.opts.debugEvents) console.log('over',this,row);
+						console.log('over',this,row);
 						
 						var integrated = ui.helper.hasClass('gs-integrated');
 						if(!integrated){
@@ -505,6 +505,7 @@
 					},
 					out: function(e, ui){
 						if(self.opts.debugEvents) console.log('out',this);
+						console.log('out',this);
 						
 						//highlight area
 						row.removeClass('gs-state-over');
@@ -600,7 +601,7 @@
 								}
 								beforeItem = this;
 							});
-							console.log('movedown',cursorY,'>',lineBottom,beforeItem);
+							//console.log('movedown',cursorY,'>',lineBottom,beforeItem);
 						}
 						else if(cursorY<lineTop){
 							self.activeRow.children(selector).reverse().each(function(){
@@ -611,7 +612,7 @@
 									return false;
 								}
 							});
-							console.log('moveup',cursorY,'<',lineTop,beforeItem);
+							//console.log('moveup',cursorY,'<',lineTop,beforeItem);
 						}
 						
 						if(beforeItem){
