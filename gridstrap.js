@@ -485,7 +485,7 @@
 								}
 								beforeItem = this;
 							});
-							//console.log('movedown',cursorY,'>',lineBottom,beforeItem);
+							if(self.opts.debugEvents) console.log('movedown',cursorY,'>',lineBottom,beforeItem);
 						}
 						else if(cursorY<lineTop){
 							self.activeRow.children(selector).reverse().each(function(){
@@ -496,7 +496,7 @@
 									return false;
 								}
 							});
-							//console.log('moveup',cursorY,'<',lineTop,beforeItem);
+							if(self.opts.debugEvents) console.log('moveup',cursorY,'<',lineTop,beforeItem);
 						}
 						
 						if(beforeItem){
