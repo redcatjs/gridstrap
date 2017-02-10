@@ -438,11 +438,11 @@
 						
 						//store
 						if(item.data('gs-startrow')!==item.closest('.gs-row').get(0)){
-							if(self.opts.debugEvents) console.log('gs-col-changed',this);
+							if(self.opts.debugEvents) console.log('gs:col:changed',this);
 							row.trigger('gs:col:changed',[ui]);
 						}
 						if(item.data('gs-startindex')!==item.index()){
-							if(self.opts.debugEvents) console.log('gs-row-changed',this);
+							if(self.opts.debugEvents) console.log('gs:row:changed',this);
 							row.trigger('gs:row:changed',[ui]);
 						}
 						
