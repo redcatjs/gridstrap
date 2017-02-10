@@ -404,8 +404,8 @@
 						
 					},
 					over: function(e, ui){
-						if(self.opts.debugEvents) console.log('over',this,row);
-						console.log('over',this,row);
+						if(self.opts.debugEvents) console.log('over',this);
+						console.log('over',this);
 						
 						var integrated = ui.helper.hasClass('gs-integrated');
 						if(!integrated){
@@ -417,6 +417,10 @@
 						
 						//self.activeRow = ui.placeholder.closest('.gs-row');
 						self.activeRow = row;
+						
+						if(!$.contains(this,ui.placeholder)){
+							console.log('in:not');
+						}
 						
 						var ph = ui.placeholder;
 						
@@ -581,6 +585,12 @@
 						var cursorY =  e.pageY;
 						var cursorX =  e.pageX;
 						
+						if(!$.contains(this,ui.placeholder)){
+							console.log('sortstart in:not');
+						}
+						else{
+							console.log('sortstart in:ok');
+						}
 						
 						var item = ui.item;
 						var ph = ui.placeholder;
@@ -624,6 +634,13 @@
 							
 						if(scrollCallback){
 							//scrollCallback(e, ui);
+						}
+						
+						if(!$.contains(this,ui.placeholder)){
+							console.log('sortend in:not');
+						}
+						else{
+							console.log('sortend in:ok');
 						}
 					},
 				};
