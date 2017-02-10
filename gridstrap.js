@@ -138,7 +138,6 @@
 				
 				var w = self.width(col);
 				var lw = line + w;
-				//console.log(lw,' = ',line,' + ',w,' found: ',found);
 				if(found){
 					result = lw > 12;
 					return false;
@@ -159,7 +158,6 @@
 					found = true;
 				}
 			});
-			//console.log(result);
 			return result;
 		},
 		_getWidthFor:function(item){
@@ -316,7 +314,6 @@
 					},
 					over: function(e, ui){
 						if(self.opts.debugEvents) console.log('over',this);
-						console.log('over',this);
 						
 						var integrated = ui.helper.hasClass('gs-integrated');
 						if(!integrated){
@@ -378,7 +375,6 @@
 						if(self.opts.debugEvents){
 							console.log(manual!==true?'change':'change manual from sort',this);
 						}
-						console.log(manual!==true?'change':'change manual from sort',this);
 						
 						//prevent strobe
 						if(self._isInRowOrigin(ui.placeholder)){
@@ -402,7 +398,6 @@
 					},
 					out: function(e, ui){
 						if(self.opts.debugEvents) console.log('out',this);
-						console.log('out',this);
 						
 						//highlight area
 						row.removeClass('gs-state-over');
