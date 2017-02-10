@@ -91,10 +91,6 @@ $gs-percent: (100% / $gridstrap-columns);
 		min-height: 100px;
 		z-index: 10;
 		transition: width $gs-col-transition-width ease-out, margin $gs-col-transition-width ease-out;
-		&.gs-clone{
-			transition: left $gs-col-transition-width ease-out, top $gs-col-transition-width ease-out;
-			z-index: 5;
-		}
 		&.gs-moving{
 			z-index: 30;
 		}

@@ -16,9 +16,7 @@
 			width: 12,
 			cellHeight: 80,
 			defaultWidth: 3,
-			//connectWith: '.gridstrap:visible .gs-col:not(.gs-clone) .gs-row, .gridstrap:visible > .gs-row', //smooth
 			connectWith: '.gridstrap:visible .gs-row',
-			//scroll: true,
 			scroll: true,
 			scrollParent: false,
 			scrollCallback: false,
@@ -41,10 +39,8 @@
 			//debugEvents: true,
 			debugColor: 0,
 			cloneCallback: null,
-			//smooth: 0,
 			sensitivityTolerance: 15,
 		}, opts || {} );
-		//this.itemsSelector = '> .gs-col:not(.gs-clone, .gs-moving)';
 		this.itemsSelector = '> .gs-real:not(.gs-moving)';
 		
 		//this.currentActiveSortables = [];
@@ -83,72 +79,6 @@
 			return row.width() * n/this.opts.width;
 		},
 		
-		/*
-		//smooth
-		_makeTempItems: function(row){
-			var self = this;
-			if(!self.opts.smooth){
-				return;
-			}
-			row.find(self.itemsSelector).each(function(){
-				var item = $(this);
-				if(item.hasClass('gs-moving')) return;
-				if(item.data('gs-clone')) return;
-				var position = item.position();
-				var clone = item.clone();
-				clone.removeClass('gs-real');
-				if(self.opts.cloneCallback){
-					self.opts.cloneCallback(clone);
-				}
-				item.data('gs-clone',clone);
-				clone.data('gs-origin',item);
-				clone.find('.gs-placeholder').remove();
-				clone.addClass('gs-clone');
-				clone.css({
-					position: 'absolute',
-					top: position.top,
-					left: position.left,
-					height: item.outerHeight(),
-					'z-index': 4,
-				});	
-				item.after(clone);
-				item.css('opacity',0);
-				
-			});
-			row.sortable('refresh');
-		},
-		_updateTempItems: function(ui){
-			var self = this;
-			$.each(self.currentActiveSortables,function(i,row){
-				
-				row.find(self.itemsSelector).each(function(){
-					var item = $(this);
-					var clone = item.data('gs-clone');
-					if(clone){
-						var position = item.position();
-						clone.css({
-							top: position.top,
-							left: position.left,
-							height: item.outerHeight(),
-						});
-					}
-				});
-				
-			});
-		},
-		_cleanTempItems: function(){
-			var self = this;
-			self.container.find('.gs-clone').each(function(){
-				var clone = $(this);
-				var item = clone.data('gs-origin');
-				clone.remove();
-				if(item){
-					item.data('gs-clone',false);
-					item.css('opacity',1);
-				}
-			});
-		},
-		*/
 		_disableTargets: function(row,ui){
 			var self = this;
 			var el = ui.item;
@@ -156,7 +86,6 @@
 			var rowCol = row.closest('.gs-col');
 			$('.gs-row.ui-sortable',self.container).each(function(){
 				var $this = $(this);
-				if($this.closest('.gs-clone').length) return;
 				var ok;
 				ok = !$this.closest('.gs-moving').length;
 				if(ok){
@@ -182,8 +111,6 @@
 			var self = this;
 			$('.gs-row.ui-sortable',self.container).each(function(){
 				var $this = $(this);
-				//smooth
-				//if($this.closest('.gs-clone').length) return;
 				if($this.sortable('instance')){
 					$this.sortable('enable');
 					row.sortable('refresh');
@@ -191,8 +118,7 @@
 			});
 		},
 		_aloneInTheRow: function(el){
-			return el.siblings('.gs-real:not(.gs-placeholder, .gs-moving, .gs-clone)').length<1;
-			//return el.siblings('.gs-real:not(.gs-moving)').length<1;
+			return el.siblings('.gs-real:not(.gs-placeholder, .gs-moving)').length<1;
 		},
 		_aloneInTheLine: function(el, row){
 			var self = this;
@@ -386,19 +312,7 @@
 						self.gsRowOrigin = null;
 						
 						//highlight area
-						this.classList.add('gs-state-highlight');
-						
-						//smooth
-						//var parentCol = $(this).closest('.gs-col');
-						//if(parentCol.length){
-							//var parentClone = parentCol.data('gs-clone');
-							//if(parentClone){
-								//parentClone.find('>.gs-content>.gs-row').addClass('gs-state-highlight');
-							//}
-						//}
-						//self.currentActiveSortables.push(row);
-						//self._makeTempItems(row);
-						
+						this.classList.add('gs-state-highlight');						
 					},
 					over: function(e, ui){
 						if(self.opts.debugEvents) console.log('over',this);
@@ -445,11 +359,6 @@
 						self.container.find('.gs-state-over').removeClass('gs-state-over');
 						row.addClass('gs-state-over');
 						
-						//smooth effect
-						//self._updateTempItems(ui);
-						//self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
-						//row.parents('.gs-col').addBack().addClass('gs-moving-parent');
-						
 						//from 3rd draggable
 						if(!ui.item.hasClass('gs-integrated')){
 							var lastItem;
@@ -482,8 +391,6 @@
 						
 						self.updateLineOffset(ph);
 						
-						//smooth effect
-						//self._updateTempItems(ui);
 					},
 					deactivate: function(e, ui){
 						if(self.opts.debugEvents) console.log('deactivate',this);
@@ -492,11 +399,6 @@
 						
 						this.classList.remove('gs-state-highlight');
 						
-						//smooth effect
-						//var index = self.currentActiveSortables.indexOf(row);
-						//if (index > -1) {
-							//self.currentActiveSortables.splice(index, 1);
-						//}
 					},
 					out: function(e, ui){
 						if(self.opts.debugEvents) console.log('out',this);
@@ -510,9 +412,6 @@
 							self._autoAdjust(self.gsFrom,ui.helper);
 						}
 						
-						//smooth effect
-						//self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
-						//self._updateTempItems(ui);
 					},
 					stop: function(e, ui){
 						if(self.opts.debugEvents) console.log('stop',this);
@@ -546,10 +445,6 @@
 						
 						//allowed drop area
 						self._reenableTargets(row, ui);
-						
-						//smooth effect
-						//self.container.find('.gs-moving-parent').removeClass('gs-moving-parent');
-						//self._cleanTempItems();
 					},
 					
 					/*
