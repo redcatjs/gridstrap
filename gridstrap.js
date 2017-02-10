@@ -40,6 +40,8 @@
 			debugColor: 0,
 			cloneCallback: null,
 			sensitivityTolerance: 15,
+			cursorAtSmooth: true,
+			cursorAtSmoothDuration: 400,
 		}, opts || {} );
 		this.itemsSelector = '> .gs-real:not(.gs-moving)';
 		
@@ -249,7 +251,6 @@
 					
 					placeholder: 'gs-placeholder',
 					
-					
 					cursor: 'grabbing',
 					
 					helper:function(e,item){
@@ -258,11 +259,19 @@
 							.removeClass('gs-real')
 							.css({
 								height: (item.outerHeight())+'px',
-								width: (item.outerWidth())+'px',								
+								width: (item.outerWidth())+'px',
+								
+								//cursorAtSmooth
+								position:'fixed',
+								top:item.offset().top,
+								left:item.offset().left,
+								'transition-property':'top, left',
+								'transition-duration':self.opts.cursorAtSmoothDuration+'ms',
+								//'transition-timing-function':'ease-out',
 							})
 						;
 					},
-					cursorAt: { left: 5, top: 5 },
+					//cursorAt: { left: 5, top: 5 },
 					appendTo: self.container, //fix z-index issues
 					
 					start: function(e, ui){
@@ -270,6 +279,11 @@
 						
 						var item = ui.item;
 						var ph = ui.placeholder;
+						
+						//cursorAtSmooth
+						setTimeout(function(){
+							ui.helper.css('transition-duration','0s');
+						},self.opts.cursorAtSmoothDuration);
 						
 						//view
 						item.addClass('gs-moving').show();
@@ -462,6 +476,15 @@
 					},
 					*/
 					sort: function(e, ui){
+						
+						//cursorAtSmooth
+						if(self.opts.cursorAtSmooth){
+							ui.helper.css({
+								position: 'fixed',
+								top: e.pageY+'px',
+								left: e.pageX+'px',
+							});
+						}
 						
 						var cursorY =  e.pageY;
 						var cursorX =  e.pageX;
