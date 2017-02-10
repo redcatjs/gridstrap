@@ -39,8 +39,7 @@
 			debugColor: 0,
 			cloneCallback: null,
 			sensitivityTolerance: 15,
-			cursorAtSmooth: true,
-			cursorAtSmoothDuration: 400,
+			cursorAtSmooth: 400,
 		}, opts || {} );
 		this.itemsSelector = '> .gs-real:not(.gs-moving)';
 		
@@ -253,22 +252,26 @@
 					cursor: 'grabbing',
 					
 					helper:function(e,item){
-						return item.clone()
+						
+						var helper = item.clone()
 							.addClass('gs-helper')
 							.removeClass('gs-real')
 							.css({
 								height: (item.outerHeight())+'px',
 								width: (item.outerWidth())+'px',
-								
-								//cursorAtSmooth
+							})
+						;
+						//cursorAtSmooth
+						if(self.opts.cursorAtSmooth){
+							helper.css({
 								position:'fixed',
 								top:item.offset().top,
 								left:item.offset().left,
 								'transition-property':'top, left',
-								'transition-duration':self.opts.cursorAtSmoothDuration+'ms',
-								//'transition-timing-function':'ease-out',
-							})
-						;
+								'transition-duration':self.opts.cursorAtSmooth+'ms',
+							});
+						}
+						return helper;
 					},
 					//cursorAt: { left: 5, top: 5 },
 					appendTo: self.container, //fix z-index issues
@@ -280,9 +283,11 @@
 						var ph = ui.placeholder;
 						
 						//cursorAtSmooth
-						setTimeout(function(){
-							ui.helper.css('transition-duration','0s');
-						},self.opts.cursorAtSmoothDuration);
+						if(self.opts.cursorAtSmooth){
+							setTimeout(function(){
+								ui.helper.css('transition-duration','0s');
+							},self.opts.cursorAtSmooth);
+						}
 						
 						//view
 						item.addClass('gs-moving').show();
