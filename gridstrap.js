@@ -36,7 +36,6 @@
 					ui.element.css('transition-duration','');
 				}
 			},
-			boxPadding: 15, //$box-padding .gs-col and .gs-placeholder horizontal padding for autoAdjustWidth calculation
 			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
 			debugEvents: false,
 			//debugEvents: true,
@@ -84,7 +83,7 @@
 		},
 		
 		_rowWidth: function(row, n, padding){
-			return row.width() * n/this.opts.width - (padding ? this.opts.boxPadding*2 : 0);
+			return row.width() * n/this.opts.width;
 		},
 		
 		/*
@@ -711,8 +710,8 @@
 			var mr = col.find('>.gs-margin-right');
 			var l = self.left(col);
 			var r = self.right(col);
-			var wr = r ? self._rowWidth(row,r,false) : 0;
-			var wl = l ? self._rowWidth(row,l,false) : 0;
+			var wr = r ? self._rowWidth(row,r) : 0;
+			var wl = l ? self._rowWidth(row,l) : 0;
 			
 			ml.css('left', (l ? (-1*wl) -1 : 0));
 			ml.width(wl-1);
