@@ -319,7 +319,6 @@
 					scrollSensitivity: 20, //default 20
 					scrollSpeed: 20, //default 20
 					
-					//tolerance: 'intersect', //intersect || pointer
 					tolerance: 'pointer', //intersect || pointer
 					placeholder: 'gs-placeholder',
 					
@@ -569,18 +568,16 @@
 					*/
 					sort: function(e, ui){
 						
-						var tolerance = 15;
-						
 						var cursorY =  e.pageY;
 						var cursorX =  e.pageX;
 						
 						var item = ui.item;
 						var ph = ui.placeholder;
 						var lineOffset = self.lineOffset;
-						var lineTop = lineOffset.top-tolerance;
-						var lineBottom = lineOffset.bottom+tolerance;
-						var lineLeft = lineOffset.left-tolerance;
-						var lineRight = lineOffset.right+tolerance;
+						var lineTop = lineOffset.top-sensitivityTolerance;
+						var lineBottom = lineOffset.bottom+sensitivityTolerance;
+						var lineLeft = lineOffset.left-sensitivityTolerance;
+						var lineRight = lineOffset.right+sensitivityTolerance;
 						var beforeItem;
 						
 						var selector = '.gs-real:not(.gs-moving)';
