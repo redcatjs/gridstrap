@@ -35,9 +35,9 @@
 				}
 			},
 			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
-			//debugEvents: false,
-			debugEvents: true,
-			debugColor: 1,
+			debugEvents: false,
+			//debugEvents: true,
+			debugColor: 0,
 			cloneCallback: null,
 			sensitivityTolerance: 15,
 		}, opts || {} );
