@@ -1,8 +1,8 @@
 (function($){
 	
-	var sensitivityTolerance = 15;
 	$.widget('ui.sortable',$.extend($.ui.sortable.prototype,{
 		_isOverAxis: function( x, reference, size ) {
+			var sensitivityTolerance = this.options.sensitivityTolerance;
 			return ( x >= reference + sensitivityTolerance ) && ( x < ( reference + size - sensitivityTolerance ) );
 		},
 	}));
@@ -42,6 +42,7 @@
 			debugColor: 0,
 			cloneCallback: null,
 			//smooth: 0,
+			sensitivityTolerance: 15,
 		}, opts || {} );
 		//this.itemsSelector = '> .gs-col:not(.gs-clone, .gs-moving)';
 		this.itemsSelector = '> .gs-real:not(.gs-moving)';
@@ -320,6 +321,8 @@
 					scrollSpeed: 20, //default 20
 					
 					tolerance: 'pointer', //intersect || pointer
+					sensitivityTolerance: self.opts.sensitivityTolerance,
+					
 					placeholder: 'gs-placeholder',
 					
 					
@@ -570,6 +573,8 @@
 						
 						var cursorY =  e.pageY;
 						var cursorX =  e.pageX;
+						
+						var sensitivityTolerance = self.opts.sensitivityTolerance;
 						
 						var item = ui.item;
 						var ph = ui.placeholder;
