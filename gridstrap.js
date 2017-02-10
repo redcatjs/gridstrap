@@ -14,7 +14,6 @@
 		
 		this.opts = $.extend(true,{
 			width: 12,
-			cellHeight: 80,
 			defaultWidth: 3,
 			connectWith: '.gridstrap:visible .gs-row',
 			scroll: true,
