@@ -29,7 +29,7 @@
 				},
 				stop: function(e,ui){
 					$(this).css('width','');
-					$(this).trigger('gs-resized');
+					$(this).trigger('gs:resized');
 					ui.element.css('transition-duration','');
 				}
 			},
@@ -73,7 +73,7 @@
 				containerW = $this.parent().innerWidth();
 			$this
 				.attr('data-gs-col', Math.round( ui.size.width / ( containerW/this.opts.width ) ) )
-				.trigger('gs-resizing');
+				.trigger('gs:resizing');
 		},
 		
 		_rowWidth: function(row, n){
@@ -439,11 +439,11 @@
 						//store
 						if(item.data('gs-startrow')!==item.closest('.gs-row').get(0)){
 							if(self.opts.debugEvents) console.log('gs-col-changed',this);
-							row.trigger('gs-col-changed',[ui]);
+							row.trigger('gs:col:changed',[ui]);
 						}
 						if(item.data('gs-startindex')!==item.index()){
 							if(self.opts.debugEvents) console.log('gs-row-changed',this);
-							row.trigger('gs-row-changed',[ui]);
+							row.trigger('gs:row:changed',[ui]);
 						}
 						
 						//from 3r draggable
@@ -453,7 +453,7 @@
 							item.css('left','');
 							item.css('top','');
 							item.css('width','');
-							row.trigger('gs-received',[ui]);
+							row.trigger('gs:received',[ui]);
 							item.addClass('gs-integrated');
 							item.removeClass('gs-sortable-helper');
 						}
@@ -661,7 +661,7 @@
 					var oldw = col.attr('data-gs-col');
 					if(parseInt(oldw,10)!=width){
 						col.attr('data-gs-col' ,width);
-						col.trigger('gs-width-change');
+						col.trigger('gs:width:change');
 					}
 					self._afterWidth(col);
 					return width;
