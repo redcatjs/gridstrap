@@ -415,12 +415,7 @@
 							}).show();
 						}
 						
-						//self.activeRow = ui.placeholder.closest('.gs-row');
 						self.activeRow = row;
-						
-						if(!$.contains(this,ui.placeholder)){
-							console.log('in:not');
-						}
 						
 						var ph = ui.placeholder;
 						
@@ -429,7 +424,6 @@
 						
 						//prevent strobe
 						if(!self.gsRowOrigin){
-							//console.log(ph.clone().insertAfter(ph),row[0]);
 							if(integrated){
 								self.gsRowOrigin = row[0];
 							}
@@ -585,13 +579,6 @@
 						var cursorY =  e.pageY;
 						var cursorX =  e.pageX;
 						
-						if(!$.contains(this,ui.placeholder)){
-							console.log('sortstart in:not');
-						}
-						else{
-							console.log('sortstart in:ok');
-						}
-						
 						var item = ui.item;
 						var ph = ui.placeholder;
 						var lineOffset = self.lineOffset;
@@ -634,13 +621,6 @@
 							
 						if(scrollCallback){
 							//scrollCallback(e, ui);
-						}
-						
-						if(!$.contains(this,ui.placeholder)){
-							console.log('sortend in:not');
-						}
-						else{
-							console.log('sortend in:ok');
 						}
 					},
 				};
