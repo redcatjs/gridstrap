@@ -71,15 +71,11 @@
 	};
 	Gridstrap.prototype = {		
 		_resizeCallback: function(el,ui,e){
-			var self = this;
-			var $this = $(el);
-			var containerW = $this.parent().innerWidth();
-			var colW = containerW/self.opts.width;
-			var padding = 15;
-			var col = (ui.size.width+padding) /colW;
-			col = Math.round( col );
-			$this.attr('data-gs-col', col );
-			$this.trigger('gs-resizing');
+			var $this = $(el),
+				containerW = $this.parent().innerWidth();
+			$this
+				.attr('data-gs-col', Math.round( ui.size.width / ( containerW/this.opts.width ) ) )
+				.trigger('gs-resizing');
 		},
 		
 		_rowWidth: function(row, n){
