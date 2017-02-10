@@ -39,7 +39,8 @@
 			debugColor: 0,
 			cloneCallback: null,
 			sensitivityTolerance: 15,
-			cursorAtSmooth: 400,
+			//cursorAtSmooth: 400,
+			cursorAtSmooth: 0,
 		}, opts || {} );
 		this.itemsSelector = '> .gs-real:not(.gs-moving)';
 		
@@ -273,7 +274,6 @@
 						}
 						return helper;
 					},
-					//cursorAt: { left: 5, top: 5 },
 					appendTo: self.container, //fix z-index issues
 					
 					start: function(e, ui){
@@ -546,6 +546,9 @@
 						}
 					},
 				};
+				if(!self.opts.cursorAtSmooth){
+					sortableOptions.cursorAt = { left: 5, top: 5 };
+				}
 				
 				var scrollCallback;
 				if(self.opts.scrollCallback){
