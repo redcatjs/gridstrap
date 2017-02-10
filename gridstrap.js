@@ -37,7 +37,7 @@
 			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
 			//debugEvents: false,
 			debugEvents: true,
-			debugColor: 0,
+			debugColor: 1,
 			cloneCallback: null,
 			sensitivityTolerance: 15,
 		}, opts || {} );
@@ -488,21 +488,27 @@
 								beforeItem = this;
 							});
 							if(self.opts.debugEvents) console.log('movedown',cursorY,'>',lineBottom,beforeItem);
+							if(beforeItem){
+								ph.insertAfter(beforeItem);
+							}
 						}
 						else if(cursorY<lineTop){
 							self.activeRow.children(selector).reverse().each(function(){
-								beforeItem = this;
 								var $this = $(this);
 								var offset = $this.offset();
 								if((offset.left<cursorX && offset.top<cursorY) || offset.top+$this.height()<cursorY){
 									return false;
 								}
+								beforeItem = this;
 							});
 							if(self.opts.debugEvents) console.log('moveup',cursorY,'<',lineTop,beforeItem);
+							if(beforeItem){
+								ph.insertBefore(beforeItem);
+							}
 						}
 						
 						if(beforeItem){
-							ph.insertAfter(beforeItem).show();
+							ph.show();
 							row.trigger('sortchange');
 							sortableOptions.change(e, ui, true);
 						}
