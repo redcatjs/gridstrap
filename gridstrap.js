@@ -734,10 +734,10 @@
 			var wr = r ? self._rowWidth(row,r,false) : 0;
 			var wl = l ? self._rowWidth(row,l,false) : 0;
 			
-			ml.css('left', (l ? (-1*wl) + self.opts.boxPadding -1 : 0));
+			ml.css('left', (l ? (-1*wl) -1 : 0));
 			ml.width(wl-1);
 			
-			mr.css('right', (r ? (-1*wr) + self.opts.boxPadding -1 : 0));
+			mr.css('right', (r ? (-1*wr) -1 : 0));
 			mr.width(wr-1);
 			self._setMarginHeight(col);
 		},
