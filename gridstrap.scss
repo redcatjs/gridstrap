@@ -1,29 +1,13 @@
 $gridstrap-columns: 12 !default;
 $gs-col-transition-width: 400ms;
+$box-space: 1.04166666%;
 
 //interesting link: https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Grids
-
-/*
-$box-space: 15px;
-*/
-$box-space: 1.04166666%;
 
 $gs-percent: (100% / $gridstrap-columns);
 @for $i from 1 through $gridstrap-columns {
 	[data-gs-col='#{$i}']{
-/*
-		width: ($gs-percent * $i); //with padding space
-*/
-/*
-		width: calc( #{($gs-percent * $i)} - #{$box-space*2} ); //with margin space and absolute px box-space
-*/
-		//with margin space with relative % box-space
 		width: #{( $gs-percent * $i - $box-space * 2 )};
-		
-/*
-		padding-left: $box-space;
-		padding-right: $box-space;
-*/
 		margin-left: $box-space;
 		margin-right: $box-space;
 		
@@ -32,20 +16,10 @@ $gs-percent: (100% / $gridstrap-columns);
 				margin-left: ($box-space + $gs-percent * ($y - 1) );
 			}
 			&[data-gs-right='#{($y - 1)}']{
-				margin-right: ($box-space + $gs-percent * ($y - 1) ); //with padding space
+				margin-right: ($box-space + $gs-percent * ($y - 1) );
 			}
 		}
 	}
-	
-/*
-	//with padding space
-	[data-gs-left='#{($i - 1)}']{
-		margin-left: ($gs-percent * ($i - 1) );
-	}
-	[data-gs-right='#{($i - 1)}']{
-		margin-right: ($gs-percent * ($i - 1) ); //with padding space
-	}
-*/
 
 }
 
@@ -215,14 +189,4 @@ $gs-percent: (100% / $gridstrap-columns);
 
 .gs-helper{
 	z-index: 40;
-}
-
-
-@-webkit-keyframes neon3 {
-  from {
-    box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #FFDD1B, 0 0 70px #FFDD1B, 0 0 80px #FFDD1B, 0 0 100px #FFDD1B, 0 0 150px #FFDD1B;
-  }
-  to {
-    box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px #FFDD1B, 0 0 35px #FFDD1B, 0 0 40px #FFDD1B, 0 0 50px #FFDD1B, 0 0 75px #FFDD1B;
-  }
 }
