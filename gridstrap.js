@@ -35,8 +35,8 @@
 				}
 			},
 			gsColTransitionWidth: 400, //$gs-col-transition-width .gs-col{ transition width duration }, .gs-margin{ transition width left }
-			debugEvents: false,
-			//debugEvents: true,
+			//debugEvents: false,
+			debugEvents: true,
 			debugColor: 0,
 			cloneCallback: null,
 			sensitivityTolerance: 15,
@@ -394,6 +394,8 @@
 						sortable.cancelHelperRemoval = false; //hack to solve this issue https://bugs.jqueryui.com/ticket/13024
 						
 						this.classList.remove('gs-state-highlight');
+						
+						row.find('.gs-from').remove();
 						
 					},
 					out: function(e, ui){
