@@ -12,19 +12,41 @@ $gs-percent: (100% / $gridstrap-columns);
 @for $i from 1 through $gridstrap-columns {
 	[data-gs-col='#{$i}']{
 /*
-		width: ($gs-percent * $i); //with padding space instead of margin
+		width: ($gs-percent * $i); //with padding space
 */
 /*
 		width: calc( #{($gs-percent * $i)} - #{$box-space*2} ); //with margin space and absolute px box-space
 */
-		width: #{( $gs-percent * $i - $box-space * 2 )}; //with margin space and absolute % box-space
+		//with margin space with relative % box-space
+		width: #{( $gs-percent * $i - $box-space * 2 )};
+		
+/*
+		padding-left: $box-space;
+		padding-right: $box-space;
+*/
+		margin-left: $box-space;
+		margin-right: $box-space;
+		
+		@for $y from 1 through $gridstrap-columns {
+			&[data-gs-left='#{($y - 1)}']{
+				margin-left: ($box-space + $gs-percent * ($y - 1) );
+			}
+			&[data-gs-right='#{($y - 1)}']{
+				margin-right: ($box-space + $gs-percent * ($y - 1) ); //with padding space
+			}
+		}
 	}
+	
+/*
+	//with padding space
 	[data-gs-left='#{($i - 1)}']{
 		margin-left: ($gs-percent * ($i - 1) );
 	}
 	[data-gs-right='#{($i - 1)}']{
-		margin-right: ($gs-percent * ($i - 1) );
+		margin-right: ($gs-percent * ($i - 1) ); //with padding space
 	}
+*/
+
 }
 
 
@@ -65,13 +87,6 @@ $gs-percent: (100% / $gridstrap-columns);
 		float:left;
 		padding-top: 5px;
 		padding-bottom: 5px;
-
-/*
-		padding-left: $box-space;
-		padding-right: $box-space;
-*/
-		margin-left: $box-space;
-		margin-right: $box-space;
 		
 		min-height: 100px;
 		z-index: 10;
