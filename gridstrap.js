@@ -82,7 +82,7 @@
 			$this.trigger('gs-resizing');
 		},
 		
-		_rowWidth: function(row, n, padding){
+		_rowWidth: function(row, n){
 			return row.width() * n/this.opts.width;
 		},
 		
