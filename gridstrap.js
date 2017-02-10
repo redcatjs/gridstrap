@@ -507,7 +507,7 @@
 					
 							
 						if(scrollCallback){
-							//scrollCallback(e, ui);
+							scrollCallback(e, ui);
 						}
 					},
 				};
