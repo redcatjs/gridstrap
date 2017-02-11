@@ -670,8 +670,8 @@
 			return width;
 		},
 		
-		outerWidth: function(){
-			return this.left()+this.width()+this.right();
+		outerWidth: function(col){
+			return this.left(col)+this.width(col)+this.right(col);
 		},
 		
 		_afterWidth: function(col){
