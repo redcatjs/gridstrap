@@ -1,8 +1,7 @@
+//interesting link: https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Grids
 $gridstrap-columns: 12 !default;
 $gs-col-transition-width: 400ms;
 $box-space: 1.04166666%;
-
-//interesting link: https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Grids
 
 $gs-percent: (100% / $gridstrap-columns);
 @for $i from 1 through $gridstrap-columns {
@@ -25,18 +24,14 @@ $gs-percent: (100% / $gridstrap-columns);
 
 
 .gridstrap{
-	&.gs-editing{
-	}
 	.gs-from,
 	.gs-placeholder {
 		float: left;
 		position: relative;
 		margin-top: 5px;
 		margin-bottom: 5px;
-		
 		margin-left: $box-space;
 		margin-right: $box-space;
-		
 		z-index:20;
 		background: transparent;
 		visibility: visible !important;
@@ -140,18 +135,12 @@ $gs-percent: (100% / $gridstrap-columns);
 		position: relative;
 		float: left;
 		width: 100%;
-		
 		height: auto;
 		display: flex;
 		flex-wrap: wrap;
 		min-height:150px;
-/*
-		padding-bottom: 20px;
-		padding-top: 20px;
-*/
 		padding-bottom: 0;
 		padding-top: 0;
-		
 		margin-bottom: 1px;
 	}
 
@@ -163,14 +152,8 @@ $gs-percent: (100% / $gridstrap-columns);
 		position: relative;
 		width: 100%;
 	}
-	.gs-state-highlight{
-/*
-		border: 1px solid rgba(23, 161, 0, 0.5);
-		border-bottom: 1px dashed $m-gray;
-*/
-		
+	.gs-state-highlight{	
 		background-color: #E7F4C9;
-		
 		&.gs-state-over{
 			background-color: #D0E993
 		}
