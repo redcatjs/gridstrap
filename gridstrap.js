@@ -654,16 +654,15 @@
 			return this.width( col, this.width(col)+1 );
 		},
 		width: function(col,width){
-			var self = this;
 			if(width){
-				var size = this.left(col)+width+self.right(col);
+				var size = this.left(col)+width+this.right(col);
 				if(size<=this.opts.width&&width>=1){
 					var oldw = col.attr('data-gs-col');
 					if(parseInt(oldw,10)!=width){
 						col.attr('data-gs-col' ,width);
 						col.trigger('gs:width:change');
 					}
-					self._afterWidth(col);
+					this._afterWidth(col);
 					return width;
 				}
 			}
@@ -677,7 +676,7 @@
 		
 		_afterWidth: function(col){
 			var self = this;
-			self._setMargin( col );
+			this._setMargin( col );
 			var timeout;
 			timeout = col.data('gs-width-timeout');
 			if(timeout){
@@ -686,7 +685,7 @@
 			timeout = setTimeout(function(){
 				self._setMarginHeight( col );
 				
-			},self.opts.gsColTransitionWidth);
+			},this.opts.gsColTransitionWidth);
 			col.data('gs-width-timeout',timeout);
 		},
 		
