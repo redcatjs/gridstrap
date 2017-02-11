@@ -140,7 +140,7 @@
 				var w = self.outerWidth(col);
 				var lw = line + w;
 				if(found){
-					result = lw > 12;
+					result = line==0 || lw > 12;
 					return false;
 				}
 				if(lw > 12){
