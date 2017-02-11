@@ -137,7 +137,7 @@
 					return;
 				}
 				
-				var w = self.width(col);
+				var w = self.outerWidth(col);
 				var lw = line + w;
 				if(found){
 					result = lw > 12;
