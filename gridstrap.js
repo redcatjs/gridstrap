@@ -293,11 +293,7 @@
 						item.addClass('gs-moving').show();
 						ph
 							.html('<div class="gs-content"/>')
-							.attr({
-								'data-gs-col':item.attr('data-gs-col'),
-								'data-gs-left':item.attr('data-gs-left'),
-								'data-gs-right':item.attr('data-gs-right'),
-							})
+							.attr('data-gs-col',self.outerWidth(item))
 						;
 						
 						
