@@ -671,6 +671,10 @@
 			return width;
 		},
 		
+		outerWidth: function(){
+			return this.left()+this.width()+this.right();
+		},
+		
 		_afterWidth: function(col){
 			var self = this;
 			self._setMargin( col );
