@@ -46,7 +46,6 @@
 		
 		//this.currentActiveSortables = [];
 		
-		container.addClass('gs-editing');
 		container.addClass('gridstrap');
 		
 		container.on('mouseover.gs', '.gs-col', function(e){
