@@ -244,6 +244,8 @@
 					scrollSensitivity: 20, //default 20
 					scrollSpeed: 20, //default 20
 					
+					delay: 150,
+					
 					tolerance: 'pointer', //intersect || pointer
 					sensitivityTolerance: self.opts.sensitivityTolerance,
 					
