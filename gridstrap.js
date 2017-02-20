@@ -37,9 +37,10 @@
 			//debugEvents: true,
 			debugColor: 0,
 			sensitivityTolerance: 15,
+			cloneCallback: false,
 			//cursorAtSmooth: 400,
 			cursorAtSmooth: 0,
-			cloneCallback: false,
+			revertEmulation: true,
 		}, opts || {} );
 		this.itemsSelector = '> .gs-real:not(.gs-moving)';
 		
@@ -280,10 +281,12 @@
 						}
 						
 						//emulation for revert invalid effect with relative positioned element
-						self.revertHelper = helper.clone().css({
-							position: 'fixed',
-							display: 'none',
-						}).appendTo(self.container);
+						if(self.opts.revertEmulation){
+							self.revertHelper = helper.clone().css({
+								position: 'fixed',
+								display: 'none',
+							}).appendTo(self.container);
+						}
 						
 						return helper;
 					},
@@ -483,21 +486,23 @@
 						if(self.opts.debugEvents) console.log('beforeStop',this);
 						
 						//emulation for revert invalid effect with relative positioned element
-						var helperOffset = ui.helper.offset();
-						self.revertHelper.css({
-							top: helperOffset.top,
-							left: helperOffset.left,
-						});
-						var item = ui.item;
-						var offset = item.offset();
-						item.css('visibility','hidden');
-						self.revertHelper.show().animate({
-							top: offset.top - ( parseInt( item.css( 'marginTop' ), 10 ) || 0 ),
-							left: offset.left - ( parseInt( item.css( 'marginLeft' ), 10 ) || 0 ),
-						}, 500, function(){
-							self.revertHelper.remove();
-							item.css('visibility','');
-						});
+						if(self.opts.revertEmulation){
+							var helperOffset = ui.helper.offset();
+							self.revertHelper.css({
+								top: helperOffset.top,
+								left: helperOffset.left,
+							});
+							var item = ui.item;
+							var offset = item.offset();
+							item.css('visibility','hidden');
+							self.revertHelper.show().animate({
+								top: offset.top - ( parseInt( item.css( 'marginTop' ), 10 ) || 0 ),
+								left: offset.left - ( parseInt( item.css( 'marginLeft' ), 10 ) || 0 ),
+							}, 500, function(){
+								self.revertHelper.remove();
+								item.css('visibility','');
+							});
+						}
 					},
 					/*
 					update: function(e, ui){
