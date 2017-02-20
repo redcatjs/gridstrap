@@ -760,7 +760,7 @@
 				.draggable($.extend(true,{
 					cursor:'grabbing',
 					scroll: true,
-					revert: 'invalid',
+					//revert: 'invalid',
 					connectToSortable: connectToSortable,
 					helper: 'clone',
 					appendTo: document.body,
