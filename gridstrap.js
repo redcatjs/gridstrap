@@ -17,7 +17,6 @@
 			defaultWidth: 3,
 			connectWith: '.gridstrap:visible .gs-row',
 			scroll: true,
-			scrollParent: false,
 			scrollCallback: false,
 			resizable:{
 				handles: 'e',
@@ -37,10 +36,10 @@
 			debugEvents: false,
 			//debugEvents: true,
 			debugColor: 0,
-			cloneCallback: null,
 			sensitivityTolerance: 15,
 			//cursorAtSmooth: 400,
 			cursorAtSmooth: 0,
+			cloneCallback: false,
 		}, opts || {} );
 		this.itemsSelector = '> .gs-real:not(.gs-moving)';
 		
@@ -223,6 +222,9 @@
 			
 		},
 		lineOffset : {},
+		scrollParentStartTop : null,
+		scrollParent : null,
+		revertHelper : null,
 		sortable: function(rows){
 			var self = this;
 			rows.each(function(){
@@ -238,7 +240,7 @@
 					items: self.itemsSelector,
 					connectWith: self.opts.connectWith,
 					
-					revert: true,
+					//revert: true,
 					
 					scroll: self.opts.scroll,
 					scrollSensitivity: 20, //default 20
@@ -273,6 +275,16 @@
 								'transition-duration':self.opts.cursorAtSmooth+'ms',
 							});
 						}
+						if(self.opts.cloneCallback){
+							self.opts.cloneCallback(helper);
+						}
+						
+						//emulation for revert invalid effect with relative positioned element
+						self.revertHelper = helper.clone().css({
+							position: 'fixed',
+							display: 'none',
+						}).appendTo(self.container);
+						
 						return helper;
 					},
 					appendTo: self.container, //fix z-index issues
@@ -315,6 +327,14 @@
 						//from 3rd draggable
 						if(!item.hasClass('gs-integrated')){
 							ui.helper.addClass('gs-sortable-helper');
+						}
+						
+						self.scrollParent = self.container.closest('.gs-scrollable');
+						if(!self.scrollParent.length){
+							self.scrollParent = false;
+						}
+						else{
+							self.scrollParentStartTop = parseInt(self.scrollParent.scrollTop());
 						}
 						
 					},
@@ -459,10 +479,27 @@
 						self._reenableTargets(row, ui);
 					},
 					
-					/*
 					beforeStop: function(e, ui){
 						if(self.opts.debugEvents) console.log('beforeStop',this);
+						
+						//emulation for revert invalid effect with relative positioned element
+						var helperOffset = ui.helper.offset();
+						self.revertHelper.css({
+							top: helperOffset.top,
+							left: helperOffset.left,
+						});
+						var item = ui.item;
+						var offset = item.offset();
+						item.css('visibility','hidden');
+						self.revertHelper.show().animate({
+							top: offset.top - ( parseInt( item.css( 'marginTop' ), 10 ) || 0 ),
+							left: offset.left - ( parseInt( item.css( 'marginLeft' ), 10 ) || 0 ),
+						}, 500, function(){
+							self.revertHelper.remove();
+							item.css('visibility','');
+						});
 					},
+					/*
 					update: function(e, ui){
 						if(self.opts.debugEvents) console.log('update',this);
 					},
@@ -541,6 +578,7 @@
 						if(scrollCallback){
 							scrollCallback(e, ui);
 						}
+						
 					},
 				};
 				if(!self.opts.cursorAtSmooth){
@@ -548,18 +586,15 @@
 				}
 				
 				var scrollCallback;
-				if(self.opts.scrollCallback){
-					var scrollParent = self.opts.scrollParent || row.scrollParent();
-					if(typeof(scrollParent)=='function'){
-						scrollParent = scrollParent(row);
-					}
+				if(self.opts.scrollCallback&&self.scrollParent){
+					var scrollParent = self.scrollParent;
 					var scrollParentEl = scrollParent[0];
-					scrollCallback = function(event, ui){
+					scrollCallback = function(){
 						var overflowOffset = scrollParent.offset();
-						if( overflowOffset.top + scrollParentEl.offsetHeight - event.pageY < sortableOptions.scrollSensitivity ){
+						if( overflowOffset.top + scrollParentEl.offsetHeight - e.pageY < sortableOptions.scrollSensitivity ){
 							self.opts.scrollCallback(scrollParentEl.scrollTop + sortableOptions.scrollSpeed, scrollParent);
 						}
-						else if( event.pageY - overflowOffset.top < sortableOptions.scrollSensitivity ){
+						else if( e.pageY - overflowOffset.top < sortableOptions.scrollSensitivity ){
 							self.opts.scrollCallback(scrollParentEl.scrollTop - sortableOptions.scrollSpeed, scrollParent);
 						}
 					};
