@@ -238,7 +238,7 @@
 					items: self.itemsSelector,
 					connectWith: self.opts.connectWith,
 					
-					revert: 'invalid',
+					revert: true,
 					
 					scroll: self.opts.scroll,
 					scrollSensitivity: 20, //default 20
