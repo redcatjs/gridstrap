@@ -676,11 +676,11 @@
 			var wr = r ? self._rowWidth(row,r) : 0;
 			var wl = l ? self._rowWidth(row,l) : 0;
 			
-			ml.css('left', (l ? (-1*wl) -1 : 0));
-			ml.width(wl-1);
+			ml.css('left', (l ? (-1*wl) : 0));
+			ml.width(wl);
 			
-			mr.css('right', (r ? (-1*wr) -1 : 0));
-			mr.width(wr-1);
+			mr.css('right', (r ? (-1*wr) : 0));
+			mr.width(wr);
 			self._setMarginHeight(col);
 		},
 		
