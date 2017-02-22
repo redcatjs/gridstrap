@@ -486,7 +486,7 @@
 						if(self.opts.debugEvents) console.log('beforeStop',this);
 						
 						//emulation for revert invalid effect with relative positioned element
-						if(self.opts.revertEmulation){
+						if(self.opts.revertEmulation&&self.revertHelper){
 							var helperOffset = ui.helper.offset();
 							self.revertHelper.css({
 								top: helperOffset.top,
