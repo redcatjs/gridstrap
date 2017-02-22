@@ -662,7 +662,7 @@
 			var self = this;
 			var ml = col.find('>.gs-margin-left');
 			var mr = col.find('>.gs-margin-right');
-			var h = col.find('>.gs-content').outerHeight() - 1;
+			var h = col.find('>.gs-content').outerHeight();
 			ml.height(h);
 			mr.height(h);
 		},
