@@ -157,6 +157,9 @@ $gs-percent: (100% / $gridstrap-columns);
 			background-color: #D0E993
 		}
 	}
+	.btn {
+		cursor: pointer;
+	}
 }
 
 .gs-col{
