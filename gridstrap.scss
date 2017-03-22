@@ -165,7 +165,10 @@ $gs-percent: (100% / $gridstrap-columns);
 .gs-col{
 	cursor: grab;
 	&.ui-draggable-dragging{
+/*
 		cursor: grabbing;
+*/
+		cursor: move;
 		background: transparent;
 		.gs-content{
 			border: 0 !important;
