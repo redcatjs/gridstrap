@@ -594,7 +594,7 @@
 				if(self.opts.scrollCallback&&self.scrollParent){
 					var scrollParent = self.scrollParent;
 					var scrollParentEl = scrollParent[0];
-					scrollCallback = function(){
+					scrollCallback = function(e, ui){
 						var overflowOffset = scrollParent.offset();
 						if( overflowOffset.top + scrollParentEl.offsetHeight - e.pageY < sortableOptions.scrollSensitivity ){
 							self.opts.scrollCallback(scrollParentEl.scrollTop + sortableOptions.scrollSpeed, scrollParent);
