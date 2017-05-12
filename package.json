@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/redcatjs/gridstrap/issues"
   },
-  "homepage": "https://github.com/redcatjs/gridstrap#readme"
+  "homepage": "https://github.com/redcatjs/gridstrap#readme",
+  "dependencies": {
+    "jquery-ui": "^1.12.1"
+  }
 }
