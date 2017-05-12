@@ -1,4 +1,14 @@
-(function($){
+(function(factory){
+	if(typeof module === "object" && typeof module.exports === "object"){
+		module.exports = factory( require('jquery'), require('jquery-ui') );
+	}
+    else if(typeof define === 'function' && define.amd){
+        define(["jquery","jquery-ui"], factory);
+    }
+    else{
+        factory($);
+    }
+}(function($){
 	
 	$.widget('ui.sortable',$.extend($.ui.sortable.prototype,{
 		_isOverAxis: function( x, reference, size ) {
@@ -809,4 +819,4 @@
 		});
 	};
 	
-})(jQuery);
+}));
